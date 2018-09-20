@@ -17,7 +17,7 @@ package io.lettuce.core.support;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -56,7 +56,7 @@ public class SpringTest {
     private RedisClusterClient redisClusterClient2;
 
     @Test
-    public void testSpring() throws Exception {
+    public void testSpring() {
 
         assertThat(redisClient1).isNotNull();
         assertThat(redisClient2).isNotNull();

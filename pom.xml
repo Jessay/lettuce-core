@@ -58,7 +58,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- You need a running redis+sentinel for all tests, therefore disabled by default -->
-        <skipTests>true</skipTests>
         <netty-version>4.1.29.Final</netty-version>
         <spring-version>4.3.19.RELEASE</spring-version>
         <reactor-version>3.2.0.RELEASE</reactor-version>
@@ -274,6 +273,13 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
+            <version>5.3.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
             <version>5.3.1</version>
             <scope>test</scope>
         </dependency>
@@ -837,6 +843,13 @@
                     <systemProperties>
                         <io.netty.eventLoopThreads>4</io.netty.eventLoopThreads>
                     </systemProperties>
+                    <includes>
+                        <include>**/*UnitTests</include>
+                        <include>**/*Tests</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/*Test</exclude>
+                    </excludes>
                 </configuration>
                 <dependencies>
                     <dependency>

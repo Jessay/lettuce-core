@@ -23,72 +23,80 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import io.lettuce.core.codec.Utf8StringCodec;
 
 /**
  * @author Mark Paluch
  */
-@RunWith(Parameterized.class)
+
 public class ListOutputTest {
 
-    @Parameter(0)
-    public CommandOutput<Object, Object, List<Object>> commandOutput;
-
-    @Parameter(1)
-    public StreamingOutput<?> streamingOutput;
-
-    @Parameter(2)
-    public byte[] valueBytes;
-
-    @Parameter(3)
-    public Object value;
-
-    @Parameters
-    public static Collection<Object[]> parameters() {
+    public static Collection<Fixture> parameters() {
 
         Utf8StringCodec codec = new Utf8StringCodec();
 
         KeyListOutput<String, String> keyListOutput = new KeyListOutput<>(codec);
-        Object[] keyList = new Object[] { keyListOutput, keyListOutput, "hello world".getBytes(), "hello world" };
+        Fixture keyList = new Fixture(keyListOutput, keyListOutput, "hello world".getBytes(), "hello world");
 
         ValueListOutput<String, String> valueListOutput = new ValueListOutput<>(codec);
-        Object[] valueList = new Object[] { valueListOutput, valueListOutput, "hello world".getBytes(), "hello world" };
+        Fixture valueList = new Fixture(valueListOutput, valueListOutput, "hello world".getBytes(), "hello world");
 
         StringListOutput<String, String> stringListOutput = new StringListOutput<>(codec);
-        Object[] stringList = new Object[] { stringListOutput, stringListOutput, "hello world".getBytes(), "hello world" };
+        Fixture stringList = new Fixture(stringListOutput, stringListOutput, "hello world".getBytes(), "hello world");
 
         return Arrays.asList(keyList, valueList, stringList);
-
     }
 
-    @Test
-    public void settingEmptySubscriberShouldFail() {
-        assertThatThrownBy(() -> streamingOutput.setSubscriber(null)).isInstanceOf(IllegalArgumentException. class);
+    @ParameterizedTest
+    @MethodSource("parameters")
+    public void settingEmptySubscriberShouldFail(Fixture fixture) {
+        assertThatThrownBy(() -> fixture.streamingOutput.setSubscriber(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test
-    public void defaultSubscriberIsSet() {
-        commandOutput.multi(1);
-        assertThat(streamingOutput.getSubscriber()).isNotNull().isInstanceOf(ListSubscriber.class);
+    @ParameterizedTest
+    @MethodSource("parameters")
+    public void defaultSubscriberIsSet(Fixture fixture) {
+        fixture.commandOutput.multi(1);
+        assertThat(fixture.streamingOutput.getSubscriber()).isNotNull().isInstanceOf(ListSubscriber.class);
     }
 
-    @Test
-    public void setIntegerShouldFail() {
-        assertThatThrownBy(() -> commandOutput.set(123L)).isInstanceOf(IllegalStateException. class);
+    @ParameterizedTest
+    @MethodSource("parameters")
+    public void setIntegerShouldFail(Fixture fixture) {
+        assertThatThrownBy(() -> fixture.commandOutput.set(123L)).isInstanceOf(IllegalStateException.class);
     }
 
-    @Test
-    public void setValueShouldConvert() {
+    @ParameterizedTest
+    @MethodSource("parameters")
+    public void setValueShouldConvert(Fixture fixture) {
 
-        commandOutput.multi(1);
-        commandOutput.set(ByteBuffer.wrap(valueBytes));
+        fixture.commandOutput.multi(1);
+        fixture.commandOutput.set(ByteBuffer.wrap(fixture.valueBytes));
 
-        assertThat(commandOutput.get()).contains(value);
+        assertThat(fixture.commandOutput.get()).contains(fixture.value);
+    }
+
+    static class Fixture {
+
+        final CommandOutput<Object, Object, List<Object>> commandOutput;
+        final StreamingOutput<?> streamingOutput;
+        final byte[] valueBytes;
+        final Object value;
+
+        public Fixture(CommandOutput<?, ?, ?> commandOutput, StreamingOutput<?> streamingOutput, byte[] valueBytes, Object value) {
+
+            this.commandOutput = (CommandOutput) commandOutput;
+            this.streamingOutput = streamingOutput;
+            this.valueBytes = valueBytes;
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return commandOutput.getClass().getSimpleName() + "/" + value;
+        }
     }
 }
