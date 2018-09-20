@@ -16,11 +16,13 @@
 package io.lettuce.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mark Paluch
@@ -28,31 +30,31 @@ import org.junit.Test;
 public class RedisURIBuilderTest {
 
     @Test
-    public void sentinel() throws Exception {
+    public void sentinel()  {
         RedisURI result = RedisURI.Builder.sentinel("localhost").withTimeout(Duration.ofHours(2)).build();
         assertThat(result.getSentinels()).hasSize(1);
         assertThat(result.getTimeout()).isEqualTo(Duration.ofHours(2));
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void sentinelWithHostShouldFail() throws Exception {
-        RedisURI.builder().sentinel("localhost").withHost("localhost");
+    @Test
+    public void sentinelWithHostShouldFail()  {
+        assertThatThrownBy(() -> RedisURI.builder().sentinel("localhost").withHost("localhost")).isInstanceOf(IllegalStateException. class);
     }
 
     @Test
-    public void sentinelWithPort() throws Exception {
+    public void sentinelWithPort()  {
         RedisURI result = RedisURI.Builder.sentinel("localhost", 1).withTimeout(Duration.ofHours(2)).build();
         assertThat(result.getSentinels()).hasSize(1);
         assertThat(result.getTimeout()).isEqualTo(Duration.ofHours(2));
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void shouldFailIfBuilderIsEmpty() throws Exception {
-        RedisURI.builder().build();
+    @Test
+    public void shouldFailIfBuilderIsEmpty()  {
+        assertThatThrownBy(() -> RedisURI.builder().build()).isInstanceOf(IllegalStateException. class);
     }
 
     @Test
-    public void redisWithHostAndPort() throws Exception {
+    public void redisWithHostAndPort()  {
         RedisURI result = RedisURI.builder().withHost("localhost").withPort(1234).build();
 
         assertThat(result.getSentinels()).isEmpty();
@@ -61,7 +63,7 @@ public class RedisURIBuilderTest {
     }
 
     @Test
-    public void redisWithPort() throws Exception {
+    public void redisWithPort()  {
         RedisURI result = RedisURI.Builder.redis("localhost").withPort(1234).build();
 
         assertThat(result.getSentinels()).isEmpty();
@@ -70,25 +72,25 @@ public class RedisURIBuilderTest {
     }
 
     @Test
-    public void redisWithClientName() throws Exception {
+    public void redisWithClientName()  {
         RedisURI result = RedisURI.Builder.redis("localhost").withClientName("hello").build();
 
         assertThat(result.getHost()).isEqualTo("localhost");
         assertThat(result.getClientName()).isEqualTo("hello");
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void redisHostAndPortWithInvalidPort() throws Exception {
-        RedisURI.Builder.redis("localhost", -1);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void redisWithInvalidPort() throws Exception {
-        RedisURI.Builder.redis("localhost").withPort(65536);
+    @Test
+    public void redisHostAndPortWithInvalidPort()  {
+        assertThatThrownBy(() -> RedisURI.Builder.redis("localhost", -1)).isInstanceOf(IllegalArgumentException. class);
     }
 
     @Test
-    public void redisFromUrl() throws Exception {
+    public void redisWithInvalidPort()  {
+        assertThatThrownBy(() -> RedisURI.Builder.redis("localhost").withPort(65536)).isInstanceOf(IllegalArgumentException. class);
+    }
+
+    @Test
+    public void redisFromUrl()  {
         RedisURI result = RedisURI.create(RedisURI.URI_SCHEME_REDIS + "://password@localhost/21");
 
         assertThat(result.getSentinels()).isEmpty();
@@ -100,7 +102,7 @@ public class RedisURIBuilderTest {
     }
 
     @Test
-    public void redisFromUrlNoPassword() throws Exception {
+    public void redisFromUrlNoPassword()  {
         RedisURI redisURI = RedisURI.create("redis://localhost:1234/5");
         assertThat(redisURI.getPassword()).isNull();
 
@@ -109,13 +111,13 @@ public class RedisURIBuilderTest {
     }
 
     @Test
-    public void redisFromUrlPassword() throws Exception {
+    public void redisFromUrlPassword()  {
         RedisURI redisURI = RedisURI.create("redis://h:password@localhost.com:14589");
         assertThat(redisURI.getPassword()).isEqualTo("password".toCharArray());
     }
 
     @Test
-    public void redisWithSSL() throws Exception {
+    public void redisWithSSL()  {
         RedisURI result = RedisURI.Builder.redis("localhost").withSsl(true).withStartTls(true).build();
 
         assertThat(result.getSentinels()).isEmpty();
@@ -125,7 +127,7 @@ public class RedisURIBuilderTest {
     }
 
     @Test
-    public void redisSslFromUrl() throws Exception {
+    public void redisSslFromUrl()  {
         RedisURI result = RedisURI.create(RedisURI.URI_SCHEME_REDIS_SECURE + "://:password@localhost/1");
 
         assertThat(result.getSentinels()).isEmpty();
@@ -136,7 +138,7 @@ public class RedisURIBuilderTest {
     }
 
     @Test
-    public void redisSentinelFromUrl() throws Exception {
+    public void redisSentinelFromUrl()  {
         RedisURI result = RedisURI.create(RedisURI.URI_SCHEME_REDIS_SENTINEL + "://password@localhost/1#master");
 
         assertThat(result.getSentinels()).hasSize(1);
@@ -168,38 +170,38 @@ public class RedisURIBuilderTest {
 
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void redisSentinelWithInvalidPort() throws Exception {
-        RedisURI.Builder.sentinel("a", 65536);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void redisSentinelWithMasterIdAndInvalidPort() throws Exception {
-        RedisURI.Builder.sentinel("a", 65536, "");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void redisSentinelWithNullMasterId() throws Exception {
-        RedisURI.Builder.sentinel("a", 1, null);
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void redisSentinelWithSSLNotPossible() throws Exception {
-        RedisURI.Builder.sentinel("a", 1, "master").withSsl(true);
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void redisSentinelWithTLSNotPossible() throws Exception {
-        RedisURI.Builder.sentinel("a", 1, "master").withStartTls(true);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void invalidScheme() throws Exception {
-        RedisURI.create("http://www.web.de");
+    @Test
+    public void redisSentinelWithInvalidPort()  {
+        assertThatThrownBy(() -> RedisURI.Builder.sentinel("a", 65536)).isInstanceOf(IllegalArgumentException. class);
     }
 
     @Test
-    public void redisSocket() throws Exception {
+    public void redisSentinelWithMasterIdAndInvalidPort()  {
+        assertThatThrownBy(() -> RedisURI.Builder.sentinel("a", 65536, "")).isInstanceOf(IllegalArgumentException. class);
+    }
+
+    @Test
+    public void redisSentinelWithNullMasterId()  {
+        assertThatThrownBy(() -> RedisURI.Builder.sentinel("a", 1, null)).isInstanceOf(IllegalArgumentException. class);
+    }
+
+    @Test
+    public void redisSentinelWithSSLNotPossible()  {
+        assertThatThrownBy(() -> RedisURI.Builder.sentinel("a", 1, "master").withSsl(true)).isInstanceOf(IllegalStateException. class);
+    }
+
+    @Test
+    public void redisSentinelWithTLSNotPossible()  {
+        assertThatThrownBy(() -> RedisURI.Builder.sentinel("a", 1, "master").withStartTls(true)).isInstanceOf(IllegalStateException. class);
+    }
+
+    @Test
+    public void invalidScheme()  {
+        assertThatThrownBy(() -> RedisURI.create("http://www.web.de")).isInstanceOf(IllegalArgumentException. class);
+    }
+
+    @Test
+    public void redisSocket() throws IOException {
         File file = new File("work/socket-6479").getCanonicalFile();
         RedisURI result = RedisURI.create(RedisURI.URI_SCHEME_REDIS_SOCKET + "://" + file.getCanonicalPath());
 
@@ -212,7 +214,7 @@ public class RedisURIBuilderTest {
     }
 
     @Test
-    public void redisSocketWithPassword() throws Exception {
+    public void redisSocketWithPassword() throws IOException {
         File file = new File("work/socket-6479").getCanonicalFile();
         RedisURI result = RedisURI.create(RedisURI.URI_SCHEME_REDIS_SOCKET + "://password@" + file.getCanonicalPath());
 

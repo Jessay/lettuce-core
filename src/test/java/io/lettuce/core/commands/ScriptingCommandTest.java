@@ -17,17 +17,14 @@ package io.lettuce.core.commands;
 
 import static io.lettuce.core.ScriptOutputType.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.After;
-import org.junit.FixMethodOrder;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.Wait;
 import io.lettuce.core.AbstractRedisClientTest;
@@ -39,12 +36,9 @@ import io.lettuce.core.api.StatefulRedisConnection;
  * @author Will Glozer
  * @author Mark Paluch
  */
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ScriptingCommandTest extends AbstractRedisClientTest {
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
-    @After
+    @AfterEach
     public void tearDown() {
 
         Wait.untilNoException(() -> {
@@ -65,8 +59,8 @@ public class ScriptingCommandTest extends AbstractRedisClientTest {
         assertThat((String) redis.eval("return {ok='status'}", STATUS)).isEqualTo("status");
         assertThat((String) redis.eval("return 'one'", VALUE)).isEqualTo("one");
         assertThat((List<?>) redis.eval("return {1, 'one', {2}}", MULTI)).isEqualTo(list(1L, "one", list(2L)));
-        exception.expectMessage("Oops!");
-        redis.eval("return {err='Oops!'}", STATUS);
+
+        assertThatThrownBy(() -> redis.eval("return {err='Oops!'}", STATUS)).hasMessageContaining("Oops!");
     }
 
     @Test
@@ -102,18 +96,18 @@ public class ScriptingCommandTest extends AbstractRedisClientTest {
         String digest = redis.digest(script);
         assertThat((Number) redis.eval(script, INTEGER)).isEqualTo(2L);
         assertThat((Number) redis.evalsha(digest, INTEGER)).isEqualTo(2L);
-        exception.expect(RedisNoScriptException.class);
-        exception.expectMessage("NOSCRIPT No matching script. Please use EVAL.");
-        redis.evalsha(redis.digest("return 1 + 1 == 4"), INTEGER);
+
+        assertThatThrownBy(() -> redis.evalsha(redis.digest("return 1 + 1 == 4"), INTEGER)).isInstanceOf(
+                RedisNoScriptException.class).hasMessageContaining("NOSCRIPT No matching script. Please use EVAL.");
     }
 
     @Test
     public void evalshaWithMulti() {
         redis.scriptFlush();
         String digest = redis.digest("return {1234, 5678}");
-        exception.expect(RedisNoScriptException.class);
-        exception.expectMessage("NOSCRIPT No matching script. Please use EVAL.");
-        redis.evalsha(digest, MULTI);
+
+        assertThatThrownBy(() -> redis.evalsha(digest, MULTI)).isInstanceOf(RedisNoScriptException.class).hasMessageContaining(
+                "NOSCRIPT No matching script. Please use EVAL.");
     }
 
     @Test

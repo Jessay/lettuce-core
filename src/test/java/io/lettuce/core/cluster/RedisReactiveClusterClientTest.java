@@ -21,6 +21,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Collections;
 
 import org.junit.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.runners.MethodSorters;
 
 import reactor.test.StepVerifier;
@@ -43,7 +47,7 @@ public class RedisReactiveClusterClientTest extends AbstractClusterTest {
     protected RedisAdvancedClusterCommands<String, String> sync;
     protected RedisAdvancedClusterReactiveCommands<String, String> reactive;
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClient() throws Exception {
         setupClusterClient();
         client = RedisClient.create(TestClientResources.get(), RedisURI.Builder.redis(host, port1).build());
@@ -51,14 +55,14 @@ public class RedisReactiveClusterClientTest extends AbstractClusterTest {
                 Collections.singletonList(RedisURI.Builder.redis(host, port1).build()));
     }
 
-    @AfterClass
+    @AfterAll
     public static void shutdownClient() {
         shutdownClusterClient();
         FastShutdown.shutdown(client);
         FastShutdown.shutdown(clusterClient);
     }
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
 
         clusterRule.getClusterClient().reloadPartitions();
@@ -69,7 +73,7 @@ public class RedisReactiveClusterClientTest extends AbstractClusterTest {
         reactive = connection.reactive();
     }
 
-    @After
+    @AfterEach
     public void after() throws Exception {
         connection.close();
     }

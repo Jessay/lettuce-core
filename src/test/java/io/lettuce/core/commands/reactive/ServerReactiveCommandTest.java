@@ -17,8 +17,8 @@ package io.lettuce.core.commands.reactive;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.api.reactive.RedisReactiveCommands;
 import io.lettuce.core.api.sync.RedisCommands;
@@ -32,7 +32,7 @@ public class ServerReactiveCommandTest extends ServerCommandTest {
 
     private RedisReactiveCommands<String, String> reactive;
 
-    @Before
+    @BeforeEach
     public void openConnection() throws Exception {
         super.openConnection();
         reactive = redis.getStatefulConnection().reactive();

@@ -16,11 +16,12 @@
 package io.lettuce.core.resource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Jongyeol Choi
@@ -28,18 +29,20 @@ import org.junit.Test;
  */
 public class DecorrelatedJitterDelayTest {
 
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldNotCreateIfLowerBoundIsNegative() throws Exception {
-        Delay.decorrelatedJitter(-1, 100, 0, TimeUnit.MILLISECONDS);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldNotCreateIfLowerBoundIsSameAsUpperBound() throws Exception {
-        Delay.decorrelatedJitter(100, 100, 1, TimeUnit.MILLISECONDS);
+    @Test
+    public void shouldNotCreateIfLowerBoundIsNegative() {
+        assertThatThrownBy(() -> Delay.decorrelatedJitter(-1, 100, 0, TimeUnit.MILLISECONDS)).isInstanceOf(
+                IllegalArgumentException.class);
     }
 
     @Test
-    public void negativeAttemptShouldReturnZero() throws Exception {
+    public void shouldNotCreateIfLowerBoundIsSameAsUpperBound() {
+        assertThatThrownBy(() -> Delay.decorrelatedJitter(100, 100, 1, TimeUnit.MILLISECONDS)).isInstanceOf(
+                IllegalArgumentException.class);
+    }
+
+    @Test
+    public void negativeAttemptShouldReturnZero() {
 
         Delay delay = Delay.decorrelatedJitter().get();
 
@@ -47,7 +50,7 @@ public class DecorrelatedJitterDelayTest {
     }
 
     @Test
-    public void zeroShouldReturnZero() throws Exception {
+    public void zeroShouldReturnZero() {
 
         Delay delay = Delay.decorrelatedJitter().get();
 
@@ -55,10 +58,9 @@ public class DecorrelatedJitterDelayTest {
     }
 
     @Test
-    public void testDefaultDelays() throws Exception {
+    public void testDefaultDelays() {
 
         Delay delay = Delay.decorrelatedJitter().get();
-
 
         for (int i = 0; i < 1000; i++) {
             assertThat(delay.createDelay(1).toMillis()).isBetween(0L, 1L);

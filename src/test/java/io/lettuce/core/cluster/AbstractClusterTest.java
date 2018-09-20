@@ -15,8 +15,8 @@
  */
 package io.lettuce.core.cluster;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.Rule;
 
 import io.lettuce.TestClientResources;
@@ -58,13 +58,13 @@ public class AbstractClusterTest extends AbstractTest {
     @Rule
     public ClusterRule clusterRule = new ClusterRule(clusterClient, port1, port2, port3, port4);
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClusterClient() {
         clusterClient = RedisClusterClient.create(
                 TestClientResources.get(), LettuceLists.unmodifiableList(RedisURI.Builder.redis(host, port1).build()));
     }
 
-    @AfterClass
+    @AfterAll
     public static void shutdownClusterClient() {
         FastShutdown.shutdown(clusterClient);
     }

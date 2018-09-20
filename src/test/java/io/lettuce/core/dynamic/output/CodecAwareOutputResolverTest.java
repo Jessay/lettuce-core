@@ -22,7 +22,7 @@ import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.dynamic.CommandMethod;

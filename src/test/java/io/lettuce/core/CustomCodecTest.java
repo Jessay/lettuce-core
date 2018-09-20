@@ -22,7 +22,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import reactor.test.StepVerifier;
 import io.lettuce.core.api.StatefulRedisConnection;

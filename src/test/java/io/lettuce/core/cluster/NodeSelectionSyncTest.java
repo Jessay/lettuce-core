@@ -22,9 +22,9 @@ import static org.assertj.core.api.Fail.fail;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.Wait;
 import io.lettuce.core.RedisCommandExecutionException;
@@ -46,14 +46,14 @@ public class NodeSelectionSyncTest extends AbstractClusterTest {
     private RedisAdvancedClusterCommands<String, String> commands;
     private StatefulRedisClusterConnection<String, String> clusterConnection;
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         clusterClient.reloadPartitions();
         clusterConnection = clusterClient.connect();
         commands = clusterConnection.sync();
     }
 
-    @After
+    @AfterEach
     public void after() throws Exception {
         commands.getStatefulConnection().close();
     }

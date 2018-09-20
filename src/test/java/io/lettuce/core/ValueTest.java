@@ -16,12 +16,13 @@
 package io.lettuce.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mark Paluch
@@ -78,9 +79,9 @@ public class ValueTest {
         assertThat(value.hasValue()).isTrue();
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void justShouldRejectEmptyValueFromValue() {
-        Value.just(null);
+        assertThatThrownBy(() -> Value.just(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -132,12 +133,13 @@ public class ValueTest {
         assertThat(value.getValueOrElseThrow(IllegalArgumentException::new)).isEqualTo("hello");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void emptyValueGetValueOrElseShouldThrowException() {
 
         Value<String> value = Value.from(Optional.empty());
 
-        value.getValueOrElseThrow(IllegalArgumentException::new);
+        assertThatThrownBy(() -> value.getValueOrElseThrow(IllegalArgumentException::new)).isInstanceOf(
+                IllegalArgumentException.class);
     }
 
     @Test
@@ -212,9 +214,9 @@ public class ValueTest {
         assertThat(value.map(s -> s + "-world")).isSameAs(value);
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void emptyValueGetEmptyValueShouldThrowException() {
-        Value.from(Optional.<String> empty()).getValue();
+        assertThatThrownBy(() -> Value.from(Optional.<String> empty()).getValue()).isInstanceOf(NoSuchElementException.class);
     }
 
     @Test

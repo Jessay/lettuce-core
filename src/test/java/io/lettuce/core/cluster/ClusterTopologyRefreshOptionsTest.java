@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.cluster.ClusterTopologyRefreshOptions.RefreshTrigger;
 

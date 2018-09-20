@@ -25,11 +25,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import io.lettuce.core.ConnectionFuture;
 import io.lettuce.core.RedisChannelHandler;
@@ -43,7 +45,7 @@ import io.lettuce.core.models.role.RedisInstance;
 /**
  * @author Mark Paluch
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class MasterSlaveConnectionProviderTest {
 
     public static final Utf8StringCodec CODEC = new Utf8StringCodec();
@@ -61,7 +63,7 @@ public class MasterSlaveConnectionProviderTest {
     @Mock
     RedisCommands<String, String> commandsMock;
 
-    @Before
+    @BeforeEach
     public void before() {
 
         nodeConnectionMock = (StatefulRedisConnection) channelHandlerMock;

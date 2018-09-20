@@ -16,6 +16,7 @@
 package io.lettuce.core.commands;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assume.assumeTrue;
 
 import java.util.HashSet;
@@ -23,7 +24,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.RedisConditions;
 import io.lettuce.core.*;
@@ -188,14 +189,14 @@ public class SetCommandTest extends AbstractRedisClientTest {
         assertThat(redis.smembers(key)).isEqualTo(set());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void sremEmpty() {
         redis.srem(key);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void sremNulls() {
-        redis.srem(key, new String[0]);
+        assertThatThrownBy(() -> redis.srem(key, new String[0])).isInstanceOf(IllegalArgumentException. class);
     }
 
     @Test
@@ -204,9 +205,9 @@ public class SetCommandTest extends AbstractRedisClientTest {
         assertThat(redis.sunion("key1", "key2", "key3")).isEqualTo(set("a", "b", "c", "d", "e"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void sunionEmpty() {
-        redis.sunion();
+        assertThatThrownBy(() -> redis.sunion()).isInstanceOf(IllegalArgumentException. class);
     }
 
     @Test

@@ -17,8 +17,8 @@ package io.lettuce.core.dynamic;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import rx.Observable;
 import rx.Single;
@@ -33,7 +33,7 @@ public class ReactiveTypeAdaptionTest extends AbstractRedisClientTest {
     private RxJava1Types rxjava1;
     private RxJava2Types rxjava2;
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
 
         redis.set(key, value);

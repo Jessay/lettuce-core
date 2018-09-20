@@ -16,33 +16,37 @@
 package io.lettuce.core.resource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mark Paluch
  */
 public class ExponentialDelayTest {
 
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldNotCreateIfLowerBoundIsNegative() throws Exception {
-        Delay.exponential(-1, 100, TimeUnit.MILLISECONDS, 10);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldNotCreateIfLowerBoundIsSameAsUpperBound() throws Exception {
-        Delay.exponential(100, 100, TimeUnit.MILLISECONDS, 10);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldNotCreateIfPowerIsOne() throws Exception {
-        Delay.exponential(100, 1000, TimeUnit.MILLISECONDS, 1);
+    @Test
+    public void shouldNotCreateIfLowerBoundIsNegative() {
+        assertThatThrownBy(() -> Delay.exponential(-1, 100, TimeUnit.MILLISECONDS, 10)).isInstanceOf(
+                IllegalArgumentException.class);
     }
 
     @Test
-    public void negativeAttemptShouldReturnZero() throws Exception {
+    public void shouldNotCreateIfLowerBoundIsSameAsUpperBound() {
+        assertThatThrownBy(() -> Delay.exponential(100, 100, TimeUnit.MILLISECONDS, 10)).isInstanceOf(
+                IllegalArgumentException.class);
+    }
+
+    @Test
+    public void shouldNotCreateIfPowerIsOne() {
+        assertThatThrownBy(() -> Delay.exponential(100, 1000, TimeUnit.MILLISECONDS, 1)).isInstanceOf(
+                IllegalArgumentException.class);
+    }
+
+    @Test
+    public void negativeAttemptShouldReturnZero() {
 
         Delay delay = Delay.exponential();
 
@@ -50,7 +54,7 @@ public class ExponentialDelayTest {
     }
 
     @Test
-    public void zeroShouldReturnZero() throws Exception {
+    public void zeroShouldReturnZero() {
 
         Delay delay = Delay.exponential();
 
@@ -58,7 +62,7 @@ public class ExponentialDelayTest {
     }
 
     @Test
-    public void testDefaultDelays() throws Exception {
+    public void testDefaultDelays() {
 
         Delay delay = Delay.exponential();
 
@@ -83,7 +87,7 @@ public class ExponentialDelayTest {
     }
 
     @Test
-    public void testPow10Delays() throws Exception {
+    public void testPow10Delays() {
 
         Delay delay = Delay.exponential(100, 10000, TimeUnit.MILLISECONDS, 10);
 

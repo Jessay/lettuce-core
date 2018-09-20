@@ -29,11 +29,13 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import io.lettuce.Futures;
 import io.lettuce.core.ConnectionFuture;
@@ -57,7 +59,7 @@ import io.lettuce.core.resource.SocketAddressResolver;
  * @author Christian Weitendorf
  */
 @SuppressWarnings("unchecked")
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ClusterTopologyRefreshTest {
 
     public final static long COMMAND_TIMEOUT_NS = TimeUnit.MILLISECONDS.toNanos(10);
@@ -93,7 +95,7 @@ public class ClusterTopologyRefreshTest {
     @Mock
     private RedisAsyncCommands<String, String> asyncCommands2;
 
-    @Before
+    @BeforeEach
     public void before() {
 
         when(clientResources.socketAddressResolver()).thenReturn(SocketAddressResolver.create(DnsResolvers.JVM_DEFAULT));

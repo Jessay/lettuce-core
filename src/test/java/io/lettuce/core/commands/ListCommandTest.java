@@ -21,7 +21,7 @@ import static org.junit.Assume.assumeTrue;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.RedisConditions;
 import io.lettuce.core.AbstractRedisClientTest;

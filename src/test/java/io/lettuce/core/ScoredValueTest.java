@@ -17,11 +17,12 @@
 package io.lettuce.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.offset;
 
 import java.util.Optional;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Will Glozer
@@ -81,9 +82,9 @@ public class ScoredValueTest {
         assertThat(value.getValue()).isEqualTo("hello");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void justShouldRejectEmptyValueFromValue() {
-        Value.just(null);
+        assertThatThrownBy(() -> ScoredValue.just(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -96,7 +97,7 @@ public class ScoredValueTest {
     }
 
     @Test
-    public void equals() throws Exception {
+    public void equals() {
         ScoredValue<String> sv1 = ScoredValue.fromNullable(1.0, "a");
         assertThat(sv1.equals(ScoredValue.fromNullable(1.0, "a"))).isTrue();
         assertThat(sv1.equals(null)).isFalse();
@@ -105,7 +106,7 @@ public class ScoredValueTest {
     }
 
     @Test
-    public void testHashCode() throws Exception {
+    public void testHashCode() {
         assertThat(ScoredValue.fromNullable(1.0, "a").hashCode() != 0).isTrue();
         assertThat(ScoredValue.fromNullable(0.0, "a").hashCode() != 0).isTrue();
         assertThat(ScoredValue.fromNullable(0.0, null).hashCode() == 0).isTrue();

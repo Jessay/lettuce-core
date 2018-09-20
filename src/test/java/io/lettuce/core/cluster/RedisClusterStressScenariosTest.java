@@ -23,6 +23,10 @@ import java.util.Collections;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.runners.MethodSorters;
 
 import io.lettuce.TestClientResources;
@@ -58,19 +62,19 @@ public class RedisClusterStressScenariosTest extends AbstractTest {
     @Rule
     public ClusterRule clusterRule = new ClusterRule(clusterClient, AbstractClusterTest.port5, AbstractClusterTest.port6);
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClient() {
         client = RedisClient.create(TestClientResources.get(), RedisURI.Builder.redis(host, AbstractClusterTest.port5).build());
         clusterClient = RedisClusterClient.create(TestClientResources.get(),
                 Collections.singletonList(RedisURI.Builder.redis(host, AbstractClusterTest.port5).build()));
     }
 
-    @AfterClass
+    @AfterAll
     public static void shutdownClient() {
         FastShutdown.shutdown(client);
     }
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
 
         ClusterSetup.setupMasterWithSlave(clusterRule);
@@ -86,7 +90,7 @@ public class RedisClusterStressScenariosTest extends AbstractTest {
 
     }
 
-    @After
+    @AfterEach
     public void after() {
         redis5.close();
 

@@ -16,6 +16,7 @@
 package io.lettuce.core.masterslave;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assume.assumeTrue;
 
 import java.util.Collections;
@@ -24,9 +25,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.*;
 import io.lettuce.core.api.async.RedisAsyncCommands;
@@ -51,7 +52,7 @@ public class MasterSlaveTest extends AbstractRedisClientTest {
     private RedisURI master;
     private RedisURI slave;
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
 
         RedisURI node1 = RedisURI.Builder.redis(host, TestSettings.port(3)).withDatabase(2).build();
@@ -87,7 +88,7 @@ public class MasterSlaveTest extends AbstractRedisClientTest {
         connection.setReadFrom(ReadFrom.SLAVE);
     }
 
-    @After
+    @AfterEach
     public void after() throws Exception {
 
         if (connectionToNode1 != null) {
@@ -108,7 +109,7 @@ public class MasterSlaveTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void testMasterSlaveReadFromMaster() throws Exception {
+    public void testMasterSlaveReadFromMaster() {
 
         connection.setReadFrom(ReadFrom.MASTER);
         String server = connection.sync().info("server");
@@ -121,7 +122,7 @@ public class MasterSlaveTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void testMasterSlaveReadFromSlave() throws Exception {
+    public void testMasterSlaveReadFromSlave() {
 
         String server = connection.sync().info("server");
 
@@ -134,7 +135,7 @@ public class MasterSlaveTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void testMasterSlaveReadWrite() throws Exception {
+    public void testMasterSlaveReadWrite() {
 
         RedisCommands<String, String> redisCommands = connection.sync();
         redisCommands.set(key, value);
@@ -144,7 +145,7 @@ public class MasterSlaveTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void testConnectToSlave() throws Exception {
+    public void testConnectToSlave() {
 
         connection.close();
 
@@ -155,8 +156,8 @@ public class MasterSlaveTest extends AbstractRedisClientTest {
         sync.set(key, value);
     }
 
-    @Test(expected = RedisException.class)
-    public void noSlaveForRead() throws Exception {
+    @Test
+    public void noSlaveForRead() {
 
         connection.setReadFrom(new ReadFrom() {
             @Override
@@ -165,11 +166,11 @@ public class MasterSlaveTest extends AbstractRedisClientTest {
             }
         });
 
-        slaveCall(connection);
+        assertThatThrownBy(() -> slaveCall(connection)).isInstanceOf(RedisException.class);
     }
 
     @Test
-    public void masterSlaveConnectionShouldSetClientName() throws Exception {
+    public void masterSlaveConnectionShouldSetClientName() {
 
         assertThat(connection.sync().clientGetname()).isEqualTo(masterURI.getClientName());
         connection.sync().quit();
@@ -179,7 +180,7 @@ public class MasterSlaveTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void testConnectionCount() throws Exception {
+    public void testConnectionCount() {
 
         MasterSlaveConnectionProvider connectionProvider = getConnectionProvider();
 
@@ -190,7 +191,7 @@ public class MasterSlaveTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void testReconfigureTopology() throws Exception {
+    public void testReconfigureTopology() {
         MasterSlaveConnectionProvider connectionProvider = getConnectionProvider();
 
         slaveCall(connection);

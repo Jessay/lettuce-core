@@ -29,6 +29,10 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.util.SocketUtils;
 import org.springframework.util.StopWatch;
 
@@ -55,7 +59,7 @@ public class AsyncConnectionProviderTest {
 
     private AsyncConnectionProvider<ConnectionKey, StatefulRedisConnection<String, String>, ConnectionFuture<StatefulRedisConnection<String, String>>> sut;
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() {
 
         RedisURI redisURI = RedisURI.create(TestSettings.host(), 1);
@@ -65,7 +69,7 @@ public class AsyncConnectionProviderTest {
         redisClient.setOptions(ClusterClientOptions.create());
     }
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
 
         serverSocket = new ServerSocket(SocketUtils.findAvailableTcpPort(), 1);
@@ -89,12 +93,12 @@ public class AsyncConnectionProviderTest {
         });
     }
 
-    @After
+    @AfterEach
     public void after() throws Exception {
         serverSocket.close();
     }
 
-    @AfterClass
+    @AfterAll
     public static void afterClass() {
         redisClient.shutdown();
     }

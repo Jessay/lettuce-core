@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.Duration;
 import java.util.concurrent.*;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import io.lettuce.ConnectionTestUtil;
@@ -42,7 +42,7 @@ public class ConnectionFailureTest extends AbstractRedisClientTest {
      *
      * @throws Exception
      */
-    @Test(timeout = 10000)
+    @Test
     public void pingBeforeConnectFails() throws Exception {
 
         client.setOptions(ClientOptions.builder().pingBeforeActivateConnection(true).build());
@@ -70,7 +70,7 @@ public class ConnectionFailureTest extends AbstractRedisClientTest {
      *
      * @throws Exception
      */
-    @Test(timeout = 12000)
+    @Test
     public void pingBeforeConnectFailOnReconnect() throws Exception {
 
         ClientOptions clientOptions = ClientOptions.builder().pingBeforeActivateConnection(true)
@@ -120,7 +120,7 @@ public class ConnectionFailureTest extends AbstractRedisClientTest {
      *
      * @throws Exception
      */
-    @Test(timeout = 120000)
+    @Test
     public void pingBeforeConnectFailOnReconnectShouldSendEvents() throws Exception {
 
         client.setOptions(ClientOptions.builder().pingBeforeActivateConnection(true).suspendReconnectOnProtocolFailure(false)
@@ -167,7 +167,7 @@ public class ConnectionFailureTest extends AbstractRedisClientTest {
      *
      * @throws Exception
      */
-    @Test(timeout = 10000)
+    @Test
     public void cancelCommandsOnReconnectFailure() throws Exception {
 
         client.setOptions(ClientOptions.builder().pingBeforeActivateConnection(true).cancelCommandsOnReconnectFailure(true)

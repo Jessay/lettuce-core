@@ -20,7 +20,7 @@ import static org.junit.Assert.fail;
 
 import java.util.concurrent.Future;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.ScanArgs;
 import io.lettuce.core.SetArgs;

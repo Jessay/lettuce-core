@@ -15,10 +15,12 @@
  */
 package io.lettuce.core.cluster;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.TestClientResources;
 import io.lettuce.core.FastShutdown;
@@ -36,95 +38,104 @@ public class RedisClusterClientFactoryTest {
     private static final List<RedisURI> REDIS_URIS = LettuceLists.newList(REDIS_URI);
 
     @Test
-    public void withStringUri() throws Exception {
+    public void withStringUri() {
         FastShutdown.shutdown(RedisClusterClient.create(TestClientResources.get(), URI));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void withStringUriNull() throws Exception {
-        RedisClusterClient.create((String) null);
+    @Test
+    public void withStringUriNull() {
+        assertThatThrownBy(() -> RedisClusterClient.create((String) null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void withUri() throws Exception {
+    public void withUri() {
         FastShutdown.shutdown(RedisClusterClient.create(REDIS_URI));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void withUriUri() throws Exception {
-        RedisClusterClient.create((RedisURI) null);
+    @Test
+    public void withUriUri() {
+        assertThatThrownBy(() -> RedisClusterClient.create((RedisURI) null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void withUriIterable() throws Exception {
+    public void withUriIterable() {
         FastShutdown.shutdown(RedisClusterClient.create(LettuceLists.newList(REDIS_URI)));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void withUriIterableNull() throws Exception {
-        RedisClusterClient.create((Iterable<RedisURI>) null);
+    @Test
+    public void withUriIterableNull() {
+        assertThatThrownBy(() -> RedisClusterClient.create((Iterable<RedisURI>) null)).isInstanceOf(
+                IllegalArgumentException.class);
     }
 
     @Test
-    public void clientResourcesWithStringUri() throws Exception {
+    public void clientResourcesWithStringUri() {
         FastShutdown.shutdown(RedisClusterClient.create(TestClientResources.get(), URI));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void clientResourcesWithStringUriNull() throws Exception {
-        RedisClusterClient.create(TestClientResources.get(), (String) null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void clientResourcesNullWithStringUri() throws Exception {
-        RedisClusterClient.create(null, URI);
+    @Test
+    public void clientResourcesWithStringUriNull() {
+        assertThatThrownBy(() -> RedisClusterClient.create(TestClientResources.get(), (String) null)).isInstanceOf(
+                IllegalArgumentException.class);
     }
 
     @Test
-    public void clientResourcesWithUri() throws Exception {
+    public void clientResourcesNullWithStringUri() {
+        assertThatThrownBy(() -> RedisClusterClient.create(null, URI)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void clientResourcesWithUri() {
         FastShutdown.shutdown(RedisClusterClient.create(TestClientResources.get(), REDIS_URI));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void clientResourcesWithUriNull() throws Exception {
-        RedisClusterClient.create(TestClientResources.get(), (RedisURI) null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void clientResourcesWithUriUri() throws Exception {
-        RedisClusterClient.create(null, REDIS_URI);
+    @Test
+    public void clientResourcesWithUriNull() {
+        assertThatThrownBy(() -> RedisClusterClient.create(TestClientResources.get(), (RedisURI) null)).isInstanceOf(
+                IllegalArgumentException.class);
     }
 
     @Test
-    public void clientResourcesWithUriIterable() throws Exception {
+    public void clientResourcesWithUriUri() {
+        assertThatThrownBy(() -> RedisClusterClient.create(null, REDIS_URI)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void clientResourcesWithUriIterable() {
         FastShutdown.shutdown(RedisClusterClient.create(TestClientResources.get(), LettuceLists.newList(REDIS_URI)));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void clientResourcesWithUriIterableNull() throws Exception {
-        RedisClusterClient.create(TestClientResources.get(), (Iterable<RedisURI>) null);
+    @Test
+    public void clientResourcesWithUriIterableNull() {
+        assertThatThrownBy(() -> RedisClusterClient.create(TestClientResources.get(), (Iterable<RedisURI>) null)).isInstanceOf(
+                IllegalArgumentException.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void clientResourcesNullWithUriIterable() throws Exception {
-        RedisClusterClient.create(null, REDIS_URIS);
+    @Test
+    public void clientResourcesNullWithUriIterable() {
+        assertThatThrownBy(() -> RedisClusterClient.create(null, REDIS_URIS)).isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void clientWithDifferentSslSettings() throws Exception {
-        RedisClusterClient.create(Arrays.asList(RedisURI.create("redis://host1"), RedisURI.create("redis+ssl://host1")));
+    @Test
+    public void clientWithDifferentSslSettings() {
+        assertThatThrownBy(
+                () -> RedisClusterClient.create(Arrays.asList(RedisURI.create("redis://host1"),
+                        RedisURI.create("redis+ssl://host1")))).isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void clientWithDifferentTlsSettings() throws Exception {
-        RedisClusterClient.create(Arrays.asList(RedisURI.create("rediss://host1"), RedisURI.create("redis+tls://host1")));
+    @Test
+    public void clientWithDifferentTlsSettings() {
+        assertThatThrownBy(
+                () -> RedisClusterClient.create(Arrays.asList(RedisURI.create("rediss://host1"),
+                        RedisURI.create("redis+tls://host1")))).isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void clientWithDifferentVerifyPeerSettings() throws Exception {
+    @Test
+    public void clientWithDifferentVerifyPeerSettings() {
         RedisURI redisURI = RedisURI.create("rediss://host1");
         redisURI.setVerifyPeer(false);
 
-        RedisClusterClient.create(Arrays.asList(redisURI, RedisURI.create("rediss://host1")));
+        assertThatThrownBy(() -> RedisClusterClient.create(Arrays.asList(redisURI, RedisURI.create("rediss://host1"))))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }

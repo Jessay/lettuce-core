@@ -19,9 +19,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.sync.RedisCommands;
@@ -42,7 +42,7 @@ public class PubSubConnectionTest extends AbstractClusterTest {
     private StatefulRedisClusterPubSubConnection<String, String> pubSubConnection;
     private StatefulRedisClusterPubSubConnection<String, String> pubSubConnection2;
 
-    @Before
+    @BeforeEach
     public void openPubSubConnection() {
         connection = clusterClient.connect();
         pubSubConnection = clusterClient.connectPubSub();
@@ -50,7 +50,7 @@ public class PubSubConnectionTest extends AbstractClusterTest {
 
     }
 
-    @After
+    @AfterEach
     public void closePubSubConnection() {
         connection.close();
         pubSubConnection.close();

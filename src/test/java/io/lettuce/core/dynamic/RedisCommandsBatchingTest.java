@@ -20,7 +20,7 @@ import static org.assertj.core.api.Fail.fail;
 
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.AbstractRedisClientTest;
 import io.lettuce.core.LettuceFutures;

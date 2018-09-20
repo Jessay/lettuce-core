@@ -16,10 +16,11 @@
 package io.lettuce.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.fail;
 
 import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -75,14 +76,14 @@ public class ConnectionCommandTest extends AbstractRedisClientTest {
         assertThat(redis.get(key)).isNull();
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void authNull()  {
-        redis.auth(null);
+        assertThatThrownBy(() -> redis.auth(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void authEmpty()  {
-        redis.auth("");
+        assertThatThrownBy(() -> redis.auth("")).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test

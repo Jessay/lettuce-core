@@ -16,13 +16,14 @@
 package io.lettuce.core.output;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
@@ -66,9 +67,9 @@ public class ListOutputTest {
 
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void settingEmptySubscriberShouldFail() {
-        streamingOutput.setSubscriber(null);
+        assertThatThrownBy(() -> streamingOutput.setSubscriber(null)).isInstanceOf(IllegalArgumentException. class);
     }
 
     @Test
@@ -77,9 +78,9 @@ public class ListOutputTest {
         assertThat(streamingOutput.getSubscriber()).isNotNull().isInstanceOf(ListSubscriber.class);
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void setIntegerShouldFail() {
-        commandOutput.set(123L);
+        assertThatThrownBy(() -> commandOutput.set(123L)).isInstanceOf(IllegalStateException. class);
     }
 
     @Test

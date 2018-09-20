@@ -16,11 +16,12 @@
 package io.lettuce.core.resource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Jongyeol Choi
@@ -28,18 +29,20 @@ import org.junit.Test;
  */
 public class FullJitterDelayTest {
 
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldNotCreateIfLowerBoundIsNegative() throws Exception {
-        Delay.fullJitter(-1, 100, 1, TimeUnit.MILLISECONDS);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldNotCreateIfLowerBoundIsSameAsUpperBound() throws Exception {
-        Delay.fullJitter(100, 100, 1, TimeUnit.MILLISECONDS);
+    @Test
+    public void shouldNotCreateIfLowerBoundIsNegative() {
+        assertThatThrownBy(() -> Delay.fullJitter(-1, 100, 1, TimeUnit.MILLISECONDS)).isInstanceOf(
+                IllegalArgumentException.class);
     }
 
     @Test
-    public void negativeAttemptShouldReturnZero() throws Exception {
+    public void shouldNotCreateIfLowerBoundIsSameAsUpperBound() {
+        assertThatThrownBy(() -> Delay.fullJitter(100, 100, 1, TimeUnit.MILLISECONDS)).isInstanceOf(
+                IllegalArgumentException.class);
+    }
+
+    @Test
+    public void negativeAttemptShouldReturnZero() {
 
         Delay delay = Delay.fullJitter();
 
@@ -47,7 +50,7 @@ public class FullJitterDelayTest {
     }
 
     @Test
-    public void zeroShouldReturnZero() throws Exception {
+    public void zeroShouldReturnZero() {
 
         Delay delay = Delay.fullJitter();
 
@@ -55,7 +58,7 @@ public class FullJitterDelayTest {
     }
 
     @Test
-    public void testDefaultDelays() throws Exception {
+    public void testDefaultDelays() {
 
         Delay delay = Delay.fullJitter();
 

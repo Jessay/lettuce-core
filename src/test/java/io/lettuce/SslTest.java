@@ -18,6 +18,7 @@ package io.lettuce;
 import static io.lettuce.core.TestSettings.host;
 import static io.lettuce.core.TestSettings.sslPort;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.fail;
 import static org.junit.Assume.assumeTrue;
 
@@ -28,12 +29,11 @@ import java.security.cert.CertificateException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import org.junit.*;
+import org.junit.jupiter.api.*;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import io.lettuce.core.*;
@@ -86,7 +86,7 @@ public class SslTest extends AbstractTest {
 
     private static RedisClient redisClient;
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() {
 
         assumeTrue("Assume that stunnel runs on port 6443", Sockets.isOpen(host(), sslPort()));
@@ -95,12 +95,12 @@ public class SslTest extends AbstractTest {
         redisClient = RedisClient.create(TestClientResources.get());
     }
 
-    @Before
+    @BeforeEach
     public void before() {
         redisClient.setOptions(ClientOptions.create());
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
 
         ChannelGroup group = (ChannelGroup) ReflectionTestUtils.getField(redisClient, "channels");
@@ -108,7 +108,7 @@ public class SslTest extends AbstractTest {
         assertThat((Iterable) group).as("Test completed without connection cleanup").isEmpty();
     }
 
-    @AfterClass
+    @AfterAll
     public static void afterClass() {
         FastShutdown.shutdown(redisClient);
     }
@@ -159,7 +159,7 @@ public class SslTest extends AbstractTest {
         verifyConnection(URI_CLIENT_CERT_AUTH);
     }
 
-    @Test(expected = RedisConnectionException.class)
+    @Test
     public void standaloneWithClientCertificatesWithoutKeystore() throws Exception {
 
         SslOptions sslOptions = SslOptions.builder() //
@@ -168,10 +168,10 @@ public class SslTest extends AbstractTest {
                 .build();
         setOptions(sslOptions);
 
-        verifyConnection(URI_CLIENT_CERT_AUTH);
+        assertThatThrownBy(() -> verifyConnection(URI_CLIENT_CERT_AUTH)).isInstanceOf(RedisConnectionException.class);
     }
 
-    @Test(expected = RedisConnectionException.class)
+    @Test
     public void standaloneWithJdkSslUsingTruststoreUrlWithWrongPassword() throws Exception {
 
         SslOptions sslOptions = SslOptions.builder() //
@@ -180,10 +180,10 @@ public class SslTest extends AbstractTest {
                 .build();
         setOptions(sslOptions);
 
-        verifyConnection(URI_VERIFY);
+        assertThatThrownBy(() -> verifyConnection(URI_VERIFY)).isInstanceOf(RedisConnectionException.class);
     }
 
-    @Test(expected = RedisConnectionException.class)
+    @Test
     public void standaloneWithJdkSslFailsWithWrongTruststore() {
 
         SslOptions sslOptions = SslOptions.builder() //
@@ -191,7 +191,7 @@ public class SslTest extends AbstractTest {
                 .build();
         setOptions(sslOptions);
 
-        verifyConnection(URI_VERIFY);
+        assertThatThrownBy(() -> verifyConnection(URI_VERIFY)).isInstanceOf(RedisConnectionException.class);
     }
 
     @Test
@@ -208,7 +208,7 @@ public class SslTest extends AbstractTest {
         verifyConnection(URI_VERIFY);
     }
 
-    @Test(expected = RedisConnectionException.class)
+    @Test
     public void standaloneWithOpenSslFailsWithWrongTruststore() {
 
         assumeTrue(OpenSsl.isAvailable());
@@ -218,7 +218,7 @@ public class SslTest extends AbstractTest {
                 .build();
         setOptions(sslOptions);
 
-        verifyConnection(URI_VERIFY);
+        assertThatThrownBy(() -> verifyConnection(URI_VERIFY)).isInstanceOf(RedisConnectionException.class);
     }
 
     @Test
@@ -239,11 +239,12 @@ public class SslTest extends AbstractTest {
         connection.getStatefulConnection().close();
     }
 
-    @Test(expected = RedisConnectionException.class)
+    @Test
     public void sslWithVerificationWillFail() {
 
         RedisURI redisUri = RedisURI.create("rediss://" + host() + ":" + sslPort());
-        redisClient.connect(redisUri).sync();
+
+        assertThatThrownBy(() -> redisClient.connect(redisUri).sync()).isInstanceOf(RedisConnectionException.class);
     }
 
     @Test
@@ -280,7 +281,7 @@ public class SslTest extends AbstractTest {
         verifyMasterSlaveConnection(MASTER_SLAVE_URIS_VERIFY);
     }
 
-    @Test(expected = RedisConnectionException.class)
+    @Test
     public void masterSlaveWithJdkSslUsingTruststoreUrlWithWrongPassword() throws Exception {
 
         SslOptions sslOptions = SslOptions.builder() //
@@ -289,10 +290,11 @@ public class SslTest extends AbstractTest {
                 .build();
         setOptions(sslOptions);
 
-        verifyMasterSlaveConnection(MASTER_SLAVE_URIS_VERIFY);
+        assertThatThrownBy(() -> verifyMasterSlaveConnection(MASTER_SLAVE_URIS_VERIFY)).isInstanceOf(
+                RedisConnectionException.class);
     }
 
-    @Test(expected = RedisConnectionException.class)
+    @Test
     public void masterSlaveWithJdkSslFailsWithWrongTruststore() {
 
         SslOptions sslOptions = SslOptions.builder() //
@@ -300,7 +302,8 @@ public class SslTest extends AbstractTest {
                 .build();
         setOptions(sslOptions);
 
-        verifyMasterSlaveConnection(MASTER_SLAVE_URIS_VERIFY);
+        assertThatThrownBy(() -> verifyMasterSlaveConnection(MASTER_SLAVE_URIS_VERIFY)).isInstanceOf(
+                RedisConnectionException.class);
     }
 
     @Test
@@ -321,9 +324,10 @@ public class SslTest extends AbstractTest {
         connection.getStatefulConnection().close();
     }
 
-    @Test(expected = RedisConnectionException.class)
+    @Test
     public void masterSlaveSslWithVerificationWillFail() {
-        MasterSlave.connect(redisClient, StringCodec.UTF8, MASTER_SLAVE_URIS_VERIFY);
+        assertThatThrownBy(() -> MasterSlave.connect(redisClient, StringCodec.UTF8, MASTER_SLAVE_URIS_VERIFY)).isInstanceOf(
+                RedisConnectionException.class);
     }
 
     @Test
@@ -338,7 +342,7 @@ public class SslTest extends AbstractTest {
         verifyMasterSlaveConnection(MASTER_SLAVE_URIS_WITH_ONE_INVALID);
     }
 
-    @Test(expected = RedisConnectionException.class)
+    @Test
     public void masterSlaveSslWithAllInvalidHostsWillFail() {
 
         SslOptions sslOptions = SslOptions.builder() //
@@ -347,7 +351,8 @@ public class SslTest extends AbstractTest {
                 .build();
         setOptions(sslOptions);
 
-        verifyMasterSlaveConnection(MASTER_SLAVE_URIS_WITH_ALL_INVALID);
+        assertThatThrownBy(() -> verifyMasterSlaveConnection(MASTER_SLAVE_URIS_WITH_ALL_INVALID)).isInstanceOf(
+                RedisConnectionException.class);
     }
 
     @Test
@@ -372,7 +377,7 @@ public class SslTest extends AbstractTest {
         connection2.getStatefulConnection().close();
     }
 
-    @Test(timeout = 10000)
+    @Test
     public void pubSubSslAndBreakConnection() throws Exception {
 
         RedisURI redisURI = RedisURI.Builder.redis(host(), sslPort()).withSsl(true).withVerifyPeer(false).build();

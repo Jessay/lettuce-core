@@ -15,9 +15,9 @@
  */
 package io.lettuce.core.cluster;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import reactor.test.StepVerifier;
 import io.lettuce.core.ScanArgs;
@@ -34,7 +34,7 @@ public class ScanStreamTest extends AbstractClusterTest {
     private StatefulRedisClusterConnection<String, String> connection;
     private RedisAdvancedClusterCommands<String, String> redis;
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
 
         this.connection = clusterClient.connect();
@@ -42,7 +42,7 @@ public class ScanStreamTest extends AbstractClusterTest {
         this.redis.flushall();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         this.connection.close();
     }

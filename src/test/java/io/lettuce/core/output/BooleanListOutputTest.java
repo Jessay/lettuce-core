@@ -16,10 +16,11 @@
 package io.lettuce.core.output;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.nio.ByteBuffer;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.codec.Utf8StringCodec;
 
@@ -31,12 +32,12 @@ public class BooleanListOutputTest {
     private BooleanListOutput<?, ?> sut = new BooleanListOutput<>(new Utf8StringCodec());
 
     @Test
-    public void defaultSubscriberIsSet() throws Exception {
+    public void defaultSubscriberIsSet() {
         assertThat(sut.getSubscriber()).isNotNull().isInstanceOf(ListSubscriber.class);
     }
 
     @Test
-    public void commandOutputCorrectlyDecoded() throws Exception {
+    public void commandOutputCorrectlyDecoded() {
 
         sut.multi(3);
         sut.set(1L);
@@ -46,8 +47,8 @@ public class BooleanListOutputTest {
         assertThat(sut.get()).contains(true, false, false);
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void setByteNotImplemented() throws Exception {
-        sut.set(ByteBuffer.wrap("4.567".getBytes()));
+    @Test
+    public void setByteNotImplemented() {
+        assertThatThrownBy(() -> sut.set(ByteBuffer.wrap("4.567".getBytes()))).isInstanceOf(IllegalStateException.class);
     }
 }

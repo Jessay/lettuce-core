@@ -16,16 +16,19 @@
 package io.lettuce.core.dynamic;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
 import java.util.concurrent.Future;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import io.lettuce.core.api.StatefulRedisConnection;
@@ -37,7 +40,7 @@ import io.lettuce.core.dynamic.output.CommandOutputFactoryResolver;
 /**
  * @author Mark Paluch
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class BatchExecutableCommandLookupStrategyTest {
 
     @Mock
@@ -53,7 +56,7 @@ public class BatchExecutableCommandLookupStrategyTest {
 
     private BatchExecutableCommandLookupStrategy sut;
 
-    @Before
+    @BeforeEach
     public void before() {
         sut = new BatchExecutableCommandLookupStrategy(Collections.singletonList(StringCodec.UTF8), outputFactoryResolver,
                 CommandMethodVerifier.NONE, Batcher.NONE, connection);
@@ -77,14 +80,16 @@ public class BatchExecutableCommandLookupStrategyTest {
         assertThat(result).isInstanceOf(BatchExecutableCommand.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldNotAllowTimeoutParameter() throws Exception {
-        sut.resolveCommandMethod(getMethod("withTimeout", String.class, Timeout.class), metadata);
+    @Test
+    public void shouldNotAllowTimeoutParameter()  {
+        assertThatThrownBy(() -> sut.resolveCommandMethod(getMethod("withTimeout", String.class, Timeout.class), metadata))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldNotAllowSynchronousReturnTypes() throws Exception {
-        sut.resolveCommandMethod(getMethod("withReturnType"), metadata);
+    @Test
+    public void shouldNotAllowSynchronousReturnTypes() {
+        assertThatThrownBy(() -> sut.resolveCommandMethod(getMethod("withReturnType"), metadata)).isInstanceOf(
+                IllegalArgumentException.class);
     }
 
     private CommandMethod getMethod(String name, Class<?>... parameterTypes) throws NoSuchMethodException {

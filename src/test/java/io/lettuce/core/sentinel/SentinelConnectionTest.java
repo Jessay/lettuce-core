@@ -22,9 +22,9 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.TestClientResources;
 import io.lettuce.Wait;
@@ -43,13 +43,13 @@ public class SentinelConnectionTest extends AbstractSentinelTest {
     private StatefulRedisSentinelConnection<String, String> connection;
     private RedisSentinelAsyncCommands<String, String> sentinelAsync;
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClient() {
         sentinelClient = RedisClient.create(TestClientResources.get(), RedisURI.Builder
                 .sentinel(TestSettings.host(), MASTER_ID).build());
     }
 
-    @Before
+    @BeforeEach
     public void openConnection() {
         connection = sentinelClient.connectSentinel();
         sentinel = connection.sync();

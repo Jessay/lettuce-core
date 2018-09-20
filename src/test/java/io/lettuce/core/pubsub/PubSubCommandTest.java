@@ -17,7 +17,6 @@ package io.lettuce.core.pubsub;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Fail.fail;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.junit.Assert.assertThat;
 
@@ -27,9 +26,9 @@ import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.TestClientResources;
 import io.lettuce.Wait;
@@ -54,7 +53,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
     private String pattern = "channel*";
     private String message = "msg!";
 
-    @Before
+    @BeforeEach
     public void openPubSubConnection() {
         pubsub = client.connectPubSub().async();
         pubsub.getStatefulConnection().addListener(this);
@@ -64,7 +63,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
         counts = LettuceFactories.newBlockingQueue();
     }
 
-    @After
+    @AfterEach
     public void closePubSubConnection() {
         pubsub.getStatefulConnection().close();
     }
@@ -105,7 +104,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
         };
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void message() throws Exception {
         pubsub.subscribe(channel);
         assertThat(channels.take()).isEqualTo(channel);
@@ -115,7 +114,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
         assertThat(messages.take()).isEqualTo(message);
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void pipelinedMessage() throws Exception {
         pubsub.subscribe(channel);
         assertThat(channels.take()).isEqualTo(channel);
@@ -134,7 +133,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
         connection.getStatefulConnection().close();
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void pmessage() throws Exception {
         pubsub.psubscribe(pattern).await(1, TimeUnit.MINUTES);
         assertThat(patterns.take()).isEqualTo(pattern);
@@ -150,7 +149,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
         assertThat(messages.take()).isEqualTo("msg 2!");
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void pipelinedSubscribe() throws Exception {
 
         pubsub.setAutoFlushCommands(false);
@@ -168,7 +167,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
 
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void psubscribe() throws Exception {
         RedisFuture<Void> psubscribe = pubsub.psubscribe(pattern);
         assertThat(psubscribe.get()).isNull();
@@ -180,7 +179,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
         assertThat((long) counts.take()).isEqualTo(1);
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void psubscribeWithListener() throws Exception {
         RedisFuture<Void> psubscribe = pubsub.psubscribe(pattern);
         final List<Object> listener = new ArrayList<>();
@@ -193,10 +192,9 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
         assertThat(listener).hasSize(1);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void pubsubEmptyChannels() {
-        pubsub.subscribe();
-        fail("Missing IllegalArgumentException: channels must not be empty");
+        assertThatThrownBy(() -> pubsub.subscribe()).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -252,14 +250,14 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
 
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void subscribe() throws Exception {
         pubsub.subscribe(channel);
         assertThat(channels.take()).isEqualTo(channel);
         assertThat((long) counts.take()).isEqualTo(1);
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void unsubscribe() throws Exception {
         pubsub.unsubscribe(channel).get();
         assertThat(channels.take()).isEqualTo(channel);
@@ -287,7 +285,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
         assertThat(connection.isOpen()).isFalse();
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void utf8Channel() throws Exception {
         String channel = "channelλ";
         String message = "αβγ";
@@ -300,7 +298,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
         assertThat(messages.take()).isEqualTo(message);
     }
 
-    @Test(timeout = 10000)
+    @Test
     public void resubscribeChannelsOnReconnect() throws Exception {
         pubsub.subscribe(channel);
         assertThat(channels.take()).isEqualTo(channel);
@@ -318,7 +316,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
         assertThat(messages.take()).isEqualTo(message);
     }
 
-    @Test(timeout = 10000)
+    @Test
     public void resubscribePatternsOnReconnect() throws Exception {
         pubsub.psubscribe(pattern);
         assertThat(patterns.take()).isEqualTo(pattern);
@@ -336,7 +334,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
         assertThat(messages.take()).isEqualTo(message);
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void adapter() throws Exception {
         final BlockingQueue<Long> localCounts = LettuceFactories.newBlockingQueue();
 
@@ -367,7 +365,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
         assertThat((long) localCounts.take()).isEqualTo(0L);
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void removeListener() throws Exception {
         pubsub.subscribe(channel);
         assertThat(channels.take()).isEqualTo(channel);

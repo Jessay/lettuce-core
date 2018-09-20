@@ -15,8 +15,8 @@
  */
 package io.lettuce.core;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.TestClientResources;
 import io.lettuce.core.cluster.RedisClusterClient;
@@ -32,14 +32,14 @@ public class AllTheAPIsTest {
     private static RedisClusterClient clusterClient;
     private static int clusterPort;
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() throws Exception {
         clusterPort = TestSettings.port(900);
         clusterClient = RedisClusterClient.create(
                 TestClientResources.get(), RedisURI.Builder.redis(TestSettings.host(), clusterPort).build());
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void afterClass() throws Exception {
         if (clusterClient != null) {
             FastShutdown.shutdown(clusterClient);

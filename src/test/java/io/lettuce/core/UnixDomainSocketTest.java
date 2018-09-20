@@ -25,10 +25,10 @@ import java.util.Locale;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.TestClientResources;
 import io.lettuce.core.api.StatefulRedisConnection;
@@ -53,12 +53,12 @@ public class UnixDomainSocketTest {
     private String key = "key";
     private String value = "value";
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClient() {
         sentinelClient = getRedisSentinelClient();
     }
 
-    @AfterClass
+    @AfterAll
     public static void shutdownClient() {
         FastShutdown.shutdown(sentinelClient);
     }

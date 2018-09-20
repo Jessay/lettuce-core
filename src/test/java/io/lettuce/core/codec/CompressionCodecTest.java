@@ -16,11 +16,13 @@
 package io.lettuce.core.codec;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mark Paluch
@@ -66,17 +68,18 @@ public class CompressionCodecTest {
         assertThat(s).isEqualTo(key);
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void wrongCompressionTypeOnDecode() throws Exception {
         RedisCodec<String, String> sut = CompressionCodec.valueCompressor(new Utf8StringCodec(),
                 CompressionCodec.CompressionType.DEFLATE);
 
-        sut.decodeValue(ByteBuffer.wrap(keyGzipBytes));
+        assertThatThrownBy(() -> sut.decodeValue(ByteBuffer.wrap(keyGzipBytes)))
+                .isInstanceOf(IllegalStateException.class);
     }
 
     private String toString(ByteBuffer buffer) throws IOException {
         byte[] bytes = toBytes(buffer);
-        return new String(bytes, "UTF-8");
+        return new String(bytes, StandardCharsets.UTF_8);
     }
 
     private byte[] toBytes(ByteBuffer buffer) {

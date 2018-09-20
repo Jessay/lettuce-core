@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.KeysAndValues;
 import io.lettuce.core.KeyValue;
@@ -43,14 +43,14 @@ public class ScanIteratorTest extends AbstractClusterTest {
     private StatefulRedisClusterConnection<String, String> connection;
     private RedisAdvancedClusterCommands<String, String> redis;
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
 
         this.connection = clusterClient.connect();
         this.redis = this.connection.sync();
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         this.connection.close();
     }

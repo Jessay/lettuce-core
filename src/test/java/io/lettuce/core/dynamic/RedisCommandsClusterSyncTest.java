@@ -20,7 +20,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.Duration;
 import java.util.List;
 
-import org.junit.*;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 
 import io.lettuce.TestClientResources;
 import io.lettuce.core.AbstractTest;
@@ -51,23 +56,23 @@ public class RedisCommandsClusterSyncTest extends AbstractTest {
 
     private StatefulRedisClusterConnection<String, String> connection;
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClusterClient() {
         clusterClient = RedisClusterClient.create(TestClientResources.get(),
                 LettuceLists.unmodifiableList(RedisURI.Builder.redis(host, port1).build()));
     }
 
-    @AfterClass
+    @AfterAll
     public static void shutdownClusterClient() {
         FastShutdown.shutdown(clusterClient);
     }
 
-    @Before
+    @BeforeEach
     public void before() {
         connection = clusterClient.connect();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         connection.close();
     }

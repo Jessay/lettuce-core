@@ -24,11 +24,13 @@ import static org.mockito.Mockito.when;
 import java.util.Queue;
 import java.util.concurrent.ExecutionException;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import io.lettuce.core.ClientOptions;
@@ -45,7 +47,7 @@ import io.lettuce.core.resource.ClientResources;
 /**
  * @author Mark Paluch
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ClusterNodeEndpointTest {
 
     private AsyncCommand<String, String, String> command = new AsyncCommand<>(new Command<>(CommandType.APPEND,
@@ -64,7 +66,7 @@ public class ClusterNodeEndpointTest {
 
     private ClusterNodeEndpoint sut;
 
-    @Before
+    @BeforeEach
     public void before() {
 
         when(clientOptions.getRequestQueueSize()).thenReturn(1000);

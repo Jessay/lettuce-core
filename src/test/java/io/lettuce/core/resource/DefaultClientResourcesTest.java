@@ -16,6 +16,7 @@
 package io.lettuce.core.resource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -23,7 +24,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import reactor.test.StepVerifier;
 import io.lettuce.core.FastShutdown;
@@ -180,14 +181,15 @@ public class DefaultClientResourcesTest {
         assertThat(sut.shutdown(0, 0, TimeUnit.MILLISECONDS).get()).isTrue();
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void delayInstanceShouldRejectStatefulDelay() throws Exception {
+    @Test
+    public void delayInstanceShouldRejectStatefulDelay() {
 
-        DefaultClientResources.builder().reconnectDelay(Delay.decorrelatedJitter().get());
+        assertThatThrownBy(() -> DefaultClientResources.builder().reconnectDelay(Delay.decorrelatedJitter().get()))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void reconnectDelayCreatesNewForStatefulDelays() throws Exception {
+    public void reconnectDelayCreatesNewForStatefulDelays() {
 
         DefaultClientResources resources = DefaultClientResources.builder().reconnectDelay(Delay.decorrelatedJitter()).build();
 
@@ -200,7 +202,7 @@ public class DefaultClientResourcesTest {
     }
 
     @Test
-    public void reconnectDelayReturnsSameInstanceForStatelessDelays() throws Exception {
+    public void reconnectDelayReturnsSameInstanceForStatelessDelays() {
 
         DefaultClientResources resources = DefaultClientResources.builder().reconnectDelay(Delay.exponential()).build();
 

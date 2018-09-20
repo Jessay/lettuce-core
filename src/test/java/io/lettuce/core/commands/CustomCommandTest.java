@@ -16,11 +16,12 @@
 package io.lettuce.core.commands;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assume.assumeTrue;
 
 import java.util.Arrays;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.AbstractRedisClientTest;
 import io.lettuce.core.RedisCommandExecutionException;
@@ -54,11 +55,13 @@ public class CustomCommandTest extends AbstractRedisClientTest {
         assertThat(response).contains("connected_clients");
     }
 
-    @Test(expected = RedisCommandExecutionException.class)
+    @Test
     public void dispatchShouldFailForWrongDataType() {
 
         redis.hset(key, key, value);
-        redis.dispatch(CommandType.GET, new StatusOutput<>(utf8StringCodec), new CommandArgs<>(utf8StringCodec).addKey(key));
+        assertThatThrownBy(
+                () -> redis.dispatch(CommandType.GET, new StatusOutput<>(utf8StringCodec),
+                        new CommandArgs<>(utf8StringCodec).addKey(key))).isInstanceOf(RedisCommandExecutionException.class);
     }
 
     @Test

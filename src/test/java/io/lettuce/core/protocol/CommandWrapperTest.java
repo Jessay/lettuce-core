@@ -19,8 +19,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.codec.StringCodec;
@@ -35,7 +35,7 @@ public class CommandWrapperTest {
     protected RedisCodec<String, String> codec = StringCodec.UTF8;
     protected Command<String, String, String> sut;
 
-    @Before
+    @BeforeEach
     public final void createCommand() throws Exception {
 
         CommandOutput<String, String, String> output = new StatusOutput<>(codec);

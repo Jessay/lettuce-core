@@ -32,11 +32,13 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import io.lettuce.Futures;
 import io.lettuce.core.*;
@@ -55,7 +57,7 @@ import io.lettuce.core.resource.ClientResources;
 /**
  * @author Mark Paluch
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class PooledClusterConnectionProviderTest {
 
     public static final Utf8StringCodec CODEC = new Utf8StringCodec();
@@ -90,7 +92,7 @@ public class PooledClusterConnectionProviderTest {
 
     Partitions partitions = new Partitions();
 
-    @Before
+    @BeforeEach
     public void before() {
 
         nodeConnectionMock = (StatefulRedisConnection) channelHandlerMock;

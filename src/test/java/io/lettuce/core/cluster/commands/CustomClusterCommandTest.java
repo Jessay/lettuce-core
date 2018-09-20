@@ -16,13 +16,14 @@
 package io.lettuce.core.cluster.commands;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.Arrays;
 
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.TestClientResources;
 import io.lettuce.core.FastShutdown;
@@ -49,18 +50,18 @@ public class CustomClusterCommandTest extends AbstractClusterTest {
     private StatefulRedisClusterConnection<String, String> redisClusterConnection;
     private RedisAdvancedClusterCommands<String, String> redis;
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClient() {
         redisClusterClient = RedisClusterClient.create(TestClientResources.get(),
                 RedisURI.Builder.redis(TestSettings.host(), TestSettings.port(900)).build());
     }
 
-    @AfterClass
+    @AfterAll
     public static void closeClient() {
         FastShutdown.shutdown(redisClusterClient);
     }
 
-    @Before
+    @BeforeEach
     public void openConnection() {
         redisClusterConnection = redisClusterClient.connect();
         redis = redisClusterConnection.sync();
@@ -84,11 +85,13 @@ public class CustomClusterCommandTest extends AbstractClusterTest {
         assertThat(response).contains("connected_clients");
     }
 
-    @Test(expected = RedisCommandExecutionException.class)
+    @Test
     public void dispatchShouldFailForWrongDataType() {
 
         redis.hset(key, key, value);
-        redis.dispatch(CommandType.GET, new StatusOutput<>(utf8StringCodec), new CommandArgs<>(utf8StringCodec).addKey(key));
+        assertThatThrownBy(
+                () -> redis.dispatch(CommandType.GET, new StatusOutput<>(utf8StringCodec),
+                        new CommandArgs<>(utf8StringCodec).addKey(key))).isInstanceOf(RedisCommandExecutionException.class);
     }
 
     @Test

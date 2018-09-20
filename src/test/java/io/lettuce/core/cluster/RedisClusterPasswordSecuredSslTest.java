@@ -23,9 +23,9 @@ import static org.junit.Assume.assumeTrue;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.Sockets;
 import io.lettuce.TestClientResources;
@@ -51,7 +51,7 @@ public class RedisClusterPasswordSecuredSslTest extends AbstractTest {
             .withSsl(true).withVerifyPeer(false).build();
     public static RedisClusterClient redisClient = RedisClusterClient.create(TestClientResources.get(), redisURI);
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         assumeTrue("Assume that stunnel runs on port 7443", Sockets.isOpen(host(), CLUSTER_PORT_SSL_1));
         assumeTrue("Assume that stunnel runs on port 7444", Sockets.isOpen(host(), CLUSTER_PORT_SSL_2));
@@ -61,7 +61,7 @@ public class RedisClusterPasswordSecuredSslTest extends AbstractTest {
         assumeTrue("Assume that Redis runs on port 7481", Sockets.isOpen(host(), 7481));
     }
 
-    @AfterClass
+    @AfterAll
     public static void afterClass() {
         FastShutdown.shutdown(redisClient);
     }

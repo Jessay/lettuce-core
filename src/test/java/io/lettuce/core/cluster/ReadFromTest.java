@@ -16,13 +16,14 @@
 package io.lettuce.core.cluster;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.ReadFrom;
 import io.lettuce.core.cluster.models.partitions.Partitions;
@@ -40,7 +41,7 @@ public class ReadFromTest {
     private RedisClusterNode master = new RedisClusterNode();
     private RedisClusterNode slave = new RedisClusterNode();
 
-    @Before
+    @BeforeEach
     public void before() {
 
         master.setFlags(Collections.singleton(RedisClusterNode.NodeFlag.MASTER));
@@ -82,14 +83,14 @@ public class ReadFromTest {
         assertThat(result).hasSize(3).containsExactly(nearest, master, slave);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void valueOfNull() {
-        ReadFrom.valueOf(null);
+        assertThatThrownBy(() -> ReadFrom.valueOf(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void valueOfUnknown() {
-        ReadFrom.valueOf("unknown");
+        assertThatThrownBy(() -> ReadFrom.valueOf("unknown")).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test

@@ -16,6 +16,7 @@
 package io.lettuce.core.cluster;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assume.assumeTrue;
 
 import java.util.*;
@@ -24,10 +25,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
@@ -56,26 +57,25 @@ public class AdvancedClusterReactiveTest extends AbstractClusterTest {
     private RedisAdvancedClusterReactiveCommands<String, String> commands;
     private RedisCommands<String, String> syncCommands;
 
-    @Before
+    @BeforeEach
     public void before() {
         commands = clusterClient.connect().reactive();
         syncCommands = ReactiveSyncInvocationHandler.sync(commands.getStatefulConnection());
     }
 
-    @After
+    @AfterEach
     public void after() {
         commands.getStatefulConnection().close();
     }
 
-    @Test(expected = RedisException.class)
+    @Test
     public void unknownNodeId() {
-
-        commands.getConnection("unknown");
+        assertThatThrownBy(() -> commands.getConnection("unknown")).isInstanceOf(RedisException.class);
     }
 
-    @Test(expected = RedisException.class)
+    @Test
     public void invalidHost() {
-        commands.getConnection("invalid-host", -1);
+        assertThatThrownBy(() -> commands.getConnection("invalid-host", -1)).isInstanceOf(RedisException.class);
     }
 
     @Test

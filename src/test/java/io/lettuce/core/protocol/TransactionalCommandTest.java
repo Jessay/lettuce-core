@@ -17,7 +17,7 @@ package io.lettuce.core.protocol;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.RedisException;
 import io.lettuce.core.codec.StringCodec;

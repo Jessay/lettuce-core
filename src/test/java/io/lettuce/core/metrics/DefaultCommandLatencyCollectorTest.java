@@ -21,9 +21,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Map;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import io.lettuce.core.metrics.DefaultCommandLatencyCollector.PauseDetectorWrapper;
@@ -33,7 +35,7 @@ import io.netty.channel.local.LocalAddress;
 /**
  * @author Mark Paluch
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class DefaultCommandLatencyCollectorTest {
 
     private DefaultCommandLatencyCollector sut;

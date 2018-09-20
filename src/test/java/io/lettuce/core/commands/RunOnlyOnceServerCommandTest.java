@@ -23,7 +23,7 @@ import static org.junit.Assume.assumeTrue;
 import java.util.Arrays;
 
 import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runners.MethodSorters;
 
 import io.lettuce.CanConnect;

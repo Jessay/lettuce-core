@@ -21,10 +21,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.TestClientResources;
 import io.lettuce.core.KillArgs;
@@ -41,13 +41,13 @@ public class SentinelServerCommandTest extends AbstractSentinelTest {
     @Rule
     public SentinelRule sentinelRule = new SentinelRule(sentinelClient, false, 26379, 26380);
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClient() {
         sentinelClient = RedisClient.create(TestClientResources.get(), RedisURI.Builder
                 .sentinel(TestSettings.host(), MASTER_ID).build());
     }
 
-    @Before
+    @BeforeEach
     public void openConnection() throws Exception {
         super.openConnection();
 

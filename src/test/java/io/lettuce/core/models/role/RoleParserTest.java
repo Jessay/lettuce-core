@@ -16,11 +16,12 @@
 package io.lettuce.core.models.role;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.internal.HostAndPort;
 import io.lettuce.core.internal.LettuceLists;
@@ -31,31 +32,29 @@ public class RoleParserTest {
     public static final String LOCALHOST = "127.0.0.1";
 
     @Test
-    public void testMappings() throws Exception {
+    public void testMappings() {
         assertThat(RoleParser.ROLE_MAPPING).hasSameSizeAs(RedisInstance.Role.values());
         assertThat(RoleParser.SLAVE_STATE_MAPPING).hasSameSizeAs(RedisSlaveInstance.State.values());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void emptyList() throws Exception {
-        RoleParser.parse(new ArrayList<>());
-
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void invalidFirstElement() throws Exception {
-        RoleParser.parse(LettuceLists.newList(new Object()));
-
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void invalidRole() throws Exception {
-        RoleParser.parse(LettuceLists.newList("blubb"));
-
+    @Test
+    public void emptyList() {
+        assertThatThrownBy(() -> RoleParser.parse(new ArrayList<>())).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void master() throws Exception {
+    public void invalidFirstElement() {
+        assertThatThrownBy(() -> RoleParser.parse(LettuceLists.newList(new Object()))).isInstanceOf(
+                IllegalArgumentException.class);
+    }
+
+    @Test
+    public void invalidRole() {
+        assertThatThrownBy(() -> RoleParser.parse(LettuceLists.newList("blubb"))).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void master() {
 
         List<List<String>> slaves = LettuceLists.newList(LettuceLists.newList(LOCALHOST, "9001", "" + REPLICATION_OFFSET_2),
                 LettuceLists.newList(LOCALHOST, "9002", "3129543"));
@@ -83,7 +82,7 @@ public class RoleParserTest {
     }
 
     @Test
-    public void slave() throws Exception {
+    public void slave() {
 
         List<?> input = LettuceLists.newList("slave", LOCALHOST, 9000L, "connected", REPLICATION_OFFSET_1);
 
@@ -102,7 +101,7 @@ public class RoleParserTest {
     }
 
     @Test
-    public void sentinel() throws Exception {
+    public void sentinel() {
 
         List<?> input = LettuceLists.newList("sentinel", LettuceLists.newList("resque-master", "html-fragments-master", "stats-master"));
 
@@ -120,7 +119,7 @@ public class RoleParserTest {
     }
 
     @Test
-    public void sentinelWithoutMasters() throws Exception {
+    public void sentinelWithoutMasters() {
 
         List<?> input = LettuceLists.newList("sentinel");
 
@@ -132,7 +131,7 @@ public class RoleParserTest {
     }
 
     @Test
-    public void sentinelMastersIsNotAList() throws Exception {
+    public void sentinelMastersIsNotAList() {
 
         List<?> input = LettuceLists.newList("sentinel", "");
 
@@ -144,7 +143,7 @@ public class RoleParserTest {
     }
 
     @Test
-    public void testModelTest() throws Exception {
+    public void testModelTest() {
 
         RedisMasterInstance master = new RedisMasterInstance();
         master.setReplicationOffset(1);

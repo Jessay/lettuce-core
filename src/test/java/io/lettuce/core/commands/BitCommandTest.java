@@ -21,12 +21,13 @@ import static io.lettuce.core.BitFieldArgs.typeWidthBasedOffset;
 import static io.lettuce.core.BitFieldArgs.unsigned;
 import static io.lettuce.core.BitFieldArgs.OverflowType.WRAP;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assume.assumeTrue;
 
 import java.nio.ByteBuffer;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.RedisConditions;
 import io.lettuce.core.AbstractRedisClientTest;
@@ -78,19 +79,19 @@ public class BitCommandTest extends AbstractRedisClientTest {
         assertThat(unsigned(63).isSigned()).isFalse();
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void bitfieldTypeSigned65() {
-        signed(65);
+        assertThatThrownBy(() -> signed(65)).isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void bitfieldTypeUnsigned64() {
-        unsigned(64);
+        assertThatThrownBy(() -> unsigned(64)).isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void bitfieldBuilderEmptyPreviousType() {
-        new BitFieldArgs().overflow(WRAP).get();
+        assertThatThrownBy(() -> new BitFieldArgs().overflow(WRAP).get()).isInstanceOf(IllegalStateException.class);
     }
 
     @Test

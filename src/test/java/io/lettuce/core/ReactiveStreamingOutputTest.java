@@ -21,10 +21,10 @@ import static org.junit.Assume.assumeTrue;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.rules.ExpectedException;
 
 import reactor.test.StepVerifier;
@@ -41,17 +41,15 @@ public class ReactiveStreamingOutputTest extends AbstractRedisClientTest {
 
     private RedisReactiveCommands<String, String> reactive;
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
     private StatefulRedisConnection<String, String> stateful;
 
-    @Before
+    @BeforeEach
     public void openReactiveConnection() {
         stateful = client.connect();
         reactive = stateful.reactive();
     }
 
-    @After
+    @AfterEach
     public void closeReactiveConnection() {
         reactive.getStatefulConnection().close();
     }

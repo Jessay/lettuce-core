@@ -16,11 +16,13 @@
  */
 package io.lettuce.core;
 
+import static io.lettuce.core.Value.just;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.Optional;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Will Glozer
@@ -79,9 +81,9 @@ public class KeyValueTest {
         assertThat(value.getKey()).isEqualTo("key");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void justShouldRejectEmptyValueFromValue() {
-        Value.just(null);
+        assertThatThrownBy(() -> just(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test

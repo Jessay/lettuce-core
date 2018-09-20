@@ -19,7 +19,7 @@ import static io.lettuce.core.Range.Boundary.excluding;
 import static io.lettuce.core.Range.Boundary.including;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mark Paluch

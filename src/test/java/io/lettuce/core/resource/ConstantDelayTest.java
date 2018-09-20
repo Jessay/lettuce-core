@@ -16,24 +16,25 @@
 package io.lettuce.core.resource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mark Paluch
  */
 public class ConstantDelayTest {
 
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldNotCreateIfDelayIsNegative() throws Exception {
-        Delay.constant(-1, TimeUnit.MILLISECONDS);
+    @Test
+    public void shouldNotCreateIfDelayIsNegative() {
+        assertThatThrownBy(() -> Delay.constant(-1, TimeUnit.MILLISECONDS)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void shouldCreateZeroDelay() throws Exception {
+    public void shouldCreateZeroDelay() {
 
         Delay delay = Delay.constant(0, TimeUnit.MILLISECONDS);
 
@@ -42,7 +43,7 @@ public class ConstantDelayTest {
     }
 
     @Test
-    public void shouldCreateConstantDelay() throws Exception {
+    public void shouldCreateConstantDelay() {
 
         Delay delay = Delay.constant(100, TimeUnit.MILLISECONDS);
 

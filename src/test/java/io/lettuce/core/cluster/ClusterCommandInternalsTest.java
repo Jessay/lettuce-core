@@ -22,11 +22,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import io.lettuce.core.RedisChannelWriter;
 import io.lettuce.core.codec.Utf8StringCodec;
@@ -35,7 +37,7 @@ import io.lettuce.core.protocol.AsyncCommand;
 import io.lettuce.core.protocol.Command;
 import io.lettuce.core.protocol.CommandType;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ClusterCommandInternalsTest {
 
     @Mock
@@ -45,7 +47,7 @@ public class ClusterCommandInternalsTest {
     private Command<String, String, String> command = new Command<String, String, String>(CommandType.TYPE,
             new StatusOutput<String, String>(new Utf8StringCodec()), null);
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         sut = new ClusterCommand<String, String, String>(command, writerMock, 1);
     }

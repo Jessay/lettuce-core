@@ -22,11 +22,13 @@ import static org.mockito.Mockito.when;
 import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import reactor.util.function.Tuples;
 import io.lettuce.core.RedisURI;
@@ -35,13 +37,13 @@ import io.lettuce.core.api.StatefulRedisConnection;
 /**
  * @author Mark Paluch
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ConnectionsTest {
 
     @Mock
     private StatefulRedisConnection<String, String> connection1;
 
-    @Before
+    @BeforeEach
     public void before() {
         when(connection1.closeAsync()).thenReturn(CompletableFuture.completedFuture(null));
     }

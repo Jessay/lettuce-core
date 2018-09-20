@@ -17,8 +17,8 @@ package io.lettuce.core.dynamic;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.reactivestreams.Publisher;
 
 import reactor.core.publisher.Flux;
@@ -33,7 +33,7 @@ public class ReactiveTypeAdaptersTest {
 
     ConversionService conversionService = new ConversionService();
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         ReactiveTypeAdapters.registerIn(conversionService);
     }

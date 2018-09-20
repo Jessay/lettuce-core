@@ -23,11 +23,13 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import io.lettuce.core.tracing.Tracing;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
@@ -45,7 +47,7 @@ import io.netty.channel.local.LocalAddress;
 /**
  * @author Mark Paluch
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ReactiveBackpressurePropagationTest {
 
     private CommandHandler commandHandler;
@@ -63,7 +65,7 @@ public class ReactiveBackpressurePropagationTest {
     @Mock
     private StatefulConnection statefulConnection;
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
 
         when(clientResources.commandLatencyCollector()).thenReturn(latencyCollector);

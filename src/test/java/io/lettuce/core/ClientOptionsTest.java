@@ -30,7 +30,7 @@ import java.util.Queue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -294,7 +294,7 @@ public class ClientOptionsTest extends AbstractRedisClientTest {
         connection.getStatefulConnection().close();
     }
 
-    @Test(timeout = 10000)
+    @Test
     public void pingBeforeConnect() {
 
         redis.set(key, value);
@@ -309,7 +309,7 @@ public class ClientOptionsTest extends AbstractRedisClientTest {
         }
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void pingBeforeConnectTimeout() throws Exception {
 
         client.setOptions(ClientOptions.builder().pingBeforeActivateConnection(true).build());
@@ -352,7 +352,7 @@ public class ClientOptionsTest extends AbstractRedisClientTest {
         };
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void pingBeforeConnectWithAuthenticationTimeout() {
 
         new WithPasswordRequired() {
@@ -495,7 +495,7 @@ public class ClientOptionsTest extends AbstractRedisClientTest {
         }
     }
 
-    @Test(timeout = 10000)
+    @Test
     public void pingBeforeConnectWithQueuedCommandsAndReconnect() throws Exception {
 
         StatefulRedisConnection<String, String> controlConnection = client.connect();
@@ -535,7 +535,7 @@ public class ClientOptionsTest extends AbstractRedisClientTest {
         redisConnection.close();
     }
 
-    @Test(timeout = 10000)
+    @Test
     public void authenticatedPingBeforeConnectWithQueuedCommandsAndReconnect() {
 
         new WithPasswordRequired() {

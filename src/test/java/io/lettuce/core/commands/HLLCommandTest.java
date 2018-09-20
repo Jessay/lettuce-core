@@ -16,18 +16,17 @@
 package io.lettuce.core.commands;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Fail.fail;
 
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.rules.ExpectedException;
 
 import io.lettuce.core.AbstractRedisClientTest;
 import io.lettuce.core.api.sync.RedisHLLCommands;
 
 public class HLLCommandTest extends AbstractRedisClientTest {
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
     private RedisHLLCommands<String, String> commands() {
         return redis;
@@ -41,9 +40,9 @@ public class HLLCommandTest extends AbstractRedisClientTest {
         assertThat(commands().pfadd(key, value)).isEqualTo(0);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void pfaddNoValues() {
-        commands().pfadd(key);
+        assertThatThrownBy(() -> commands().pfadd(key)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -77,9 +76,9 @@ public class HLLCommandTest extends AbstractRedisClientTest {
         assertThat(commands().pfcount("key8885")).isEqualTo(3);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void pfmergeNoKeys() {
-        commands().pfmerge(key);
+        assertThatThrownBy(() -> commands().pfmerge(key)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -90,9 +89,9 @@ public class HLLCommandTest extends AbstractRedisClientTest {
         assertThat(commands().pfcount(key, "key2")).isEqualTo(2);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void pfcountNoKeys() {
-        commands().pfcount();
+        assertThatThrownBy(() -> commands().pfcount()).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test

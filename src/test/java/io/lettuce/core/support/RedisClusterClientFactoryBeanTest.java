@@ -16,12 +16,13 @@
 package io.lettuce.core.support;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.net.URI;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.RedisURI;
 
@@ -32,18 +33,18 @@ public class RedisClusterClientFactoryBeanTest {
 
     private RedisClusterClientFactoryBean sut = new RedisClusterClientFactoryBean();
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void invalidUri() throws Exception {
 
         sut.setUri(URI.create("http://www.web.de"));
-        sut.afterPropertiesSet();
+        assertThatThrownBy(() -> sut.afterPropertiesSet()).isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void sentinelUri() throws Exception {
 
         sut.setUri(URI.create(RedisURI.URI_SCHEME_REDIS_SENTINEL + "://www.web.de"));
-        sut.afterPropertiesSet();
+        assertThatThrownBy(() -> sut.afterPropertiesSet()).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test

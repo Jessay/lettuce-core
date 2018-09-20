@@ -26,8 +26,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import io.lettuce.core.api.async.RedisAsyncCommands;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.ConnectionTestUtil;
 import io.lettuce.Delay;
@@ -56,7 +56,7 @@ public class AtMostOnceTest extends AbstractRedisClientTest {
     protected final Utf8StringCodec CODEC = new Utf8StringCodec();
     protected String key = "key";
 
-    @Before
+    @BeforeEach
     public void before() {
         client.setOptions(ClientOptions.builder().autoReconnect(false).build());
 

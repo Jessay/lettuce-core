@@ -15,7 +15,9 @@
  */
 package io.lettuce.core;
 
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.TestClientResources;
 import io.lettuce.core.resource.ClientResources;
@@ -29,67 +31,69 @@ public class RedisClientFactoryTest {
     private final static RedisURI REDIS_URI = RedisURI.create(URI);
 
     @Test
-    public void plain() throws Exception {
+    public void plain() {
         FastShutdown.shutdown(RedisClient.create());
     }
 
     @Test
-    public void withStringUri() throws Exception {
+    public void withStringUri() {
         FastShutdown.shutdown(RedisClient.create(URI));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void withStringUriNull() throws Exception {
-        RedisClient.create((String) null);
+    @Test
+    public void withStringUriNull() {
+        assertThatThrownBy(() -> RedisClient.create((String) null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void withUri() throws Exception {
+    public void withUri() {
         FastShutdown.shutdown(RedisClient.create(REDIS_URI));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void withUriNull() throws Exception {
-        RedisClient.create((RedisURI) null);
+    @Test
+    public void withUriNull() {
+        assertThatThrownBy(() -> RedisClient.create((RedisURI) null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void clientResources() throws Exception {
+    public void clientResources() {
         FastShutdown.shutdown(RedisClient.create(TestClientResources.get()));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void clientResourcesNull() throws Exception {
-        RedisClient.create((ClientResources) null);
+    @Test
+    public void clientResourcesNull() {
+        assertThatThrownBy(() -> RedisClient.create((ClientResources) null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void clientResourcesWithStringUri() throws Exception {
+    public void clientResourcesWithStringUri() {
         FastShutdown.shutdown(RedisClient.create(TestClientResources.get(), URI));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void clientResourcesWithStringUriNull() throws Exception {
-        RedisClient.create(TestClientResources.get(), (String) null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void clientResourcesNullWithStringUri() throws Exception {
-        RedisClient.create(null, URI);
+    @Test
+    public void clientResourcesWithStringUriNull() {
+        assertThatThrownBy(() -> RedisClient.create(TestClientResources.get(), (String) null)).isInstanceOf(
+                IllegalArgumentException.class);
     }
 
     @Test
-    public void clientResourcesWithUri() throws Exception {
+    public void clientResourcesNullWithStringUri() {
+        assertThatThrownBy(() -> RedisClient.create(null, URI)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void clientResourcesWithUri() {
         FastShutdown.shutdown(RedisClient.create(TestClientResources.get(),  REDIS_URI));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void clientResourcesWithUriNull() throws Exception {
-        RedisClient.create(TestClientResources.get(), (RedisURI) null);
+    @Test
+    public void clientResourcesWithUriNull() {
+        assertThatThrownBy(() -> RedisClient.create(TestClientResources.get(), (RedisURI) null)).isInstanceOf(
+                IllegalArgumentException.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void clientResourcesNullWithUri() throws Exception {
-        RedisClient.create(null, REDIS_URI);
+    @Test
+    public void clientResourcesNullWithUri() {
+        assertThatThrownBy(() -> RedisClient.create(null, REDIS_URI)).isInstanceOf(IllegalArgumentException.class);
     }
 }

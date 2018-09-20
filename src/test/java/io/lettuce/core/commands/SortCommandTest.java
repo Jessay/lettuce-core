@@ -18,7 +18,7 @@ package io.lettuce.core.commands;
 import static io.lettuce.core.SortArgs.Builder.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.AbstractRedisClientTest;
 import io.lettuce.core.ListStreamingAdapter;

@@ -15,6 +15,7 @@
  */
 package io.lettuce.core.resource;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.net.Inet4Address;
@@ -24,9 +25,9 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Properties;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mark Paluch
@@ -35,14 +36,14 @@ public class DirContextDnsResolverTest {
 
     DirContextDnsResolver resolver;
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
 
         System.getProperties().remove(DirContextDnsResolver.PREFER_IPV4_KEY);
         System.getProperties().remove(DirContextDnsResolver.PREFER_IPV6_KEY);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
 
         if (resolver != null) {
@@ -121,12 +122,12 @@ public class DirContextDnsResolverTest {
         assertThat(resolved[0]).isInstanceOf(Inet6Address.class);
     }
 
-    @Test(expected = UnknownHostException.class)
-    public void shouldFailWithUnknownHost() throws Exception {
+    @Test
+    public void shouldFailWithUnknownHost() {
 
         resolver = new DirContextDnsResolver("8.8.8.8");
 
-        resolver.resolve("unknown-domain-name");
+        assertThatThrownBy(() -> resolver.resolve("unknown-domain-name")).isInstanceOf(UnknownHostException.class);
     }
 
     @Test

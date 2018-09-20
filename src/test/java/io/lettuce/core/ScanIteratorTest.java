@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.KeysAndValues;
 
@@ -33,7 +33,7 @@ import io.lettuce.KeysAndValues;
 public class ScanIteratorTest extends AbstractRedisClientTest {
 
     @Test
-    public void scanShouldThrowNoSuchElementExceptionOnEmpty() throws Exception {
+    public void scanShouldThrowNoSuchElementExceptionOnEmpty() {
 
         redis.mset(KeysAndValues.MAP);
 
@@ -49,7 +49,7 @@ public class ScanIteratorTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void keysSinglePass() throws Exception {
+    public void keysSinglePass() {
 
         redis.mset(KeysAndValues.MAP);
 
@@ -67,7 +67,7 @@ public class ScanIteratorTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void keysMultiPass() throws Exception {
+    public void keysMultiPass() {
 
         redis.mset(KeysAndValues.MAP);
 
@@ -79,7 +79,7 @@ public class ScanIteratorTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void hscanShouldThrowNoSuchElementExceptionOnEmpty() throws Exception {
+    public void hscanShouldThrowNoSuchElementExceptionOnEmpty() {
 
         redis.mset(KeysAndValues.MAP);
 
@@ -96,7 +96,7 @@ public class ScanIteratorTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void hashSinglePass() throws Exception {
+    public void hashSinglePass() {
 
         redis.hmset(key, KeysAndValues.MAP);
 
@@ -115,7 +115,7 @@ public class ScanIteratorTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void hashMultiPass() throws Exception {
+    public void hashMultiPass() {
 
         redis.hmset(key, KeysAndValues.MAP);
 
@@ -128,7 +128,7 @@ public class ScanIteratorTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void sscanShouldThrowNoSuchElementExceptionOnEmpty() throws Exception {
+    public void sscanShouldThrowNoSuchElementExceptionOnEmpty() {
 
         redis.sadd(key, KeysAndValues.VALUES.toArray(new String[0]));
 
@@ -145,7 +145,7 @@ public class ScanIteratorTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void setSinglePass() throws Exception {
+    public void setSinglePass() {
 
         redis.sadd(key, KeysAndValues.KEYS.toArray(new String[0]));
 
@@ -164,7 +164,7 @@ public class ScanIteratorTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void setMultiPass() throws Exception {
+    public void setMultiPass() {
 
         redis.sadd(key, KeysAndValues.KEYS.toArray(new String[0]));
 
@@ -176,7 +176,7 @@ public class ScanIteratorTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void zscanShouldThrowNoSuchElementExceptionOnEmpty() throws Exception {
+    public void zscanShouldThrowNoSuchElementExceptionOnEmpty() {
 
         for (int i = 0; i < KeysAndValues.COUNT; i++) {
             redis.zadd(key, ScoredValue.just(i, KeysAndValues.KEYS.get(i)));
@@ -196,7 +196,7 @@ public class ScanIteratorTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void zsetSinglePass() throws Exception {
+    public void zsetSinglePass() {
 
         for (int i = 0; i < KeysAndValues.COUNT; i++) {
             redis.zadd(key, ScoredValue.just(i, KeysAndValues.KEYS.get(i)));
@@ -217,7 +217,7 @@ public class ScanIteratorTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void zsetMultiPass() throws Exception {
+    public void zsetMultiPass() {
 
         List<ScoredValue<String>> expected = new ArrayList<>();
         for (int i = 0; i < KeysAndValues.COUNT; i++) {

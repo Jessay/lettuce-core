@@ -25,12 +25,14 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.StatefulRedisConnection;
@@ -43,7 +45,7 @@ import io.netty.util.concurrent.DefaultThreadFactory;
 /**
  * @author Mark Paluch
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class MasterSlaveTopologyRefreshTest {
 
     private static final RedisMasterSlaveNode MASTER = new RedisMasterSlaveNode("localhost", 1, new RedisURI(),
@@ -65,7 +67,7 @@ public class MasterSlaveTopologyRefreshTest {
 
     TopologyProvider provider;
 
-    @Before
+    @BeforeEach
     public void before() {
 
         executorService = new ScheduledThreadPoolExecutor(1, new DefaultThreadFactory(getClass().getSimpleName(), true));
@@ -82,7 +84,7 @@ public class MasterSlaveTopologyRefreshTest {
         provider = () -> Arrays.asList(MASTER, SLAVE);
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         executorService.shutdown();
     }

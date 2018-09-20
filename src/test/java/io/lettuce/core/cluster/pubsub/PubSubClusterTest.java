@@ -21,9 +21,9 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.cluster.AbstractClusterTest;
@@ -48,7 +48,7 @@ public class PubSubClusterTest extends AbstractClusterTest {
     private StatefulRedisClusterPubSubConnection<String, String> pubSubConnection;
     private StatefulRedisPubSubConnection<String, String> pubSubConnection2;
 
-    @Before
+    @BeforeEach
     public void openPubSubConnection() {
 
         pubSubConnection = clusterClient.connectPubSub();
@@ -57,7 +57,7 @@ public class PubSubClusterTest extends AbstractClusterTest {
         pubSubConnection.addListener(connectionListener);
     }
 
-    @After
+    @AfterEach
     public void closePubSubConnection() {
         pubSubConnection.close();
         pubSubConnection2.close();

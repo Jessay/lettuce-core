@@ -23,10 +23,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.TestClientResources;
 import io.lettuce.core.*;
@@ -55,17 +55,17 @@ public class ClusterPartiallyDownTest extends AbstractTest {
 
     private RedisClusterClient redisClusterClient;
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() {
         clientResources = TestClientResources.get();
     }
 
-    @Before
+    @BeforeEach
     public void before() {
 
     }
 
-    @After
+    @AfterEach
     public void after() {
         redisClusterClient.shutdown();
     }

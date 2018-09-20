@@ -25,9 +25,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiFunction;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import io.lettuce.Wait;
@@ -63,7 +63,7 @@ public class TopologyRefreshTest extends AbstractTest {
     private RedisCommands<String, String> redis1;
     private RedisCommands<String, String> redis2;
 
-    @Before
+    @BeforeEach
     public void openConnection() {
         clusterClient = RedisClusterClient.create(client.getResources(), RedisURI.Builder
                 .redis(host, AbstractClusterTest.port1).build());
@@ -71,7 +71,7 @@ public class TopologyRefreshTest extends AbstractTest {
         redis2 = client.connect(RedisURI.Builder.redis(AbstractClusterTest.host, AbstractClusterTest.port2).build()).sync();
     }
 
-    @After
+    @AfterEach
     public void closeConnection() {
         redis1.getStatefulConnection().close();
         redis2.getStatefulConnection().close();

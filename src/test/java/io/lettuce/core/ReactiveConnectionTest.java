@@ -24,10 +24,10 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.rules.ExpectedException;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
@@ -44,17 +44,15 @@ public class ReactiveConnectionTest extends AbstractRedisClientTest {
 
     private RedisReactiveCommands<String, String> reactive;
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
     private StatefulRedisConnection<String, String> stateful;
 
-    @Before
+    @BeforeEach
     public void openReactiveConnection() {
         stateful = client.connect();
         reactive = stateful.reactive();
     }
 
-    @After
+    @AfterEach
     public void closeReactiveConnection() {
         reactive.getStatefulConnection().close();
     }

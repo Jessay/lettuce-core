@@ -16,6 +16,7 @@
 package io.lettuce.core.dynamic.codec;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -23,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.Range;
 import io.lettuce.core.codec.ByteArrayCodec;
@@ -87,11 +88,11 @@ public class AnnotationRedisCodecResolverTest {
         assertThat(codec).isInstanceOf(ByteArrayCodec.class);
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void resolutionShouldFail() {
 
         Method method = ReflectionUtils.findMethod(CommandMethods.class, "mixedTypes", String.class, byte[].class);
-        resolve(method);
+        assertThatThrownBy(() -> resolve(method)).isInstanceOf(IllegalStateException. class);
     }
 
     @Test

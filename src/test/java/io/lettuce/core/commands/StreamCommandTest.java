@@ -22,8 +22,8 @@ import static org.junit.Assume.assumeTrue;
 import java.time.Instant;
 import java.util.*;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.RedisConditions;
 import io.lettuce.core.*;
@@ -39,7 +39,7 @@ import io.lettuce.core.protocol.CommandArgs;
  */
 public class StreamCommandTest extends AbstractRedisClientTest {
 
-    @Before
+    @BeforeEach
     public void openConnection() throws Exception {
 
         super.openConnection();

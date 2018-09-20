@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.GeoCoordinates;
 import io.lettuce.core.ScoredValue;

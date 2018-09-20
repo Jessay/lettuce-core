@@ -33,14 +33,16 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import edu.umd.cs.mtc.MultithreadedTestCase;
@@ -56,7 +58,7 @@ import io.netty.channel.*;
 import io.netty.handler.codec.EncoderException;
 import io.netty.util.concurrent.ImmediateEventExecutor;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class DefaultEndpointTest {
 
     private Queue<RedisCommand<String, String, ?>> queue = LettuceFactories.newConcurrentQueue(1000);
@@ -80,7 +82,7 @@ public class DefaultEndpointTest {
 
     private ChannelPromise promise;
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() {
         LoggerContext ctx = (LoggerContext) LogManager.getContext();
         Configuration config = ctx.getConfiguration();
@@ -88,7 +90,7 @@ public class DefaultEndpointTest {
         loggerConfig.setLevel(Level.ALL);
     }
 
-    @AfterClass
+    @AfterAll
     public static void afterClass() {
         LoggerContext ctx = (LoggerContext) LogManager.getContext();
         Configuration config = ctx.getConfiguration();
@@ -96,7 +98,7 @@ public class DefaultEndpointTest {
         loggerConfig.setLevel(null);
     }
 
-    @Before
+    @BeforeEach
     public void before() {
 
         promise = new DefaultChannelPromise(channel);

@@ -15,9 +15,11 @@
  */
 package io.lettuce.core.resource;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.util.concurrent.Future;
@@ -40,11 +42,12 @@ public class DefaultEventLoopGroupProviderTest {
         shutdown2.get();
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void getAfterShutdown() throws Exception {
+
         DefaultEventLoopGroupProvider sut = new DefaultEventLoopGroupProvider(1);
 
         sut.shutdown(10, 10, TimeUnit.MILLISECONDS).get();
-        sut.allocate(NioEventLoopGroup.class);
+        assertThatThrownBy(() -> sut.allocate(NioEventLoopGroup.class)).isInstanceOf(IllegalStateException.class);
     }
 }

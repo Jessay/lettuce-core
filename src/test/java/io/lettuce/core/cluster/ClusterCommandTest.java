@@ -21,6 +21,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 
 import org.junit.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.runners.MethodSorters;
 
 import io.lettuce.TestClientResources;
@@ -49,7 +53,7 @@ public class ClusterCommandTest extends AbstractClusterTest {
 
     protected RedisClusterCommands<String, String> sync;
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClient() {
         client = RedisClient.create(TestClientResources.get(), RedisURI.Builder.redis(host, port1).build());
         clusterClient = RedisClusterClient.create(TestClientResources.get(),
@@ -57,13 +61,13 @@ public class ClusterCommandTest extends AbstractClusterTest {
 
     }
 
-    @AfterClass
+    @AfterAll
     public static void shutdownClient() {
         FastShutdown.shutdown(client);
         FastShutdown.shutdown(clusterClient);
     }
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
 
         clusterRule.getClusterClient().reloadPartitions();
@@ -74,7 +78,7 @@ public class ClusterCommandTest extends AbstractClusterTest {
 
     }
 
-    @After
+    @AfterEach
     public void after() {
         connection.close();
     }

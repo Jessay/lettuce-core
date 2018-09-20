@@ -20,10 +20,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.TestClientResources;
 import io.lettuce.core.FastShutdown;
@@ -43,18 +43,18 @@ public class StringClusterCommandTest extends StringCommandTest {
     private static RedisClusterClient redisClusterClient;
     private StatefulRedisClusterConnection<String, String> clusterConnection;
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClient() {
         redisClusterClient = RedisClusterClient.create(
                 TestClientResources.get(), RedisURI.Builder.redis(TestSettings.host(), TestSettings.port(900)).build());
     }
 
-    @AfterClass
+    @AfterAll
     public static void closeClient() {
         FastShutdown.shutdown(redisClusterClient);
     }
 
-    @Before
+    @BeforeEach
     public void openConnection() {
         redis = connect();
         ClusterTestUtil.flushDatabaseOfAllNodes(clusterConnection);

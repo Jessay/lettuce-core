@@ -16,6 +16,7 @@
 package io.lettuce.core.commands;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assume.assumeFalse;
@@ -29,7 +30,7 @@ import java.util.regex.Pattern;
 
 import org.junit.FixMethodOrder;
 import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runners.MethodSorters;
 
 import io.lettuce.RedisConditions;
@@ -329,9 +330,9 @@ public class ServerCommandTest extends AbstractRedisClientTest {
         redis.slaveofNoOne();
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void slaveofEmptyHost() {
-        redis.slaveof("", 0);
+        assertThatThrownBy(() -> redis.slaveof("", 0)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test

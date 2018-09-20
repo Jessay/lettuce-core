@@ -24,7 +24,7 @@ import java.time.Duration;
 import java.util.*;
 
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.rules.ExpectedException;
 
 import io.lettuce.RedisConditions;
@@ -35,9 +35,6 @@ import io.lettuce.core.*;
  * @author Mark Paluch
  */
 public class KeyCommandTest extends AbstractRedisClientTest {
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
     @Test
     public void del() {
@@ -217,9 +214,9 @@ public class KeyCommandTest extends AbstractRedisClientTest {
         assertThat(redis.get(key)).isEqualTo(value);
     }
 
-    @Test(expected = RedisException.class)
+    @Test
     public void renameNonexistentKey() {
-        redis.rename(key, key + "X");
+        assertThatThrownBy(() -> redis.rename(key, key + "X")).isInstanceOf(RedisException.class);
     }
 
     @Test
@@ -231,9 +228,9 @@ public class KeyCommandTest extends AbstractRedisClientTest {
         assertThat(redis.renamenx(key + "X", key)).isFalse();
     }
 
-    @Test(expected = RedisException.class)
+    @Test
     public void renamenxNonexistentKey() {
-        redis.renamenx(key, key + "X");
+        assertThatThrownBy(() -> redis.renamenx(key, key + "X")).isInstanceOf(RedisException.class);
     }
 
     @Test
@@ -335,16 +332,16 @@ public class KeyCommandTest extends AbstractRedisClientTest {
         assertThat(cursor.getKeys()).isEqualTo(list(key));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void scanFinishedCursor() {
         redis.set(key, value);
-        redis.scan(ScanCursor.FINISHED);
+        assertThatThrownBy(() -> redis.scan(ScanCursor.FINISHED)).isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void scanNullCursor() {
         redis.set(key, value);
-        redis.scan((ScanCursor) null);
+        assertThatThrownBy(() -> redis.scan((ScanCursor) null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test

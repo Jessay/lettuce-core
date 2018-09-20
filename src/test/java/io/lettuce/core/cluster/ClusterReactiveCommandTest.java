@@ -21,6 +21,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 
 import org.junit.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.runners.MethodSorters;
 
 import reactor.test.StepVerifier;
@@ -43,8 +47,8 @@ public class ClusterReactiveCommandTest extends AbstractClusterTest {
     protected RedisClusterReactiveCommands<String, String> reactive;
     protected RedisAsyncCommands<String, String> async;
 
-    @BeforeClass
-    public static void setupClient() throws Exception {
+    @BeforeAll
+    public static void setupClient()  {
         setupClusterClient();
         client = RedisClient.create(TestClientResources.get(), RedisURI.Builder.redis(host, port1).build());
         clusterClient = RedisClusterClient.create(TestClientResources.get(),
@@ -52,15 +56,15 @@ public class ClusterReactiveCommandTest extends AbstractClusterTest {
 
     }
 
-    @AfterClass
+    @AfterAll
     public static void shutdownClient() {
         shutdownClusterClient();
         FastShutdown.shutdown(client);
         FastShutdown.shutdown(clusterClient);
     }
 
-    @Before
-    public void before() throws Exception {
+    @BeforeEach
+    public void before()  {
 
         clusterRule.getClusterClient().reloadPartitions();
 
@@ -68,19 +72,19 @@ public class ClusterReactiveCommandTest extends AbstractClusterTest {
         reactive = async.getStatefulConnection().reactive();
     }
 
-    @After
-    public void after() throws Exception {
+    @AfterEach
+    public void after()  {
         async.getStatefulConnection().close();
     }
 
     @Test
-    public void testClusterBumpEpoch() throws Exception {
+    public void testClusterBumpEpoch()  {
         StepVerifier.create(reactive.clusterBumpepoch())
                 .consumeNextWith(actual -> assertThat(actual).matches("(BUMPED|STILL).*")).verifyComplete();
     }
 
     @Test
-    public void testClusterInfo() throws Exception {
+    public void testClusterInfo()  {
 
         StepVerifier.create(reactive.clusterInfo()).consumeNextWith(actual -> {
             assertThat(actual).contains("cluster_known_nodes:");
@@ -90,7 +94,7 @@ public class ClusterReactiveCommandTest extends AbstractClusterTest {
     }
 
     @Test
-    public void testClusterNodes() throws Exception {
+    public void testClusterNodes()  {
 
         StepVerifier.create(reactive.clusterNodes()).consumeNextWith(actual -> {
             assertThat(actual).contains("connected");
@@ -100,17 +104,17 @@ public class ClusterReactiveCommandTest extends AbstractClusterTest {
     }
 
     @Test
-    public void testClusterSlaves() throws Exception {
+    public void testClusterSlaves()  {
         StepVerifier.create(reactive.waitForReplication(1, 5)).expectNextCount(1).verifyComplete();
     }
 
     @Test
-    public void testAsking() throws Exception {
+    public void testAsking()  {
         StepVerifier.create(reactive.asking()).expectNext("OK").verifyComplete();
     }
 
     @Test
-    public void testClusterSlots() throws Exception {
+    public void testClusterSlots()  {
 
         List<Object> reply = reactive.clusterSlots().collectList().block();
         assertThat(reply.size()).isGreaterThan(1);
@@ -126,7 +130,7 @@ public class ClusterReactiveCommandTest extends AbstractClusterTest {
     }
 
     @Test
-    public void clusterSlaves() throws Exception {
+    public void clusterSlaves()  {
 
         String nodeId = getNodeId(async.getStatefulConnection().sync());
         List<String> result = reactive.clusterSlaves(nodeId).collectList().block();

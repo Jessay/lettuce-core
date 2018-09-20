@@ -22,10 +22,10 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.rules.ExpectedException;
 
 import io.lettuce.core.api.async.RedisAsyncCommands;
@@ -37,20 +37,17 @@ import io.lettuce.core.api.async.RedisAsyncCommands;
 public class AsyncConnectionTest extends AbstractRedisClientTest {
     private RedisAsyncCommands<String, String> async;
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
-    @Before
+    @BeforeEach
     public void openAsyncConnection() throws Exception {
         async = client.connect().async();
     }
 
-    @After
+    @AfterEach
     public void closeAsyncConnection() throws Exception {
         async.getStatefulConnection().close();
     }
 
-    @Test(timeout = 10000)
+    @Test
     public void multi() throws Exception {
         assertThat(async.multi().get()).isEqualTo("OK");
         Future<String> set = async.set(key, value);
@@ -65,7 +62,7 @@ public class AsyncConnectionTest extends AbstractRedisClientTest {
         assertThat(lrange.get()).isEqualTo(list("1", "2"));
     }
 
-    @Test(timeout = 10000)
+    @Test
     public void watch() throws Exception {
         assertThat(async.watch(key).get()).isEqualTo("OK");
 
@@ -79,7 +76,7 @@ public class AsyncConnectionTest extends AbstractRedisClientTest {
         assertThat(append.get()).isNull();
     }
 
-    @Test(timeout = 10000)
+    @Test
     public void futureListener() throws Exception {
 
         final List<Object> run = new ArrayList<>();
@@ -114,7 +111,7 @@ public class AsyncConnectionTest extends AbstractRedisClientTest {
 
     }
 
-    @Test(timeout = 1000)
+    @Test
     public void futureListenerCompleted() throws Exception {
 
         final List<Object> run = new ArrayList<>();
@@ -138,7 +135,7 @@ public class AsyncConnectionTest extends AbstractRedisClientTest {
         connection.getStatefulConnection().close();
     }
 
-    @Test(timeout = 500)
+    @Test
     public void discardCompletesFutures() throws Exception {
         async.multi();
         Future<String> set = async.set(key, value);
@@ -146,7 +143,7 @@ public class AsyncConnectionTest extends AbstractRedisClientTest {
         assertThat(set.get()).isNull();
     }
 
-    @Test(timeout = 10000)
+    @Test
     public void awaitAll() throws Exception {
         Future<String> get1 = async.get(key);
         Future<String> set = async.set(key, value);
@@ -161,7 +158,7 @@ public class AsyncConnectionTest extends AbstractRedisClientTest {
         assertThat((long) append.get()).isEqualTo(value.length() * 2);
     }
 
-    @Test(timeout = 500)
+    @Test
     public void awaitAllTimeout() throws Exception {
         Future<KeyValue<String, String>> blpop = async.blpop(1, key);
         assertThat(LettuceFutures.awaitAll(1, TimeUnit.NANOSECONDS, blpop)).isFalse();

@@ -22,9 +22,9 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.Wait;
 import io.lettuce.core.api.async.RedisAsyncCommands;
@@ -45,14 +45,14 @@ public class NodeSelectionAsyncTest extends AbstractClusterTest {
     private RedisAdvancedClusterAsyncCommands<String, String> commands;
     private StatefulRedisClusterConnection<String, String> clusterConnection;
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         clusterClient.reloadPartitions();
         clusterConnection = clusterClient.connect();
         commands = clusterConnection.async();
     }
 
-    @After
+    @AfterEach
     public void after() throws Exception {
         commands.getStatefulConnection().close();
     }

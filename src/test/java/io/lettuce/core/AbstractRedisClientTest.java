@@ -15,9 +15,9 @@
  */
 package io.lettuce.core;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 
 import io.lettuce.TestClientResources;
 import io.lettuce.core.api.sync.RedisCommands;
@@ -31,7 +31,7 @@ public abstract class AbstractRedisClientTest extends AbstractTest {
     protected static RedisClient client;
     protected RedisCommands<String, String> redis;
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClient() {
         client = DefaultRedisClient.get();
         client.setOptions(ClientOptions.create());
@@ -46,7 +46,7 @@ public abstract class AbstractRedisClientTest extends AbstractTest {
         return connect;
     }
 
-    @Before
+    @BeforeEach
     public void openConnection() throws Exception {
         client.setOptions(ClientOptions.builder().build());
         redis = connect();
@@ -70,7 +70,7 @@ public abstract class AbstractRedisClientTest extends AbstractTest {
         } while (scriptRunning);
     }
 
-    @After
+    @AfterEach
     public void closeConnection() throws Exception {
         if (redis != null) {
             redis.getStatefulConnection().close();

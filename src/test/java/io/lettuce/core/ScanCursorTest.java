@@ -16,25 +16,26 @@
 package io.lettuce.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ScanCursorTest {
 
     @Test
-    public void testFactory() throws Exception {
+    public void testFactory() {
         ScanCursor scanCursor = ScanCursor.of("dummy");
         assertThat(scanCursor.getCursor()).isEqualTo("dummy");
         assertThat(scanCursor.isFinished()).isFalse();
     }
 
-    @Test(expected = UnsupportedOperationException.class)
-    public void setCursorOnImmutableInstance() throws Exception {
-        ScanCursor.INITIAL.setCursor("");
+    @Test
+    public void setCursorOnImmutableInstance() {
+        assertThatThrownBy(() -> ScanCursor.INITIAL.setCursor("")).isInstanceOf(UnsupportedOperationException.class);
     }
 
-    @Test(expected = UnsupportedOperationException.class)
-    public void setFinishedOnImmutableInstance() throws Exception {
-        ScanCursor.INITIAL.setFinished(false);
+    @Test
+    public void setFinishedOnImmutableInstance() {
+        assertThatThrownBy(() -> ScanCursor.INITIAL.setFinished(false)).isInstanceOf(UnsupportedOperationException.class);
     }
 }

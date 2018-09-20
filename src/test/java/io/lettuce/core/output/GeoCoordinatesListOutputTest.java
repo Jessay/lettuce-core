@@ -16,10 +16,11 @@
 package io.lettuce.core.output;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.nio.ByteBuffer;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.GeoCoordinates;
 import io.lettuce.core.codec.Utf8StringCodec;
@@ -31,9 +32,9 @@ public class GeoCoordinatesListOutputTest {
 
     private GeoCoordinatesListOutput<?, ?> sut = new GeoCoordinatesListOutput<>(new Utf8StringCodec());
 
-    @Test(expected = IllegalStateException.class)
-    public void setIntegerShouldFail() throws Exception {
-        sut.set(123L);
+    @Test
+    public void setIntegerShouldFail() {
+        assertThatThrownBy(() -> sut.set(123L)).isInstanceOf(IllegalStateException. class);
     }
 
     @Test

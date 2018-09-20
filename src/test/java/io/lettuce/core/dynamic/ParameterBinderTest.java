@@ -16,11 +16,14 @@
 package io.lettuce.core.dynamic;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.Collections;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.util.Base64Utils;
 import org.springframework.util.ReflectionUtils;
@@ -35,7 +38,7 @@ import io.lettuce.core.protocol.CommandType;
 /**
  * @author Mark Paluch
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ParameterBinderTest {
 
     private ParameterBinder binder = new ParameterBinder();
@@ -81,9 +84,9 @@ public class ParameterBinderTest {
         assertThat(args.toCommandString()).isEqualTo("value<string>");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void rejectsEmptyValue() {
-        bind(Value.empty());
+        assertThatThrownBy(() -> bind(Value.empty())).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -94,9 +97,9 @@ public class ParameterBinderTest {
         assertThat(args.toCommandString()).isEqualTo("key<mykey> value<string>");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void rejectsEmptyKeyValue() {
-        bind(KeyValue.empty());
+        assertThatThrownBy(() -> bind(KeyValue.empty())).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -107,9 +110,9 @@ public class ParameterBinderTest {
         assertThat(args.toCommandString()).isEqualTo("20.0 value<string>");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void rejectsEmptyScoredValue() {
-        bind(ScoredValue.empty());
+        assertThatThrownBy(() -> bind(ScoredValue.empty())).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -136,34 +139,37 @@ public class ParameterBinderTest {
         assertThat(args.toCommandString()).isEqualTo("-inf +inf");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void rejectsStringLowerValue() {
-        bind(Range.from(Range.Boundary.including("hello"), Range.Boundary.excluding(15)));
+        assertThatThrownBy(() -> bind(Range.from(Range.Boundary.including("hello"), Range.Boundary.excluding(15))))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void rejectsStringUpperValue() {
-        bind(Range.from(Range.Boundary.including(11), Range.Boundary.excluding("hello")));
+        assertThatThrownBy(() -> bind(Range.from(Range.Boundary.including(11), Range.Boundary.excluding("hello"))))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     public void bindsValueRangeCorrectly() {
 
-        CommandMethod commandMethod = DeclaredCommandMethod.create(
-                ReflectionUtils.findMethod(MyCommands.class, "valueRange", Range.class));
+        CommandMethod commandMethod = DeclaredCommandMethod.create(ReflectionUtils.findMethod(MyCommands.class, "valueRange",
+                Range.class));
 
         CommandArgs<String, String> args = bind(commandMethod,
                 Range.from(Range.Boundary.including("lower"), Range.Boundary.excluding("upper")));
 
-        assertThat(args.toCommandString()).isEqualTo(String.format("%s %s", Base64Utils.encodeToString("[lower".getBytes()),
-                Base64Utils.encodeToString("(upper".getBytes())));
+        assertThat(args.toCommandString()).isEqualTo(
+                String.format("%s %s", Base64Utils.encodeToString("[lower".getBytes()),
+                        Base64Utils.encodeToString("(upper".getBytes())));
     }
 
     @Test
     public void bindsUnboundedValueRangeCorrectly() {
 
-        CommandMethod commandMethod = DeclaredCommandMethod.create(
-                ReflectionUtils.findMethod(MyCommands.class, "valueRange", Range.class));
+        CommandMethod commandMethod = DeclaredCommandMethod.create(ReflectionUtils.findMethod(MyCommands.class, "valueRange",
+                Range.class));
 
         CommandArgs<String, String> args = bind(commandMethod, Range.unbounded());
 
@@ -188,8 +194,8 @@ public class ParameterBinderTest {
     }
 
     private CommandArgs<String, String> bind(Object object) {
-        CommandMethod commandMethod = DeclaredCommandMethod.create(
-                ReflectionUtils.findMethod(MyCommands.class, "justObject", Object.class));
+        CommandMethod commandMethod = DeclaredCommandMethod.create(ReflectionUtils.findMethod(MyCommands.class, "justObject",
+                Object.class));
         return bind(commandMethod, object);
     }
 

@@ -21,9 +21,11 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 
 import java.util.Arrays;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import io.lettuce.core.api.StatefulConnection;
@@ -36,7 +38,7 @@ import io.lettuce.core.protocol.RedisCommand;
 /**
  * @author Mark Paluch
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class SimpleBatcherTest {
 
     @Mock

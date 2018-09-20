@@ -23,15 +23,16 @@ import static io.lettuce.core.ZStoreArgs.Builder.weights;
 import static java.lang.Double.NEGATIVE_INFINITY;
 import static java.lang.Double.POSITIVE_INFINITY;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.data.Offset.offset;
 import static org.junit.Assume.assumeTrue;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import io.lettuce.RedisConditions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
+import io.lettuce.RedisConditions;
 import io.lettuce.core.*;
 import io.lettuce.core.Range.Boundary;
 
@@ -73,14 +74,15 @@ public class SortedSetCommandTest extends AbstractRedisClientTest {
         assertThat(redis.zrangeWithScores(key, 0, -1)).isEqualTo(svlist(sv(1.0, "a"), sv(2.0, "b"), sv(3.0, "c")));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void zaddWrongArguments() {
-        assertThat(redis.zadd(key, 2.0, "b", 3.0)).isEqualTo(2);
+        assertThatThrownBy(() -> redis.zadd(key, 2.0, "b", 3.0)).isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void zaddnxWrongArguments() {
-        assertThat(redis.zadd(key, ZAddArgs.Builder.nx(), new Object[] { 2.0, "b", 3.0 })).isEqualTo(1);
+        assertThatThrownBy(() -> redis.zadd(key, ZAddArgs.Builder.nx(), new Object[] { 2.0, "b", 3.0 })).isInstanceOf(
+                IllegalArgumentException.class);
     }
 
     @Test

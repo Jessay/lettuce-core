@@ -21,11 +21,13 @@ import static org.mockito.Mockito.when;
 
 import java.util.concurrent.CompletableFuture;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.StatefulRedisConnection;
@@ -34,7 +36,7 @@ import io.lettuce.core.api.StatefulRedisConnection;
  * @author Christian Weitendorf
  * @author Mark Paluch
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ConnectionsTest {
 
     @Mock
@@ -43,7 +45,7 @@ public class ConnectionsTest {
     @Mock
     private StatefulRedisConnection<String, String> connection2;
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
 
         when(connection1.closeAsync()).thenReturn(CompletableFuture.completedFuture(null));

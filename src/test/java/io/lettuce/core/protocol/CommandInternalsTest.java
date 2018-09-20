@@ -17,9 +17,10 @@ package io.lettuce.core.protocol;
 
 import static io.lettuce.core.protocol.LettuceCharsets.buffer;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.RedisException;
 import io.lettuce.core.codec.RedisCodec;
@@ -36,7 +37,7 @@ public class CommandInternalsTest {
     protected RedisCodec<String, String> codec = new Utf8StringCodec();
     protected Command<String, String, String> sut;
 
-    @Before
+    @BeforeEach
     public void createCommand() {
 
         CommandOutput<String, String, String> output = new StatusOutput<String, String>(codec);
@@ -80,10 +81,10 @@ public class CommandInternalsTest {
         assertThat(sut.getError()).isEqualTo("error");
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void setOutputAfterCompleted() {
         sut.complete();
-        sut.setOutput(new StatusOutput<>(codec));
+        assertThatThrownBy(() -> sut.setOutput(new StatusOutput<>(codec))).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
@@ -115,7 +116,7 @@ public class CommandInternalsTest {
         assertThat(sut.get()).isEqualTo("one");
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void outputSubclassOverride1() {
         CommandOutput<String, String, String> output = new CommandOutput<String, String, String>(codec, null) {
             @Override
@@ -123,10 +124,10 @@ public class CommandInternalsTest {
                 return null;
             }
         };
-        output.set(null);
+        assertThatThrownBy(() -> output.set(null)).isInstanceOf(IllegalStateException.class);
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void outputSubclassOverride2() {
         CommandOutput<String, String, String> output = new CommandOutput<String, String, String>(codec, null) {
             @Override
@@ -134,7 +135,7 @@ public class CommandInternalsTest {
                 return null;
             }
         };
-        output.set(0);
+        assertThatThrownBy(() -> output.set(0)).isInstanceOf(IllegalStateException.class);
     }
 
     @Test

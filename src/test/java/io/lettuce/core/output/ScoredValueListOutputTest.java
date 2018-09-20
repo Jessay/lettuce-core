@@ -16,10 +16,11 @@
 package io.lettuce.core.output;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.nio.ByteBuffer;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.ScoredValue;
 import io.lettuce.core.codec.Utf8StringCodec;
@@ -38,9 +39,9 @@ public class ScoredValueListOutputTest {
         assertThat(sut.getSubscriber()).isNotNull().isInstanceOf(ListSubscriber.class);
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void setIntegerShouldFail() {
-        sut.set(123L);
+        assertThatThrownBy(() -> sut.set(123L)).isInstanceOf(IllegalStateException. class);
     }
 
     @Test

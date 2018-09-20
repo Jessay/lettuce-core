@@ -16,12 +16,13 @@
 package io.lettuce.core.cluster.models.slots;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.cluster.models.partitions.RedisClusterNode;
 import io.lettuce.core.internal.LettuceLists;
@@ -108,16 +109,17 @@ public class ClusterSlotsParserTest {
         assertThat(masterNode.getSlots()).hasSize(201);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testParseInvalidMaster() {
+
         List<?> list = Arrays.asList(LettuceLists.newList("0", "1", LettuceLists.newList("1")));
-        ClusterSlotsParser.parse(list);
+        assertThatThrownBy(() -> ClusterSlotsParser.parse(list)).isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testParseInvalidMaster2() {
         List<?> list = Arrays.asList(LettuceLists.newList("0", "1", ""));
-        ClusterSlotsParser.parse(list);
+        assertThatThrownBy(() -> ClusterSlotsParser.parse(list)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test

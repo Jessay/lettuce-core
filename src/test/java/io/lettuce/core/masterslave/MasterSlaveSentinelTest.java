@@ -24,9 +24,9 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import io.lettuce.TestClientResources;
@@ -52,7 +52,7 @@ public class MasterSlaveSentinelTest extends AbstractSentinelTest {
     private RedisURI sentinelUri = RedisURI.Builder.sentinel(TestSettings.host(), 26379, MASTER_ID).build();
     private Pattern pattern = Pattern.compile("role:(\\w+)");
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         sentinelRule.needMasterWithSlave(MASTER_ID, port(3), port(4));
     }

@@ -16,11 +16,12 @@
 package io.lettuce.core.cluster.topology;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.Arrays;
 import java.util.Set;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.RedisURI;
 
@@ -54,13 +55,14 @@ public class NodeTopologyViewsTest {
         assertThat(clusterNodes).contains(localhost, otherhost, host3);
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void shouldFailWithoutOwnPartition() {
 
         RedisURI localhost = RedisURI.create("127.0.0.1", 6479);
 
         String viewByLocalhost = "1 127.0.0.1:6479 master - 0 1401258245007 2 connected 8000-11999\n";
 
-        new NodeTopologyView(localhost, viewByLocalhost, "", 0).getOwnPartition();
+        assertThatThrownBy(() -> new NodeTopologyView(localhost, viewByLocalhost, "", 0).getOwnPartition()).isInstanceOf(
+                IllegalStateException.class);
     }
 }

@@ -17,14 +17,15 @@ package io.lettuce.core.protocol;
 
 import static io.lettuce.core.protocol.LettuceCharsets.buffer;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.*;
 import io.lettuce.core.codec.RedisCodec;
@@ -37,15 +38,15 @@ public class AsyncCommandInternalsTest {
     protected Command<String, String, String> internal;
     protected AsyncCommand<String, String, String> sut;
 
-    @Before
-    public final void createCommand() throws Exception {
+    @BeforeEach
+    public final void createCommand() {
         CommandOutput<String, String, String> output = new StatusOutput<String, String>(codec);
         internal = new Command<String, String, String>(CommandType.INFO, output, null);
         sut = new AsyncCommand<>(internal);
     }
 
     @Test
-    public void isCancelled() throws Exception {
+    public void isCancelled() {
         assertThat(sut.isCancelled()).isFalse();
         assertThat(sut.cancel(true)).isTrue();
         assertThat(sut.isCancelled()).isTrue();
@@ -53,66 +54,68 @@ public class AsyncCommandInternalsTest {
     }
 
     @Test
-    public void isDone() throws Exception {
+    public void isDone() {
         assertThat(sut.isDone()).isFalse();
         sut.complete();
         assertThat(sut.isDone()).isTrue();
     }
 
     @Test
-    public void awaitAllCompleted() throws Exception {
+    public void awaitAllCompleted() {
         sut.complete();
         assertThat(LettuceFutures.awaitAll(5, TimeUnit.MILLISECONDS, sut)).isTrue();
     }
 
     @Test
-    public void awaitAll() throws Exception {
+    public void awaitAll() {
         assertThat(LettuceFutures.awaitAll(-1, TimeUnit.NANOSECONDS, sut)).isFalse();
     }
 
-    @Test(expected = RedisCommandTimeoutException.class)
-    public void awaitNotCompleted() throws Exception {
-        LettuceFutures.awaitOrCancel(sut, 0, TimeUnit.NANOSECONDS);
-    }
-
-    @Test(expected = RedisException.class)
-    public void awaitWithExecutionException() throws Exception {
-        sut.completeExceptionally(new RedisException("error"));
-        LettuceFutures.awaitOrCancel(sut, 1, TimeUnit.SECONDS);
-    }
-
-    @Test(expected = CancellationException.class)
-    public void awaitWithCancelledCommand() throws Exception {
-        sut.cancel();
-        LettuceFutures.awaitOrCancel(sut, 5, TimeUnit.SECONDS);
-    }
-
-    @Test(expected = RedisException.class)
-    public void awaitAllWithExecutionException() throws Exception {
-        sut.completeExceptionally(new RedisCommandExecutionException("error"));
-
-        assertThat(LettuceFutures.awaitAll(0, TimeUnit.SECONDS, sut));
+    @Test
+    public void awaitNotCompleted() {
+        assertThatThrownBy(() -> LettuceFutures.awaitOrCancel(sut, 0, TimeUnit.NANOSECONDS)).isInstanceOf(
+                RedisCommandTimeoutException.class);
     }
 
     @Test
-    public void getError() throws Exception {
+    public void awaitWithExecutionException() {
+        sut.completeExceptionally(new RedisException("error"));
+        assertThatThrownBy(() -> LettuceFutures.awaitOrCancel(sut, 1, TimeUnit.SECONDS)).isInstanceOf(RedisException.class);
+    }
+
+    @Test
+    public void awaitWithCancelledCommand() {
+        sut.cancel();
+        assertThatThrownBy(() -> LettuceFutures.awaitOrCancel(sut, 5, TimeUnit.SECONDS)).isInstanceOf(
+                CancellationException.class);
+    }
+
+    @Test
+    public void awaitAllWithExecutionException() {
+        sut.completeExceptionally(new RedisCommandExecutionException("error"));
+
+        assertThatThrownBy(() -> LettuceFutures.awaitAll(0, TimeUnit.SECONDS, sut)).isInstanceOf(RedisException.class);
+    }
+
+    @Test
+    public void getError() {
         sut.getOutput().setError("error");
         assertThat(internal.getError()).isEqualTo("error");
     }
 
-    @Test(expected = ExecutionException.class)
-    public void getErrorAsync() throws Exception {
+    @Test
+    public void getErrorAsync() {
         sut.getOutput().setError("error");
         sut.complete();
-        sut.get();
+        assertThatThrownBy(() -> sut.get()).isInstanceOf(ExecutionException.class);
     }
 
-    @Test(expected = ExecutionException.class)
-    public void completeExceptionally() throws Exception {
+    @Test
+    public void completeExceptionally() {
         sut.completeExceptionally(new RuntimeException("test"));
         assertThat(internal.getError()).isEqualTo("test");
 
-        sut.get();
+        assertThatThrownBy(() -> sut.get()).isInstanceOf(ExecutionException.class);
     }
 
     @Test
@@ -124,7 +127,7 @@ public class AsyncCommandInternalsTest {
     }
 
     @Test
-    public void customKeyword() throws Exception {
+    public void customKeyword() {
         sut = new AsyncCommand<>(
                 new Command<String, String, String>(MyKeywords.DUMMY, new StatusOutput<String, String>(codec), null));
 
@@ -132,7 +135,7 @@ public class AsyncCommandInternalsTest {
     }
 
     @Test
-    public void customKeywordWithArgs() throws Exception {
+    public void customKeywordWithArgs() {
         sut = new AsyncCommand<>(
                 new Command<String, String, String>(MyKeywords.DUMMY, null, new CommandArgs<String, String>(codec)));
         sut.getArgs().add(MyKeywords.DUMMY);
@@ -147,35 +150,35 @@ public class AsyncCommandInternalsTest {
         assertThat(sut.get(0, TimeUnit.MILLISECONDS)).isEqualTo("one");
     }
 
-    @Test(expected = TimeoutException.class, timeout = 100)
-    public void getTimeout() throws Exception {
-        assertThat(sut.get(2, TimeUnit.MILLISECONDS)).isNull();
+    @Test
+    public void getTimeout() {
+        assertThatThrownBy(() -> sut.get(2, TimeUnit.MILLISECONDS)).isInstanceOf(TimeoutException.class);
     }
 
-    @Test(timeout = 100)
-    public void awaitTimeout() throws Exception {
+    @Test
+    public void awaitTimeout() {
         assertThat(sut.await(2, TimeUnit.MILLISECONDS)).isFalse();
     }
 
-    @Test(expected = InterruptedException.class, timeout = 100)
-    public void getInterrupted() throws Exception {
+    @Test
+    public void getInterrupted() {
         Thread.currentThread().interrupt();
-        sut.get();
+        assertThatThrownBy(() -> sut.get()).isInstanceOf(InterruptedException.class);
     }
 
-    @Test(expected = InterruptedException.class, timeout = 100)
-    public void getInterrupted2() throws Exception {
+    @Test
+    public void getInterrupted2() {
         Thread.currentThread().interrupt();
-        sut.get(5, TimeUnit.MILLISECONDS);
+        assertThatThrownBy(() -> sut.get(5, TimeUnit.MILLISECONDS)).isInstanceOf(InterruptedException. class);
     }
 
-    @Test(expected = RedisCommandInterruptedException.class, timeout = 100)
-    public void awaitInterrupted2() throws Exception {
+    @Test
+    public void awaitInterrupted2() {
         Thread.currentThread().interrupt();
-        sut.await(5, TimeUnit.MILLISECONDS);
+        assertThatThrownBy(() -> sut.await(5, TimeUnit.MILLISECONDS)).isInstanceOf(RedisCommandInterruptedException. class);
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void outputSubclassOverride1() {
         CommandOutput<String, String, String> output = new CommandOutput<String, String, String>(codec, null) {
             @Override
@@ -183,10 +186,10 @@ public class AsyncCommandInternalsTest {
                 return null;
             }
         };
-        output.set(null);
+        assertThatThrownBy(() -> output.set(null)).isInstanceOf(IllegalStateException. class);
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void outputSubclassOverride2() {
         CommandOutput<String, String, String> output = new CommandOutput<String, String, String>(codec, null) {
             @Override
@@ -194,11 +197,11 @@ public class AsyncCommandInternalsTest {
                 return null;
             }
         };
-        output.set(0);
+        assertThatThrownBy(() -> output.set(0)).isInstanceOf(IllegalStateException. class);
     }
 
     @Test
-    public void sillyTestsForEmmaCoverage() throws Exception {
+    public void sillyTestsForEmmaCoverage() {
         assertThat(CommandType.valueOf("APPEND")).isEqualTo(CommandType.APPEND);
         assertThat(CommandKeyword.valueOf("AFTER")).isEqualTo(CommandKeyword.AFTER);
     }

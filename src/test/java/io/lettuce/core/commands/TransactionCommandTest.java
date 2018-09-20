@@ -16,10 +16,9 @@
 package io.lettuce.core.commands;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.AbstractRedisClientTest;
 import io.lettuce.core.RedisCommandExecutionException;
@@ -32,9 +31,6 @@ import io.lettuce.core.api.sync.RedisCommands;
  * @author Mark Paluch
  */
 public class TransactionCommandTest extends AbstractRedisClientTest {
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
     @Test
     public void discard() {
@@ -122,17 +118,15 @@ public class TransactionCommandTest extends AbstractRedisClientTest {
 
     @Test
     public void execWithoutMulti() {
-        exception.expect(RedisCommandExecutionException.class);
-        exception.expectMessage("ERR EXEC without MULTI");
-        redis.exec();
+        assertThatThrownBy(() -> redis.exec()).isInstanceOf(RedisCommandExecutionException.class).hasMessageContaining(
+                "ERR EXEC without MULTI");
     }
 
     @Test
     public void multiCalledTwiceShouldFail() {
-        exception.expect(RedisCommandExecutionException.class);
-        exception.expectMessage("ERR MULTI calls can not be nested");
 
         redis.multi();
-        redis.multi();
+        assertThatThrownBy(() -> redis.multi()).isInstanceOf(RedisCommandExecutionException.class).hasMessageContaining(
+                "ERR MULTI calls can not be nested");
     }
 }

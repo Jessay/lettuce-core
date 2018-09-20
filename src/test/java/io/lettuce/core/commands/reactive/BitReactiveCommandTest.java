@@ -21,7 +21,7 @@ import static io.lettuce.core.BitFieldArgs.typeWidthBasedOffset;
 import static io.lettuce.core.BitFieldArgs.OverflowType.FAIL;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import reactor.test.StepVerifier;
 import io.lettuce.core.BitFieldArgs;

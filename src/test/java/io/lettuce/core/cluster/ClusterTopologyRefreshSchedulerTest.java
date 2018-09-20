@@ -23,11 +23,13 @@ import static org.mockito.Mockito.when;
 
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import io.lettuce.core.resource.ClientResources;
 import io.netty.util.concurrent.EventExecutorGroup;
@@ -35,7 +37,7 @@ import io.netty.util.concurrent.EventExecutorGroup;
 /**
  * @author Mark Paluch
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ClusterTopologyRefreshSchedulerTest {
 
     private ClusterTopologyRefreshScheduler sut;
@@ -55,7 +57,7 @@ public class ClusterTopologyRefreshSchedulerTest {
     @Mock
     private EventExecutorGroup eventExecutors;
 
-    @Before
+    @BeforeEach
     public void before() {
 
         when(clientResources.eventExecutorGroup()).thenReturn(eventExecutors);

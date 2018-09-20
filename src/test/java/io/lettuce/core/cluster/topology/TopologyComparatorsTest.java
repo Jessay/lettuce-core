@@ -17,6 +17,7 @@ package io.lettuce.core.cluster.topology;
 
 import static io.lettuce.core.cluster.topology.TopologyComparators.isChanged;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.util.Lists.newArrayList;
 
 import java.util.Collections;
@@ -24,7 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.cluster.models.partitions.ClusterPartitionParser;
@@ -49,7 +50,7 @@ public class TopologyComparatorsTest {
     }
 
     @Test
-    public void latenciesForAllNodes() throws Exception {
+    public void latenciesForAllNodes() {
 
         Map<String, Long> map = new HashMap<>();
         map.put(node1.getNodeId(), 1L);
@@ -62,7 +63,7 @@ public class TopologyComparatorsTest {
     }
 
     @Test
-    public void latenciesForTwoNodes_N1_N2() throws Exception {
+    public void latenciesForTwoNodes_N1_N2() {
 
         Map<String, Long> map = new HashMap<>();
         map.put(node1.getNodeId(), 1L);
@@ -74,7 +75,7 @@ public class TopologyComparatorsTest {
     }
 
     @Test
-    public void latenciesForTwoNodes_N2_N3() throws Exception {
+    public void latenciesForTwoNodes_N2_N3() {
 
         Map<String, Long> map = new HashMap<>();
         map.put(node3.getNodeId(), 1L);
@@ -86,7 +87,7 @@ public class TopologyComparatorsTest {
     }
 
     @Test
-    public void latenciesForOneNode() throws Exception {
+    public void latenciesForOneNode() {
 
         Map<String, Long> map = Collections.singletonMap(node2.getNodeId(), 2L);
 
@@ -95,16 +96,17 @@ public class TopologyComparatorsTest {
         runTest(map, newArrayList(node2, node3, node1), newArrayList(node3, node2, node1));
     }
 
-    @Test(expected = AssertionError.class)
-    public void shouldFail() throws Exception {
+    @Test
+    public void shouldFail() {
 
         Map<String, Long> map = Collections.singletonMap(node2.getNodeId(), 2L);
 
-        runTest(map, newArrayList(node2, node1, node3), newArrayList(node3, node1, node2));
+        assertThatThrownBy(() -> runTest(map, newArrayList(node2, node1, node3), newArrayList(node3, node1, node2)))
+                .isInstanceOf(AssertionError.class);
     }
 
     @Test
-    public void testLatencyComparator() throws Exception {
+    public void testLatencyComparator() {
 
         RedisClusterNodeSnapshot node1 = new RedisClusterNodeSnapshot();
         node1.setLatencyNs(1L);
@@ -122,7 +124,7 @@ public class TopologyComparatorsTest {
     }
 
     @Test
-    public void testLatencyComparatorWithSomeNodesWithoutStats() throws Exception {
+    public void testLatencyComparatorWithSomeNodesWithoutStats() {
 
         RedisClusterNodeSnapshot node1 = new RedisClusterNodeSnapshot();
         node1.setLatencyNs(1L);
@@ -140,7 +142,7 @@ public class TopologyComparatorsTest {
     }
 
     @Test
-    public void testClientComparator() throws Exception {
+    public void testClientComparator() {
 
         RedisClusterNodeSnapshot node1 = new RedisClusterNodeSnapshot();
         node1.setConnectedClients(1);
@@ -158,7 +160,7 @@ public class TopologyComparatorsTest {
     }
 
     @Test
-    public void testClientComparatorWithSomeNodesWithoutStats() throws Exception {
+    public void testClientComparatorWithSomeNodesWithoutStats() {
 
         RedisClusterNodeSnapshot node1 = new RedisClusterNodeSnapshot();
         node1.setConnectedClients(1);
@@ -176,7 +178,7 @@ public class TopologyComparatorsTest {
     }
 
     @Test
-    public void testLatencyComparatorWithoutClients() throws Exception {
+    public void testLatencyComparatorWithoutClients() {
 
         RedisClusterNodeSnapshot node1 = new RedisClusterNodeSnapshot();
         node1.setConnectedClients(1);
@@ -194,7 +196,7 @@ public class TopologyComparatorsTest {
     }
 
     @Test
-    public void testFixedOrdering1() throws Exception {
+    public void testFixedOrdering1() {
 
         List<RedisClusterNode> list = LettuceLists.newList(node2, node3, node1);
         List<RedisURI> fixedOrder = LettuceLists.newList(node1.getUri(), node2.getUri(), node3.getUri());
@@ -203,7 +205,7 @@ public class TopologyComparatorsTest {
     }
 
     @Test
-    public void testFixedOrdering2() throws Exception {
+    public void testFixedOrdering2() {
 
         List<RedisClusterNode> list = LettuceLists.newList(node2, node3, node1);
         List<RedisURI> fixedOrder = LettuceLists.newList(node3.getUri(), node2.getUri(), node1.getUri());
@@ -212,7 +214,7 @@ public class TopologyComparatorsTest {
     }
 
     @Test
-    public void testFixedOrderingNoFixedPart() throws Exception {
+    public void testFixedOrderingNoFixedPart() {
 
         List<RedisClusterNode> list = LettuceLists.newList(node2, node3, node1);
         List<RedisURI> fixedOrder = LettuceLists.newList();
@@ -221,7 +223,7 @@ public class TopologyComparatorsTest {
     }
 
     @Test
-    public void testFixedOrderingPartiallySpecifiedOrder() throws Exception {
+    public void testFixedOrderingPartiallySpecifiedOrder() {
 
         List<RedisClusterNode> list = LettuceLists.newList(node2, node3, node1);
         List<RedisURI> fixedOrder = LettuceLists.newList(node3.getUri(), node1.getUri());
@@ -230,7 +232,7 @@ public class TopologyComparatorsTest {
     }
 
     @Test
-    public void isChangedSamePartitions() throws Exception {
+    public void isChangedSamePartitions() {
 
         String nodes = "c37ab8396be428403d4e55c0d317348be27ed973 127.0.0.1:7381 master - 111 1401258245007 222 connected 7000 12000 12002-16383\n"
                 + "3d005a179da7d8dc1adae6409d47b39c369e992b 127.0.0.1:7380 master - 0 1401258245007 2 disconnected 8000-11999\n";
@@ -241,7 +243,7 @@ public class TopologyComparatorsTest {
     }
 
     @Test
-    public void isChangedDifferentOrder() throws Exception {
+    public void isChangedDifferentOrder() {
         String nodes1 = "3d005a179da7d8dc1adae6409d47b39c369e992b 127.0.0.1:7380 master,myself - 0 1401258245007 2 disconnected 8000-11999\n"
                 + "c37ab8396be428403d4e55c0d317348be27ed973 127.0.0.1:7381 master - 111 1401258245007 222 connected 7000 12000 12002-16383\n";
 
@@ -255,7 +257,7 @@ public class TopologyComparatorsTest {
     }
 
     @Test
-    public void isChangedPortChanged() throws Exception {
+    public void isChangedPortChanged() {
         String nodes1 = "3d005a179da7d8dc1adae6409d47b39c369e992b 127.0.0.1:7382 master - 0 1401258245007 2 disconnected 8000-11999\n"
                 + "c37ab8396be428403d4e55c0d317348be27ed973 127.0.0.1:7381 master - 111 1401258245007 222 connected 7000 12000 12002-16383\n";
 
@@ -268,7 +270,7 @@ public class TopologyComparatorsTest {
     }
 
     @Test
-    public void isChangedSlotsChanged() throws Exception {
+    public void isChangedSlotsChanged() {
         String nodes1 = "3d005a179da7d8dc1adae6409d47b39c369e992b 127.0.0.1:7380 master - 0 1401258245007 2 disconnected 8000-11999\n"
                 + "c37ab8396be428403d4e55c0d317348be27ed973 127.0.0.1:7381 master - 111 1401258245007 222 connected 7000 12000 12002-16383\n";
 
@@ -281,7 +283,7 @@ public class TopologyComparatorsTest {
     }
 
     @Test
-    public void isChangedNodeIdChanged() throws Exception {
+    public void isChangedNodeIdChanged() {
         String nodes1 = "3d005a179da7d8dc1adae6409d47b39c369e992b 127.0.0.1:7380 master - 0 1401258245007 2 disconnected 8000-11999\n"
                 + "c37ab8396be428403d4e55c0d317348be27ed973 127.0.0.1:7381 master - 111 1401258245007 222 connected 7000 12000 12002-16383\n";
 
@@ -294,7 +296,7 @@ public class TopologyComparatorsTest {
     }
 
     @Test
-    public void isChangedFlagsChangedSlaveToMaster() throws Exception {
+    public void isChangedFlagsChangedSlaveToMaster() {
         String nodes1 = "3d005a179da7d8dc1adae6409d47b39c369e992b 127.0.0.1:7380 slave - 0 1401258245007 2 disconnected 8000-11999\n"
                 + "c37ab8396be428403d4e55c0d317348be27ed973 127.0.0.1:7381 master - 111 1401258245007 222 connected 7000 12000 12002-16383\n";
 
@@ -307,7 +309,7 @@ public class TopologyComparatorsTest {
     }
 
     @Test
-    public void isChangedFlagsChangedMasterToSlave() throws Exception {
+    public void isChangedFlagsChangedMasterToSlave() {
         String nodes1 = "3d005a179da7d8dc1adae6409d47b39c369e992b 127.0.0.1:7380 master - 0 1401258245007 2 disconnected 8000-11999\n"
                 + "c37ab8396be428403d4e55c0d317348be27ed973 127.0.0.1:7381 master - 111 1401258245007 222 connected 7000 12000 12002-16383\n";
 

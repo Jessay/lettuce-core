@@ -21,10 +21,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Collection;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import reactor.core.Disposable;
@@ -42,17 +42,17 @@ public class ClientMetricsTest extends AbstractTest {
 
     private RedisCommands<String, String> redis;
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClient() {
         client = RedisClient.create(TestClientResources.get(), RedisURI.Builder.redis(host, port).build());
     }
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         redis = client.connect().sync();
     }
 
-    @AfterClass
+    @AfterAll
     public static void afterClass() {
         FastShutdown.shutdown(client);
     }

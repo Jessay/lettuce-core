@@ -26,14 +26,16 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import io.lettuce.core.ConnectionFuture;
@@ -55,7 +57,7 @@ import io.netty.util.concurrent.EventExecutorGroup;
  * @author Mark Paluch
  */
 @SuppressWarnings("unchecked")
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class SentinelTopologyRefreshTest {
 
     private static final RedisURI host1 = RedisURI.create("localhost", 1234);
@@ -84,7 +86,7 @@ public class SentinelTopologyRefreshTest {
 
     private SentinelTopologyRefresh sut;
 
-    @Before
+    @BeforeEach
     public void before() {
 
         when(redisClient.connectPubSubAsync(any(StringCodec.class), eq(host1))).thenReturn(
@@ -101,7 +103,7 @@ public class SentinelTopologyRefreshTest {
         sut = new SentinelTopologyRefresh(redisClient, "mymaster", Collections.singletonList(host1));
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
 
         verify(redisClient, never()).connect(any(), any());

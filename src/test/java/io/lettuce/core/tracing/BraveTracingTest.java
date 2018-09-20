@@ -23,10 +23,10 @@ import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import reactor.test.StepVerifier;
 import zipkin2.Span;
@@ -54,7 +54,7 @@ public class BraveTracingTest extends AbstractTest {
     private static Tracing clientTracing;
     private static Queue<Span> spans = new LinkedBlockingQueue<>();
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() {
 
         clientTracing = Tracing.newBuilder().localServiceName("client")
@@ -64,7 +64,7 @@ public class BraveTracingTest extends AbstractTest {
         client = RedisClient.create(clientResources, RedisURI.Builder.redis(host, port).build());
     }
 
-    @Before
+    @BeforeEach
     public void before() {
 
         Tracer tracer = clientTracing.tracer();
@@ -75,7 +75,7 @@ public class BraveTracingTest extends AbstractTest {
         spans.clear();
     }
 
-    @AfterClass
+    @AfterAll
     public static void afterClass() {
 
         clientTracing.close();

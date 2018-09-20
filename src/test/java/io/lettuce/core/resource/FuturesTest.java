@@ -16,8 +16,9 @@
 package io.lettuce.core.resource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.Wait;
 import io.netty.util.concurrent.DefaultPromise;
@@ -30,33 +31,37 @@ import io.netty.util.concurrent.Promise;
  */
 public class FuturesTest {
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testPromise() {
-        new Futures.PromiseAggregator(null);
+        assertThatThrownBy(() -> new Futures.PromiseAggregator(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void notArmed() {
+
         Futures.PromiseAggregator<Boolean, Promise<Boolean>> sut = new Futures.PromiseAggregator<Boolean, Promise<Boolean>>(
                 new DefaultPromise<>(ImmediateEventExecutor.INSTANCE));
-        sut.add(new DefaultPromise<>(ImmediateEventExecutor.INSTANCE));
+        assertThatThrownBy(() -> sut.add(new DefaultPromise<>(ImmediateEventExecutor.INSTANCE))).isInstanceOf(
+                IllegalStateException.class);
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void expectAfterArmed() {
         Futures.PromiseAggregator<Boolean, Promise<Boolean>> sut = new Futures.PromiseAggregator<Boolean, Promise<Boolean>>(
                 new DefaultPromise<>(ImmediateEventExecutor.INSTANCE));
         sut.arm();
 
-        sut.expectMore(1);
+        assertThatThrownBy(() -> sut.expectMore(1)).isInstanceOf(IllegalStateException.class);
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void armTwice() {
+
         Futures.PromiseAggregator<Boolean, Promise<Boolean>> sut = new Futures.PromiseAggregator<Boolean, Promise<Boolean>>(
                 new DefaultPromise<>(ImmediateEventExecutor.INSTANCE));
+
         sut.arm();
-        sut.arm();
+        assertThatThrownBy(sut::arm).isInstanceOf(IllegalStateException.class);
     }
 
     @Test

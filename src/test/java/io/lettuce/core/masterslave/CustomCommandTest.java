@@ -16,11 +16,16 @@
 package io.lettuce.core.masterslave;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assume.assumeTrue;
 
 import java.util.Arrays;
 
-import org.junit.*;
+import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 
 import io.lettuce.TestClientResources;
 import io.lettuce.core.*;
@@ -41,17 +46,17 @@ public class CustomCommandTest extends AbstractTest {
     private RedisCommands<String, String> redis;
     private StatefulRedisConnection<String, String> connection;
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() {
         redisClient = RedisClient.create(TestClientResources.get());
     }
 
-    @AfterClass
+    @AfterAll
     public static void afterClass() {
         FastShutdown.shutdown(redisClient);
     }
 
-    @Before
+    @BeforeEach
     public void before() {
 
         RedisURI uri = RedisURI.create("redis-sentinel://127.0.0.1:26379?sentinelMasterId=mymaster&timeout=5s");
@@ -60,13 +65,13 @@ public class CustomCommandTest extends AbstractTest {
         redis = connection.sync();
     }
 
-    @After
+    @AfterEach
     public void after() {
         connection.close();
     }
 
     @Test
-    public void dispatchSet() throws Exception {
+    public void dispatchSet() {
 
         String response = redis.dispatch(MyCommands.SET, new StatusOutput<>(utf8StringCodec),
                 new CommandArgs<>(utf8StringCodec).addKey(key).addValue(value));
@@ -75,22 +80,24 @@ public class CustomCommandTest extends AbstractTest {
     }
 
     @Test
-    public void dispatchWithoutArgs() throws Exception {
+    public void dispatchWithoutArgs() {
 
         String response = redis.dispatch(MyCommands.INFO, new StatusOutput<>(utf8StringCodec));
 
         assertThat(response).contains("connected_clients");
     }
 
-    @Test(expected = RedisCommandExecutionException.class)
-    public void dispatchShouldFailForWrongDataType() throws Exception {
+    @Test
+    public void dispatchShouldFailForWrongDataType() {
 
         redis.hset(key, key, value);
-        redis.dispatch(CommandType.GET, new StatusOutput<>(utf8StringCodec), new CommandArgs<>(utf8StringCodec).addKey(key));
+        assertThatThrownBy(
+                () -> redis.dispatch(CommandType.GET, new StatusOutput<>(utf8StringCodec),
+                        new CommandArgs<>(utf8StringCodec).addKey(key))).isInstanceOf(RedisCommandExecutionException.class);
     }
 
     @Test
-    public void dispatchTransactions() throws Exception {
+    public void dispatchTransactions() {
 
         redis.multi();
         String response = redis.dispatch(CommandType.SET, new StatusOutput<>(utf8StringCodec), new CommandArgs<>(
@@ -137,7 +144,7 @@ public class CustomCommandTest extends AbstractTest {
     }
 
     @Test
-    public void masterSlaveFireAndForget() throws Exception {
+    public void masterSlaveFireAndForget() {
 
         RedisCommand<String, String, String> command = new Command<>(MyCommands.PING,
                 new StatusOutput<>(new Utf8StringCodec()), null);

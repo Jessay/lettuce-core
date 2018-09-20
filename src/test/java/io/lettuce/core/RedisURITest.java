@@ -16,6 +16,7 @@
 package io.lettuce.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.Duration;
 import java.util.LinkedHashMap;
@@ -23,7 +24,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.internal.LettuceSets;
 
@@ -77,9 +78,9 @@ public class RedisURITest {
         assertThat(redisURI.toURI().toString()).isEqualTo("redis://localhost");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void shouldThrowIllegalArgumentExceptionOnMalformedUri() {
-        RedisURI.create("localhost");
+        assertThatThrownBy(() -> RedisURI.create("localhost")).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test

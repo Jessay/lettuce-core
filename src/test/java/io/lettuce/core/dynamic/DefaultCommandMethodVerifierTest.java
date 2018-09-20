@@ -21,8 +21,8 @@ import static org.assertj.core.api.Fail.fail;
 import java.lang.reflect.Method;
 import java.util.Collections;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.GeoCoordinates;
 import io.lettuce.core.KeyValue;
@@ -39,7 +39,7 @@ public class DefaultCommandMethodVerifierTest {
 
     private DefaultCommandMethodVerifier sut;
 
-    @Before
+    @BeforeEach
     public void before() {
 
         CommandDetail mget = new CommandDetail("mget", -2, null, 0, 0, 0);

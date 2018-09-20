@@ -22,12 +22,14 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.cluster.models.partitions.Partitions;
@@ -39,7 +41,7 @@ import io.lettuce.core.resource.SocketAddressResolver;
 /**
  * @author Mark Paluch
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class RoundRobinSocketAddressSupplierTest {
 
     private static RedisURI hap1 = new RedisURI("127.0.0.1", 1, Duration.ofSeconds(1));
@@ -51,7 +53,7 @@ public class RoundRobinSocketAddressSupplierTest {
     @Mock
     private ClientResources clientResourcesMock;
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() {
 
         hap1.getResolvedAddress();
@@ -59,7 +61,7 @@ public class RoundRobinSocketAddressSupplierTest {
         hap3.getResolvedAddress();
     }
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
 
         when(clientResourcesMock.socketAddressResolver()).thenReturn(SocketAddressResolver.create(DnsResolvers.JVM_DEFAULT));

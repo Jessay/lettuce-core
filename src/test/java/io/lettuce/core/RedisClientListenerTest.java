@@ -19,8 +19,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.net.SocketAddress;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.TestClientResources;
 import io.lettuce.Wait;
@@ -36,7 +36,7 @@ public class RedisClientListenerTest extends AbstractTest {
 
     private static ClientResources DEFAULT_RESOURCES;
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() throws Exception {
         DEFAULT_RESOURCES = TestClientResources.get();
     }

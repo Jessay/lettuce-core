@@ -17,9 +17,9 @@ package biz.paluch.redis.extensibility;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.FastShutdown;
 import io.lettuce.core.RedisURI;
@@ -41,7 +41,7 @@ public class MyExtendedRedisClientTest {
     protected String key = "key";
     protected String value = "value";
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClient() {
         client = getRedisClient();
     }
@@ -50,7 +50,7 @@ public class MyExtendedRedisClientTest {
         return new MyExtendedRedisClient(null, RedisURI.create(host, port));
     }
 
-    @AfterClass
+    @AfterAll
     public static void shutdownClient() {
         FastShutdown.shutdown(client);
     }

@@ -23,9 +23,9 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import io.lettuce.TestClientResources;
@@ -47,7 +47,7 @@ public class AsyncConnectionPoolSupportTest extends AbstractTest {
     private static Set<?> channels;
     private static RedisURI uri = RedisURI.Builder.redis(host, port).build();
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClient() {
 
         client = RedisClient.create(TestClientResources.create(), uri);
@@ -55,7 +55,7 @@ public class AsyncConnectionPoolSupportTest extends AbstractTest {
         channels = (ChannelGroup) ReflectionTestUtils.getField(client, "channels");
     }
 
-    @AfterClass
+    @AfterAll
     public static void afterClass() {
         FastShutdown.shutdown(client);
         FastShutdown.shutdown(client.getResources());

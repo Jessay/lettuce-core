@@ -15,40 +15,43 @@
  */
 package io.lettuce.core;
 
+import static io.lettuce.core.LettuceFutures.awaitAll;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mark Paluch
  */
 public class LettuceFuturesTest {
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    public void setUp() {
         Thread.interrupted();
     }
 
-    @Test(expected = RedisCommandExecutionException.class)
-    public void awaitAllShouldThrowRedisCommandExecutionException() throws Exception {
+    @Test
+    public void awaitAllShouldThrowRedisCommandExecutionException() {
 
         CompletableFuture<String> f = new CompletableFuture<>();
         f.completeExceptionally(new RedisCommandExecutionException("error"));
 
-        LettuceFutures.awaitAll(1, TimeUnit.SECONDS, f);
+        assertThatThrownBy(() -> awaitAll(1, SECONDS, f)).isInstanceOf(RedisCommandExecutionException.class);
     }
 
-    @Test(expected = RedisCommandInterruptedException.class)
+    @Test
     public void awaitAllShouldThrowRedisCommandInterruptedException() throws Exception {
 
         CompletableFuture<String> f = new CompletableFuture<>();
         Thread.currentThread().interrupt();
 
-        LettuceFutures.awaitAll(1, TimeUnit.SECONDS, f);
+        assertThatThrownBy(() -> awaitAll(1, SECONDS, f)).isInstanceOf(RedisCommandInterruptedException.class);
     }
 
     @Test
@@ -58,7 +61,7 @@ public class LettuceFuturesTest {
         Thread.currentThread().interrupt();
 
         try {
-            LettuceFutures.awaitAll(1, TimeUnit.SECONDS, f);
+            awaitAll(1, SECONDS, f);
         } catch (Exception e) {
         }
 

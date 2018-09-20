@@ -22,9 +22,9 @@ import javax.enterprise.inject.Produces;
 
 import org.apache.webbeans.cditest.CdiTestContainer;
 import org.apache.webbeans.cditest.CdiTestContainerLoader;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.TestClientResources;
 import io.lettuce.core.AbstractRedisClientTest;
@@ -41,7 +41,7 @@ public class CdiTest {
 
     static CdiTestContainer container;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() throws Exception {
 
         container = CdiTestContainerLoader.getCdiContainer();
@@ -49,7 +49,7 @@ public class CdiTest {
         container.startApplicationScope();
     }
 
-    @AfterClass
+    @AfterAll
     public static void afterClass() throws Exception {
 
         container.stopApplicationScope();

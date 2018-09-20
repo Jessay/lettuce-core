@@ -16,14 +16,11 @@
 package io.lettuce.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.concurrent.TimeUnit;
 
-import org.junit.FixMethodOrder;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.TestClientResources;
 import io.lettuce.Wait;
@@ -34,11 +31,7 @@ import io.lettuce.core.api.async.RedisAsyncCommands;
  * @author Will Glozer
  * @author Mark Paluch
  */
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ClientTest extends AbstractRedisClientTest {
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
     @Override
     public void openConnection() throws Exception {
@@ -50,39 +43,42 @@ public class ClientTest extends AbstractRedisClientTest {
         super.closeConnection();
     }
 
-    @Test(expected = RedisException.class)
-    public void close() throws Exception {
+    @Test
+    public void close() {
+
         redis.getStatefulConnection().close();
-        redis.get(key);
+        assertThatThrownBy(() -> redis.get(key)).isInstanceOf(RedisException.class);
     }
 
     @Test
-    public void statefulConnectionFromSync() throws Exception {
+    public void statefulConnectionFromSync() {
         assertThat(redis.getStatefulConnection().sync()).isSameAs(redis);
     }
 
     @Test
-    public void statefulConnectionFromAsync() throws Exception {
+    public void statefulConnectionFromAsync() {
         RedisAsyncCommands<String, String> async = client.connect().async();
         assertThat(async.getStatefulConnection().async()).isSameAs(async);
         async.getStatefulConnection().close();
     }
 
     @Test
-    public void statefulConnectionFromReactive() throws Exception {
+    public void statefulConnectionFromReactive() {
         RedisAsyncCommands<String, String> async = client.connect().async();
         assertThat(async.getStatefulConnection().reactive().getStatefulConnection()).isSameAs(async.getStatefulConnection());
         async.getStatefulConnection().close();
     }
 
-    @Test(expected = RedisException.class)
-    public void timeout() throws Exception {
+    @Test
+    public void timeout() {
+
         redis.setTimeout(0, TimeUnit.MICROSECONDS);
-        redis.eval(" os.execute(\"sleep \" .. tonumber(1))", ScriptOutputType.STATUS);
+        assertThatThrownBy(() -> redis.eval(" os.execute(\"sleep \" .. tonumber(1))", ScriptOutputType.STATUS)).isInstanceOf(
+                RedisCommandTimeoutException.class);
     }
 
     @Test
-    public void reconnect() throws Exception {
+    public void reconnect() throws InterruptedException {
 
         redis.set(key, value);
 
@@ -97,32 +93,34 @@ public class ClientTest extends AbstractRedisClientTest {
         assertThat(redis.get(key)).isEqualTo(value);
     }
 
-    @Test(expected = RedisCommandInterruptedException.class, timeout = 50)
-    public void interrupt() throws Exception {
+    @Test
+    public void interrupt() {
+
         Thread.currentThread().interrupt();
-        redis.blpop(0, key);
+        assertThatThrownBy(() -> redis.blpop(0, key)).isInstanceOf(RedisCommandInterruptedException.class);
     }
 
     @Test
-    public void connectFailure() throws Exception {
+    public void connectFailure() {
         RedisClient client = RedisClient.create(TestClientResources.get(), "redis://invalid");
-        exception.expect(RedisException.class);
-        exception.expectMessage("Unable to connect");
-        client.connect();
+
+        assertThatThrownBy(client::connect).isInstanceOf(RedisConnectionException.class).hasMessageContaining(
+                "Unable to connect");
+
         FastShutdown.shutdown(client);
     }
 
     @Test
-    public void connectPubSubFailure() throws Exception {
+    public void connectPubSubFailure() {
         RedisClient client = RedisClient.create(TestClientResources.get(), "redis://invalid");
-        exception.expect(RedisException.class);
-        exception.expectMessage("Unable to connect");
-        client.connectPubSub();
+
+        assertThatThrownBy(client::connectPubSub).isInstanceOf(RedisConnectionException.class).hasMessageContaining(
+                "Unable to connect");
         FastShutdown.shutdown(client);
     }
 
     @Test
-    public void emptyClient() throws Exception {
+    public void emptyClient() {
 
         RedisClient client = DefaultRedisClient.get();
         try {
@@ -145,12 +143,12 @@ public class ClientTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void testExceptionWithCause() throws Exception {
+    public void testExceptionWithCause() {
         RedisException e = new RedisException(new RuntimeException());
         assertThat(e).hasCauseExactlyInstanceOf(RuntimeException.class);
     }
 
-    @Test(timeout = 20000)
+    @Test
     public void reset() throws Exception {
 
         StatefulRedisConnection<String, String> connection = client.connect();

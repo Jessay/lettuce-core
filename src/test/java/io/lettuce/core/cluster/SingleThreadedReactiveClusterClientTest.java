@@ -19,9 +19,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
@@ -37,7 +37,7 @@ public class SingleThreadedReactiveClusterClientTest {
 
     RedisClusterClient client;
 
-    @Before
+    @BeforeEach
     public void before() {
 
         DefaultClientResources clientResources = DefaultClientResources.builder()
@@ -48,7 +48,7 @@ public class SingleThreadedReactiveClusterClientTest {
         client = RedisClusterClient.create(clientResources, RedisURI.create("localhost", 7379));
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
 
         client.shutdown();

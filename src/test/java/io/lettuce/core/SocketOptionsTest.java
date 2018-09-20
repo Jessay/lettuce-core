@@ -22,7 +22,7 @@ import java.net.SocketException;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.netty.channel.ConnectTimeoutException;
 
@@ -58,7 +58,7 @@ public class SocketOptionsTest extends AbstractRedisClientTest {
         assertThat(sut.getConnectTimeout()).isEqualTo(Duration.ofSeconds(10));
     }
 
-    @Test(timeout = 1000)
+    @Test
     public void testConnectTimeout() {
 
         SocketOptions socketOptions = SocketOptions.builder().connectTimeout(100, TimeUnit.MILLISECONDS).build();

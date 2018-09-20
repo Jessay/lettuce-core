@@ -30,6 +30,10 @@ import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 import org.junit.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 
 import io.lettuce.ConnectionTestUtil;
 import io.lettuce.Futures;
@@ -72,25 +76,25 @@ public class RedisClusterSetupTest extends AbstractTest {
     @Rule
     public ClusterRule clusterRule = new ClusterRule(clusterClient, AbstractClusterTest.port5, AbstractClusterTest.port6);
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClient() {
         clusterClient = RedisClusterClient.create(TestClientResources.get(),
                 RedisURI.Builder.redis(host, AbstractClusterTest.port5).build());
     }
 
-    @AfterClass
+    @AfterAll
     public static void shutdownClient() {
         FastShutdown.shutdown(clusterClient);
     }
 
-    @Before
+    @BeforeEach
     public void openConnection() throws Exception {
         redis1 = client.connect(RedisURI.Builder.redis(AbstractClusterTest.host, AbstractClusterTest.port5).build()).sync();
         redis2 = client.connect(RedisURI.Builder.redis(AbstractClusterTest.host, AbstractClusterTest.port6).build()).sync();
         clusterRule.clusterReset();
     }
 
-    @After
+    @AfterEach
     public void closeConnection() throws Exception {
         redis1.getStatefulConnection().close();
         redis2.getStatefulConnection().close();

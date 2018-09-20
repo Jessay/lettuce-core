@@ -22,10 +22,12 @@ import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Method;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.reactivestreams.Publisher;
 
@@ -41,7 +43,7 @@ import io.lettuce.core.protocol.RedisCommand;
 /**
  * @author Mark Paluch
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ReactiveCommandSegmentCommandFactoryTest {
 
     @Mock
@@ -50,7 +52,7 @@ public class ReactiveCommandSegmentCommandFactoryTest {
     @Mock
     private CommandOutputFactory commandOutputFactory;
 
-    @Before
+    @BeforeEach
     public void before() {
         when(outputFactoryResolver.resolveCommandOutput(any())).thenReturn(commandOutputFactory);
     }

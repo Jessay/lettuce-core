@@ -17,6 +17,7 @@ package io.lettuce.core.protocol;
 
 import static io.lettuce.core.protocol.RedisStateMachine.State;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.nio.charset.Charset;
 import java.util.Arrays;
@@ -27,10 +28,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.RedisException;
 import io.lettuce.core.codec.RedisCodec;
@@ -49,7 +50,7 @@ public class StateMachineTest {
     protected CommandOutput<String, String, String> output;
     protected RedisStateMachine rsm;
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() {
 
         LoggerContext ctx = (LoggerContext) LogManager.getContext();
@@ -58,7 +59,7 @@ public class StateMachineTest {
         loggerConfig.setLevel(Level.ALL);
     }
 
-    @AfterClass
+    @AfterAll
     public static void afterClass() {
         LoggerContext ctx = (LoggerContext) LogManager.getContext();
         Configuration config = ctx.getConfiguration();
@@ -66,40 +67,40 @@ public class StateMachineTest {
         loggerConfig.setLevel(null);
     }
 
-    @Before
-    public final void createStateMachine() throws Exception {
+    @BeforeEach
+    public final void createStateMachine() {
         output = new StatusOutput<String, String>(codec);
         rsm = new RedisStateMachine();
     }
 
     @Test
-    public void single() throws Exception {
+    public void single() {
         assertThat(rsm.decode(buffer("+OK\r\n"), output)).isTrue();
         assertThat(output.get()).isEqualTo("OK");
     }
 
     @Test
-    public void error() throws Exception {
+    public void error() {
         assertThat(rsm.decode(buffer("-ERR\r\n"), output)).isTrue();
         assertThat(output.getError()).isEqualTo("ERR");
     }
 
     @Test
-    public void errorWithoutLineBreak() throws Exception {
+    public void errorWithoutLineBreak() {
         assertThat(rsm.decode(buffer("-ERR"), output)).isFalse();
         assertThat(rsm.decode(buffer("\r\n"), output)).isTrue();
         assertThat(output.getError()).isEqualTo("");
     }
 
     @Test
-    public void integer() throws Exception {
+    public void integer() {
         CommandOutput<String, String, Long> output = new IntegerOutput<String, String>(codec);
         assertThat(rsm.decode(buffer(":1\r\n"), output)).isTrue();
         assertThat((long) output.get()).isEqualTo(1);
     }
 
     @Test
-    public void bulk() throws Exception {
+    public void bulk() {
         CommandOutput<String, String, String> output = new ValueOutput<String, String>(codec);
         assertThat(rsm.decode(buffer("$-1\r\n"), output)).isTrue();
         assertThat(output.get()).isNull();
@@ -108,7 +109,7 @@ public class StateMachineTest {
     }
 
     @Test
-    public void multi() throws Exception {
+    public void multi() {
         CommandOutput<String, String, List<String>> output = new ValueListOutput<String, String>(codec);
         ByteBuf buffer = buffer("*2\r\n$-1\r\n$2\r\nok\r\n");
         assertThat(rsm.decode(buffer, output)).isTrue();
@@ -116,7 +117,7 @@ public class StateMachineTest {
     }
 
     @Test
-    public void multiEmptyArray1() throws Exception {
+    public void multiEmptyArray1() {
         CommandOutput<String, String, List<Object>> output = new NestedMultiOutput<String, String>(codec);
         ByteBuf buffer = buffer("*2\r\n$3\r\nABC\r\n*0\r\n");
         assertThat(rsm.decode(buffer, output)).isTrue();
@@ -126,7 +127,7 @@ public class StateMachineTest {
     }
 
     @Test
-    public void multiEmptyArray2() throws Exception {
+    public void multiEmptyArray2() {
         CommandOutput<String, String, List<Object>> output = new NestedMultiOutput<String, String>(codec);
         ByteBuf buffer = buffer("*2\r\n*0\r\n$3\r\nABC\r\n");
         assertThat(rsm.decode(buffer, output)).isTrue();
@@ -136,7 +137,7 @@ public class StateMachineTest {
     }
 
     @Test
-    public void multiEmptyArray3() throws Exception {
+    public void multiEmptyArray3() {
         CommandOutput<String, String, List<Object>> output = new NestedMultiOutput<String, String>(codec);
         ByteBuf buffer = buffer("*2\r\n*2\r\n$2\r\nAB\r\n$2\r\nXY\r\n*0\r\n");
         assertThat(rsm.decode(buffer, output)).isTrue();
@@ -146,7 +147,7 @@ public class StateMachineTest {
     }
 
     @Test
-    public void partialFirstLine() throws Exception {
+    public void partialFirstLine() {
         assertThat(rsm.decode(buffer("+"), output)).isFalse();
         assertThat(rsm.decode(buffer("-"), output)).isFalse();
         assertThat(rsm.decode(buffer(":"), output)).isFalse();
@@ -154,13 +155,13 @@ public class StateMachineTest {
         assertThat(rsm.decode(buffer("*"), output)).isFalse();
     }
 
-    @Test(expected = RedisException.class)
-    public void invalidReplyType() throws Exception {
-        rsm.decode(buffer("="), output);
+    @Test
+    public void invalidReplyType() {
+        assertThatThrownBy(() -> rsm.decode(buffer("="), output)).isInstanceOf(RedisException.class);
     }
 
     @Test
-    public void sillyTestsForEmmaCoverage() throws Exception {
+    public void sillyTestsForEmmaCoverage() {
         assertThat(State.Type.valueOf("SINGLE")).isEqualTo(State.Type.SINGLE);
     }
 

@@ -20,13 +20,14 @@ import static io.lettuce.core.SetArgs.Builder.nx;
 import static io.lettuce.core.SetArgs.Builder.px;
 import static io.lettuce.core.SetArgs.Builder.xx;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.rules.ExpectedException;
 
 import io.lettuce.core.AbstractRedisClientTest;
@@ -39,8 +40,6 @@ import io.lettuce.core.RedisException;
  * @author Mark Paluch
  */
 public class StringCommandTest extends AbstractRedisClientTest {
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
     @Test
     public void append() {
@@ -152,14 +151,14 @@ public class StringCommandTest extends AbstractRedisClientTest {
         assertThat(redis.ttl(key) >= 19).isTrue();
     }
 
-    @Test(expected = RedisException.class)
+    @Test
     public void setNegativeEX() {
-        redis.set(key, value, ex(-10));
+        assertThatThrownBy(() -> redis.set(key, value, ex(-10))).isInstanceOf(RedisException. class);
     }
 
-    @Test(expected = RedisException.class)
+    @Test
     public void setNegativePX() {
-        redis.set(key, value, px(-1000));
+        assertThatThrownBy(() -> redis.set(key, value, px(-1000))).isInstanceOf(RedisException. class);
     }
 
     @Test

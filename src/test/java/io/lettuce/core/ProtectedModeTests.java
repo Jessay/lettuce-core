@@ -21,10 +21,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import io.lettuce.TestClientResources;
 import io.lettuce.Wait;
@@ -42,7 +42,7 @@ public class ProtectedModeTests {
     private static MockTcpServer server;
     private static RedisClient client;
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() throws Exception {
 
         server = new MockTcpServer();
@@ -71,14 +71,14 @@ public class ProtectedModeTests {
                 RedisURI.create(TestSettings.host(), TestSettings.nonexistentPort()));
     }
 
-    @AfterClass
+    @AfterAll
     public static void afterClass() {
 
         server.shutdown();
         FastShutdown.shutdown(client);
     }
 
-    @Before
+    @BeforeEach
     public void before() {
         client.setOptions(ClientOptions.create());
     }

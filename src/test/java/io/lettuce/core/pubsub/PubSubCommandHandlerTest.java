@@ -22,12 +22,14 @@ import static org.mockito.Mockito.when;
 
 import java.util.Queue;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import io.lettuce.core.ClientOptions;
@@ -48,7 +50,7 @@ import io.netty.channel.*;
 /**
  * @author Mark Paluch
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class PubSubCommandHandlerTest {
 
     private Queue<RedisCommand<String, String, ?>> stack;
@@ -80,7 +82,7 @@ public class PubSubCommandHandlerTest {
     private PubSubEndpoint<String, String> endpoint;
 
     @SuppressWarnings("unchecked")
-    @Before
+    @BeforeEach
     public void before() throws Exception {
 
         when(channel.config()).thenReturn(channelConfig);

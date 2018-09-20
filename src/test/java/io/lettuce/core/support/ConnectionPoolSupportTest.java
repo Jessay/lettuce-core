@@ -25,9 +25,9 @@ import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.apache.commons.pool2.impl.SoftReferenceObjectPool;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import io.lettuce.TestClientResources;
@@ -58,14 +58,14 @@ public class ConnectionPoolSupportTest extends AbstractTest {
     private static RedisClient client;
     private static Set<?> channels;
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClient() {
         client = RedisClient.create(TestClientResources.create(), RedisURI.Builder.redis(host, port).build());
         client.setOptions(ClientOptions.create());
         channels = (ChannelGroup) ReflectionTestUtils.getField(client, "channels");
     }
 
-    @AfterClass
+    @AfterAll
     public static void afterClass() {
         FastShutdown.shutdown(client);
         FastShutdown.shutdown(client.getResources());
