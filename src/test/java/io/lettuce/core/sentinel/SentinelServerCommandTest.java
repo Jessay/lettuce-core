@@ -15,23 +15,23 @@
  */
 package io.lettuce.core.sentinel;
 
-import static io.lettuce.core.TestSettings.hostAddr;
+import static io.lettuce.test.settings.TestSettings.hostAddr;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
-import io.lettuce.TestClientResources;
 import io.lettuce.core.KillArgs;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
-import io.lettuce.core.TestSettings;
 import io.lettuce.core.sentinel.api.sync.RedisSentinelCommands;
+import io.lettuce.test.resource.TestClientResources;
+import io.lettuce.test.settings.TestSettings;
 
 /**
  * @author Mark Paluch
@@ -41,13 +41,13 @@ public class SentinelServerCommandTest extends AbstractSentinelTest {
     @Rule
     public SentinelRule sentinelRule = new SentinelRule(sentinelClient, false, 26379, 26380);
 
-    @BeforeAll
+    @BeforeClass
     public static void setupClient() {
         sentinelClient = RedisClient.create(TestClientResources.get(), RedisURI.Builder
                 .sentinel(TestSettings.host(), MASTER_ID).build());
     }
 
-    @BeforeEach
+    @Before
     public void openConnection() throws Exception {
         super.openConnection();
 

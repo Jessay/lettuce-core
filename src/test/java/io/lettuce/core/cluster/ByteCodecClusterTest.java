@@ -17,18 +17,25 @@ package io.lettuce.core.cluster;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.jupiter.api.Test;
+import javax.inject.Inject;
 
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import io.lettuce.test.LettuceExtension;
+import io.lettuce.core.TestSupport;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.codec.ByteArrayCodec;
 
 /**
  * @author Mark Paluch
  */
-public class ByteCodecClusterTest extends AbstractClusterTest {
+@ExtendWith(LettuceExtension.class)
+public class ByteCodecClusterTest extends TestSupport {
 
     @Test
-    public void testByteCodec() throws Exception {
+    @Inject
+    public void testByteCodec(RedisClusterClient clusterClient)  {
 
         StatefulRedisClusterConnection<byte[], byte[]> connection = clusterClient.connect(new ByteArrayCodec());
 

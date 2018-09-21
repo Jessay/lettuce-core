@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 public class GeoModelUnitTests {
 
     @Test
-    public void geoWithin() throws Exception {
+    public void geoWithin() {
 
         GeoWithin<String> sut = new GeoWithin<String>("me", 1.0, 1234L, new GeoCoordinates(1, 2));
         GeoWithin<String> equalsToSut = new GeoWithin<String>("me", 1.0, 1234L, new GeoCoordinates(1, 2));
@@ -39,11 +39,10 @@ public class GeoModelUnitTests {
         assertThat(sut).isEqualTo(equalsToSut);
         assertThat(sut.hashCode()).isEqualTo(equalsToSut.hashCode());
         assertThat(sut.toString()).isEqualTo(equalsToSut.toString());
-
     }
 
     @Test
-    public void geoWithinSlightlyDifferent() throws Exception {
+    public void geoWithinSlightlyDifferent() {
 
         GeoWithin<String> sut = new GeoWithin<String>("me", 1.0, 1234L, new GeoCoordinates(1, 2));
         GeoWithin<String> slightlyDifferent = new GeoWithin<String>("me", 1.0, 1234L, new GeoCoordinates(1.1, 2));
@@ -60,7 +59,7 @@ public class GeoModelUnitTests {
     }
 
     @Test
-    public void geoWithinEmpty() throws Exception {
+    public void geoWithinEmpty() {
 
         GeoWithin<String> sut = new GeoWithin<String>(null, null, null, null);
         GeoWithin<String> equalsToSut = new GeoWithin<String>(null, null, null, null);
@@ -70,7 +69,7 @@ public class GeoModelUnitTests {
     }
 
     @Test
-    public void geoCoordinates() throws Exception {
+    public void geoCoordinates() {
 
         GeoCoordinates sut = new GeoCoordinates(1, 2);
         GeoCoordinates equalsToSut = new GeoCoordinates(1, 2);
@@ -85,7 +84,7 @@ public class GeoModelUnitTests {
     }
 
     @Test
-    public void geoCoordinatesSlightlyDifferent() throws Exception {
+    public void geoCoordinatesSlightlyDifferent() {
 
         GeoCoordinates sut = new GeoCoordinates(1, 2);
         GeoCoordinates slightlyDifferent = new GeoCoordinates(1.1, 2);

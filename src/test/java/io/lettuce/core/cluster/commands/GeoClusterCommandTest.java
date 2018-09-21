@@ -16,18 +16,19 @@
 package io.lettuce.core.cluster.commands;
 
 import static io.lettuce.core.cluster.ClusterTestUtil.flushDatabaseOfAllNodes;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 
-import io.lettuce.RedisConditions;
-import io.lettuce.TestClientResources;
-import io.lettuce.core.FastShutdown;
+import io.lettuce.test.condition.RedisConditions;
+import io.lettuce.test.resource.TestClientResources;
+import io.lettuce.test.resource.FastShutdown;
 import io.lettuce.core.RedisURI;
-import io.lettuce.core.TestSettings;
+import io.lettuce.test.settings.TestSettings;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.cluster.ClusterTestUtil;
 import io.lettuce.core.cluster.RedisClusterClient;
@@ -69,42 +70,42 @@ public class GeoClusterCommandTest extends GeoCommandTest {
         return ClusterTestUtil.redisCommandsOverCluster(clusterConnection);
     }
 
-    @Ignore("MULTI not available on Redis Cluster")
+    @Disabled("MULTI not available on Redis Cluster")
     @Override
     public void geoaddInTransaction() {
     }
 
-    @Ignore("MULTI not available on Redis Cluster")
+    @Disabled("MULTI not available on Redis Cluster")
     @Override
     public void geoaddMultiInTransaction() {
     }
 
-    @Ignore("MULTI not available on Redis Cluster")
+    @Disabled("MULTI not available on Redis Cluster")
     @Override
     public void georadiusInTransaction() {
     }
 
-    @Ignore("MULTI not available on Redis Cluster")
+    @Disabled("MULTI not available on Redis Cluster")
     @Override
     public void geodistInTransaction() {
     }
 
-    @Ignore("MULTI not available on Redis Cluster")
+    @Disabled("MULTI not available on Redis Cluster")
     @Override
     public void georadiusWithArgsAndTransaction() {
     }
 
-    @Ignore("MULTI not available on Redis Cluster")
+    @Disabled("MULTI not available on Redis Cluster")
     @Override
     public void georadiusbymemberWithArgsInTransaction() {
     }
 
-    @Ignore("MULTI not available on Redis Cluster")
+    @Disabled("MULTI not available on Redis Cluster")
     @Override
     public void geoposInTransaction() {
     }
 
-    @Ignore("MULTI not available on Redis Cluster")
+    @Disabled("MULTI not available on Redis Cluster")
     @Override
     public void geohashInTransaction() {
     }

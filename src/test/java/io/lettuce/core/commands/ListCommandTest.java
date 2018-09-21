@@ -16,16 +16,16 @@
 package io.lettuce.core.commands;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
 
-import io.lettuce.RedisConditions;
+import io.lettuce.test.condition.RedisConditions;
 import io.lettuce.core.AbstractRedisClientTest;
-import io.lettuce.core.ListStreamingAdapter;
+import io.lettuce.test.ListStreamingAdapter;
 
 /**
  * @author Will Glozer

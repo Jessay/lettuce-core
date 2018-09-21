@@ -32,18 +32,15 @@ import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import io.lettuce.Futures;
 import io.lettuce.core.ConnectionFuture;
 import io.lettuce.core.RedisException;
 import io.lettuce.core.RedisURI;
-import io.lettuce.core.TestSettings;
+import io.lettuce.test.settings.TestSettings;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.cluster.RedisClusterClient;
@@ -457,7 +454,8 @@ public class ClusterTopologyRefreshUnitTests {
     }
 
     private static <T> ConnectionFuture<T> completedFuture(T value) {
-        return Futures.createConnectionFuture(InetSocketAddress.createUnresolved(TestSettings.host(), TestSettings.port()),
+
+        return ConnectionFuture.from(InetSocketAddress.createUnresolved(TestSettings.host(), TestSettings.port()),
                 CompletableFuture.completedFuture(value));
     }
 
@@ -465,7 +463,8 @@ public class ClusterTopologyRefreshUnitTests {
 
         CompletableFuture<T> future = new CompletableFuture<T>();
         future.completeExceptionally(e);
-        return Futures.createConnectionFuture(InetSocketAddress.createUnresolved(TestSettings.host(), TestSettings.port()),
+
+        return ConnectionFuture.from(InetSocketAddress.createUnresolved(TestSettings.host(), TestSettings.port()),
                 future);
     }
 }

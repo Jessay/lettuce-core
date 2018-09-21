@@ -30,7 +30,7 @@ import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.reactive.RedisStringReactiveCommands;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.commands.BitCommandTest;
-import io.lettuce.util.ReactiveSyncInvocationHandler;
+import io.lettuce.test.ReactiveSyncInvocationHandler;
 
 /**
  * @author Mark Paluch

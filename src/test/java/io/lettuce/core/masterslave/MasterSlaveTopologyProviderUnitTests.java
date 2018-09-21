@@ -24,7 +24,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.RedisURI;
-import io.lettuce.core.TestSettings;
+import io.lettuce.test.settings.TestSettings;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.models.role.RedisInstance;
 import io.lettuce.core.models.role.RedisNodeDescription;

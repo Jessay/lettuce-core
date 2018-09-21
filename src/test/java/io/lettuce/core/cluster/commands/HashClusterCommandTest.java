@@ -19,10 +19,10 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 
-import io.lettuce.TestClientResources;
-import io.lettuce.core.FastShutdown;
+import io.lettuce.test.resource.TestClientResources;
+import io.lettuce.test.resource.FastShutdown;
 import io.lettuce.core.RedisURI;
-import io.lettuce.core.TestSettings;
+import io.lettuce.test.settings.TestSettings;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.cluster.ClusterTestUtil;
 import io.lettuce.core.cluster.RedisClusterClient;

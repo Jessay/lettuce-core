@@ -24,8 +24,8 @@ import org.junit.jupiter.api.Test;
 
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
-import io.lettuce.TestClientResources;
-import io.lettuce.core.AbstractTest;
+import io.lettuce.test.resource.TestClientResources;
+import io.lettuce.core.TestSupport;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.event.connection.ConnectionEvent;
@@ -33,7 +33,7 @@ import io.lettuce.core.event.connection.ConnectionEvent;
 /**
  * @author Mark Paluch
  */
-public class ConnectionEventsTriggeredTest extends AbstractTest {
+public class ConnectionEventsTriggeredTest extends TestSupport {
 
     @Test
     public void testConnectionEvents() throws Exception {

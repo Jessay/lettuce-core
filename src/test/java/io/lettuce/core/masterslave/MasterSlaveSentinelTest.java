@@ -15,8 +15,8 @@
  */
 package io.lettuce.core.masterslave;
 
-import static io.lettuce.core.TestSettings.port;
 import static io.lettuce.core.masterslave.MasterSlaveTest.slaveCall;
+import static io.lettuce.test.settings.TestSettings.port;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 
@@ -24,16 +24,20 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.Before;
 import org.junit.Rule;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import io.lettuce.TestClientResources;
-import io.lettuce.core.*;
+import io.lettuce.core.ReadFrom;
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.RedisConnectionException;
+import io.lettuce.core.RedisURI;
 import io.lettuce.core.codec.Utf8StringCodec;
 import io.lettuce.core.sentinel.AbstractSentinelTest;
 import io.lettuce.core.sentinel.SentinelRule;
+import io.lettuce.test.resource.TestClientResources;
+import io.lettuce.test.settings.TestSettings;
 import io.netty.channel.group.ChannelGroup;
 
 /**
@@ -52,7 +56,7 @@ public class MasterSlaveSentinelTest extends AbstractSentinelTest {
     private RedisURI sentinelUri = RedisURI.Builder.sentinel(TestSettings.host(), 26379, MASTER_ID).build();
     private Pattern pattern = Pattern.compile("role:(\\w+)");
 
-    @BeforeEach
+    @Before
     public void before() throws Exception {
         sentinelRule.needMasterWithSlave(MASTER_ID, port(3), port(4));
     }

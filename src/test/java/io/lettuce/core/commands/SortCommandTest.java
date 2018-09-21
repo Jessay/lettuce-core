@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.AbstractRedisClientTest;
-import io.lettuce.core.ListStreamingAdapter;
+import io.lettuce.test.ListStreamingAdapter;
 
 /**
  * @author Will Glozer

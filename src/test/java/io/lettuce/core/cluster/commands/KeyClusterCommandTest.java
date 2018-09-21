@@ -16,19 +16,19 @@
 package io.lettuce.core.cluster.commands;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import io.lettuce.RedisConditions;
-import io.lettuce.TestClientResources;
+import io.lettuce.test.condition.EnabledOnCommand;
+import io.lettuce.test.resource.TestClientResources;
 import io.lettuce.core.AbstractRedisClientTest;
-import io.lettuce.core.FastShutdown;
+import io.lettuce.test.resource.FastShutdown;
 import io.lettuce.core.RedisURI;
-import io.lettuce.core.TestSettings;
+import io.lettuce.test.settings.TestSettings;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.cluster.ClusterTestUtil;
 import io.lettuce.core.cluster.RedisClusterClient;
@@ -92,9 +92,8 @@ public class KeyClusterCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
+    @EnabledOnCommand("TOUCH")
     public void touch() {
-
-        assumeTrue(RedisConditions.of(redis).hasCommand("TOUCH"));
 
         redis.set(key, "value");
         redis.set("a", "value");
@@ -105,9 +104,8 @@ public class KeyClusterCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
+    @EnabledOnCommand("UNLINK")
     public void unlink() {
-
-        assumeTrue(RedisConditions.of(redis).hasCommand("UNLINK"));
 
         redis.set(key, "value");
         redis.set("a", "value");

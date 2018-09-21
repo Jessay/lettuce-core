@@ -19,28 +19,43 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.fail;
 
-import org.junit.FixMethodOrder;
+import javax.inject.Inject;
+
 import org.junit.jupiter.api.Test;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import io.lettuce.Wait;
+import io.lettuce.test.LettuceExtension;
+import io.lettuce.test.Wait;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.api.sync.RedisCommands;
+import io.lettuce.test.WithPassword;
+import io.lettuce.test.resource.DefaultRedisClient;
 
 /**
  * @author Will Glozer
  * @author Mark Paluch
  */
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class ConnectionCommandTest extends AbstractRedisClientTest {
+@ExtendWith(LettuceExtension.class)
+public class ConnectionCommandTest extends TestSupport {
+
+    private final RedisClient client;
+    private final StatefulRedisConnection<String, String> connection;
+    private final RedisCommands<String, String> redis;
+
+    @Inject
+    public ConnectionCommandTest(RedisClient client, StatefulRedisConnection<String, String> connection) {
+        this.client = client;
+        this.connection = connection;
+        this.redis = connection.sync();
+    }
+
     @Test
     public void auth()  {
-        new WithPasswordRequired() {
-            @Override
-            public void run(RedisClient client) {
-                RedisCommands<String, String> connection = client.connect().sync();
+
+        WithPassword.run(client, () -> {
+            RedisCommands<String, String> connection = client.connect().sync();
                 try {
                     connection.ping();
                     fail("Server doesn't require authentication");
@@ -51,12 +66,11 @@ public class ConnectionCommandTest extends AbstractRedisClientTest {
                 }
 
                 RedisURI redisURI = RedisURI.Builder.redis(host, port).withDatabase(2).withPassword(passwd).build();
-                RedisClient redisClient = DefaultRedisClient.get();
-                RedisCommands<String, String> authConnection = redisClient.connect(redisURI).sync();
+                RedisCommands<String, String> authConnection = client.connect(redisURI).sync();
                 authConnection.ping();
                 authConnection.getStatefulConnection().close();
-            }
-        };
+        });
+
     }
 
     @Test
@@ -88,19 +102,18 @@ public class ConnectionCommandTest extends AbstractRedisClientTest {
 
     @Test
     public void authReconnect()  {
-        new WithPasswordRequired() {
-            @Override
-            public void run(RedisClient client) throws InterruptedException {
+        WithPassword.run(client, () -> {
 
-                RedisCommands<String, String> connection = client.connect().sync();
+            RedisCommands<String, String> connection = client.connect().sync();
                 assertThat(connection.auth(passwd)).isEqualTo("OK");
                 assertThat(connection.set(key, value)).isEqualTo("OK");
                 connection.quit();
 
                 Thread.sleep(100);
                 assertThat(connection.get(key)).isEqualTo(value);
-            }
-        };
+
+            connection.getStatefulConnection().close();
+        });
     }
 
     @Test
@@ -159,6 +172,5 @@ public class ConnectionCommandTest extends AbstractRedisClientTest {
         assertThat(LettuceStrings.string(1.1)).isEqualTo("1.1");
         assertThat(LettuceStrings.string(Double.POSITIVE_INFINITY)).isEqualTo("+inf");
         assertThat(LettuceStrings.string(Double.NEGATIVE_INFINITY)).isEqualTo("-inf");
-
     }
 }

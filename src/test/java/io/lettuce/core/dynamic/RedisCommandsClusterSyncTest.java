@@ -20,17 +20,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.Duration;
 import java.util.List;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.*;
 
-import io.lettuce.TestClientResources;
-import io.lettuce.core.AbstractTest;
-import io.lettuce.core.FastShutdown;
 import io.lettuce.core.RedisURI;
+import io.lettuce.core.TestSupport;
 import io.lettuce.core.Value;
 import io.lettuce.core.cluster.ClusterRule;
 import io.lettuce.core.cluster.RedisClusterClient;
@@ -38,11 +31,13 @@ import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.dynamic.annotation.Command;
 import io.lettuce.core.dynamic.domain.Timeout;
 import io.lettuce.core.internal.LettuceLists;
+import io.lettuce.test.resource.FastShutdown;
+import io.lettuce.test.resource.TestClientResources;
 
 /**
  * @author Mark Paluch
  */
-public class RedisCommandsClusterSyncTest extends AbstractTest {
+public class RedisCommandsClusterSyncTest extends TestSupport {
 
     public static final int port1 = 7379;
     public static final int port2 = port1 + 1;
@@ -56,23 +51,23 @@ public class RedisCommandsClusterSyncTest extends AbstractTest {
 
     private StatefulRedisClusterConnection<String, String> connection;
 
-    @BeforeAll
+    @BeforeClass
     public static void setupClusterClient() {
         clusterClient = RedisClusterClient.create(TestClientResources.get(),
                 LettuceLists.unmodifiableList(RedisURI.Builder.redis(host, port1).build()));
     }
 
-    @AfterAll
+    @AfterClass
     public static void shutdownClusterClient() {
         FastShutdown.shutdown(clusterClient);
     }
 
-    @BeforeEach
+    @Before
     public void before() {
         connection = clusterClient.connect();
     }
 
-    @AfterEach
+    @After
     public void tearDown() {
         connection.close();
     }

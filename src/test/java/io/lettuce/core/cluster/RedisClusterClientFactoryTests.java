@@ -22,10 +22,10 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import io.lettuce.TestClientResources;
-import io.lettuce.core.FastShutdown;
+import io.lettuce.test.resource.TestClientResources;
+import io.lettuce.test.resource.FastShutdown;
 import io.lettuce.core.RedisURI;
-import io.lettuce.core.TestSettings;
+import io.lettuce.test.settings.TestSettings;
 import io.lettuce.core.internal.LettuceLists;
 
 /**

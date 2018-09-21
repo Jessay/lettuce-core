@@ -17,7 +17,7 @@ package io.lettuce.core.masterslave;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -29,12 +29,16 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import io.lettuce.core.*;
+import io.lettuce.core.AbstractRedisClientTest;
+import io.lettuce.core.ReadFrom;
+import io.lettuce.core.RedisException;
+import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.codec.Utf8StringCodec;
 import io.lettuce.core.models.role.RedisInstance;
 import io.lettuce.core.models.role.RoleParser;
+import io.lettuce.test.settings.TestSettings;
 
 /**
  * @author Mark Paluch
@@ -69,8 +73,9 @@ public class StaticMasterSlaveTest extends AbstractRedisClientTest {
             master = node2;
             slave = node1;
         } else {
-            assumeTrue(String.format("Cannot run the test because I don't have a distinct master and slave but %s and %s",
-                    node1Instance, node2Instance), false);
+            assumeTrue(false, String.format(
+                    "Cannot run the test because I don't have a distinct master and slave but %s and %s", node1Instance,
+                    node2Instance));
         }
 
         connectionToNode1.configSet("requirepass", passwd);

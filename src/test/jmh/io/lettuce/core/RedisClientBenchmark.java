@@ -20,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.openjdk.jmh.annotations.*;
 
+import io.lettuce.test.settings.TestSettings;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import io.lettuce.core.api.StatefulRedisConnection;

@@ -18,17 +18,16 @@ package io.lettuce.core.commands;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.offset;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Rule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.rules.ExpectedException;
 
-import io.lettuce.RedisConditions;
+import io.lettuce.test.resource.DefaultRedisClient;
+import io.lettuce.test.condition.RedisConditions;
 import io.lettuce.core.*;
 import io.lettuce.core.api.StatefulRedisConnection;
 

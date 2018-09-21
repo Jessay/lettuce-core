@@ -23,25 +23,23 @@ import java.util.Collections;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.*;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.runners.MethodSorters;
 
-import io.lettuce.TestClientResources;
-import io.lettuce.Wait;
 import io.lettuce.category.SlowTests;
 import io.lettuce.core.*;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.cluster.models.partitions.RedisClusterNode;
+import io.lettuce.test.Wait;
+import io.lettuce.test.resource.FastShutdown;
+import io.lettuce.test.resource.TestClientResources;
+import io.lettuce.test.settings.TestSettings;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @SuppressWarnings("unchecked")
 @SlowTests
-public class RedisClusterStressScenariosTest extends AbstractTest {
+public class RedisClusterStressScenariosTest extends TestSupport {
 
     public static final String host = TestSettings.hostAddr();
 
@@ -60,27 +58,27 @@ public class RedisClusterStressScenariosTest extends AbstractTest {
     protected String value = "value";
 
     @Rule
-    public ClusterRule clusterRule = new ClusterRule(clusterClient, AbstractClusterTest.port5, AbstractClusterTest.port6);
+    public ClusterRule clusterRule = new ClusterRule(clusterClient, ClusterTestSettings.port5, ClusterTestSettings.port6);
 
-    @BeforeAll
+    @BeforeClass
     public static void setupClient() {
-        client = RedisClient.create(TestClientResources.get(), RedisURI.Builder.redis(host, AbstractClusterTest.port5).build());
+        client = RedisClient.create(TestClientResources.get(), RedisURI.Builder.redis(host, ClusterTestSettings.port5).build());
         clusterClient = RedisClusterClient.create(TestClientResources.get(),
-                Collections.singletonList(RedisURI.Builder.redis(host, AbstractClusterTest.port5).build()));
+                Collections.singletonList(RedisURI.Builder.redis(host, ClusterTestSettings.port5).build()));
     }
 
-    @AfterAll
+    @AfterClass
     public static void shutdownClient() {
         FastShutdown.shutdown(client);
     }
 
-    @BeforeEach
+    @Before
     public void before() throws Exception {
 
         ClusterSetup.setupMasterWithSlave(clusterRule);
 
-        redis5 = client.connect(RedisURI.Builder.redis(host, AbstractClusterTest.port5).build());
-        redis6 = client.connect(RedisURI.Builder.redis(host, AbstractClusterTest.port6).build());
+        redis5 = client.connect(RedisURI.Builder.redis(host, ClusterTestSettings.port5).build());
+        redis6 = client.connect(RedisURI.Builder.redis(host, ClusterTestSettings.port6).build());
 
         redissync5 = redis5.sync();
         redissync6 = redis6.sync();
@@ -90,7 +88,7 @@ public class RedisClusterStressScenariosTest extends AbstractTest {
 
     }
 
-    @AfterEach
+    @After
     public void after() {
         redis5.close();
 

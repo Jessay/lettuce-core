@@ -25,14 +25,15 @@ import static java.lang.Double.POSITIVE_INFINITY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.data.Offset.offset;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-import io.lettuce.RedisConditions;
+import io.lettuce.test.ListStreamingAdapter;
+import io.lettuce.test.condition.EnabledOnCommand;
 import io.lettuce.core.*;
 import io.lettuce.core.Range.Boundary;
 
@@ -174,9 +175,8 @@ public class SortedSetCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
+    @EnabledOnCommand("BZPOPMIN")
     public void bzpopmin() {
-
-        assumeTrue(RedisConditions.of(redis).hasCommand("BZPOPMIN"));
 
         redis.zadd("zset", 2.0, "a", 3.0, "b", 4.0, "c");
 
@@ -185,9 +185,8 @@ public class SortedSetCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
+    @EnabledOnCommand("BZPOPMAX")
     public void bzpopmax() {
-
-        assumeTrue(RedisConditions.of(redis).hasCommand("BZPOPMAX"));
 
         redis.zadd("zset", 2.0, "a", 3.0, "b", 4.0, "c");
 
@@ -196,9 +195,8 @@ public class SortedSetCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
+    @EnabledOnCommand("ZPOPMIN")
     public void zpopmin() {
-
-        assumeTrue(RedisConditions.of(redis).hasCommand("ZPOPMIN"));
 
         redis.zadd("zset", 2.0, "a", 3.0, "b", 4.0, "c");
 
@@ -208,9 +206,8 @@ public class SortedSetCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
+    @EnabledOnCommand("ZPOPMAX")
     public void zpopmax() {
-
-        assumeTrue(RedisConditions.of(redis).hasCommand("ZPOPMAX"));
 
         redis.zadd("zset", 2.0, "a", 3.0, "b", 4.0, "c");
 

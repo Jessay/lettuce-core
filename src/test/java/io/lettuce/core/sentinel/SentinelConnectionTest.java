@@ -26,14 +26,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import io.lettuce.TestClientResources;
-import io.lettuce.Wait;
+import io.lettuce.test.resource.TestClientResources;
+import io.lettuce.test.Wait;
 import io.lettuce.core.*;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.codec.ByteArrayCodec;
 import io.lettuce.core.sentinel.api.StatefulRedisSentinelConnection;
 import io.lettuce.core.sentinel.api.async.RedisSentinelAsyncCommands;
 import io.lettuce.core.sentinel.api.sync.RedisSentinelCommands;
+import io.lettuce.test.settings.TestSettings;
 
 /**
  * @author Mark Paluch

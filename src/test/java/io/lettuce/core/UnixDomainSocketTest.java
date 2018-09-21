@@ -17,7 +17,7 @@ package io.lettuce.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,16 +25,18 @@ import java.util.Locale;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Rule;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
-import io.lettuce.TestClientResources;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.sentinel.SentinelRule;
 import io.lettuce.core.sentinel.api.StatefulRedisSentinelConnection;
+import io.lettuce.test.resource.FastShutdown;
+import io.lettuce.test.resource.TestClientResources;
+import io.lettuce.test.settings.TestSettings;
 import io.netty.util.internal.SystemPropertyUtil;
 
 /**
@@ -53,12 +55,12 @@ public class UnixDomainSocketTest {
     private String key = "key";
     private String value = "value";
 
-    @BeforeAll
+    @BeforeClass
     public static void setupClient() {
         sentinelClient = getRedisSentinelClient();
     }
 
-    @AfterAll
+    @AfterClass
     public static void shutdownClient() {
         FastShutdown.shutdown(sentinelClient);
     }
@@ -187,8 +189,8 @@ public class UnixDomainSocketTest {
 
     private void assumeTestSupported() {
         String osName = SystemPropertyUtil.get("os.name").toLowerCase(Locale.UK).trim();
-        assumeTrue("Only supported on Linux/OSX, your os is " + osName + " with epoll/kqueue support.",
-                Transports.NativeTransports.isSocketSupported());
+        assumeTrue(Transports.NativeTransports.isSocketSupported(), "Only supported on Linux/OSX, your os is " + osName
+                + " with epoll/kqueue support.");
     }
 
     private static RedisURI getSocketRedisUri() throws IOException {

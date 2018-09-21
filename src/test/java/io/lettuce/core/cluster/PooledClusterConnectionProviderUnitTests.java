@@ -40,7 +40,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import io.lettuce.Futures;
 import io.lettuce.core.*;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
@@ -117,7 +116,7 @@ public class PooledClusterConnectionProviderUnitTests {
     public void shouldObtainConnection() {
 
         when(clientMock.connectToNodeAsync(eq(CODEC), eq("localhost:1"), any(), any())).thenReturn(
-                Futures.createConnectionFuture(socketAddressMock, CompletableFuture.completedFuture(nodeConnectionMock)));
+                ConnectionFuture.from(socketAddressMock, CompletableFuture.completedFuture(nodeConnectionMock)));
 
         StatefulRedisConnection<String, String> connection = sut.getConnection(Intent.READ, 1);
 
@@ -130,7 +129,7 @@ public class PooledClusterConnectionProviderUnitTests {
     public void shouldObtainConnectionReadFromSlave() {
 
         when(clientMock.connectToNodeAsync(eq(CODEC), eq("localhost:2"), any(), any())).thenReturn(
-                Futures.createConnectionFuture(socketAddressMock, CompletableFuture.completedFuture(nodeConnectionMock)));
+                ConnectionFuture.from(socketAddressMock, CompletableFuture.completedFuture(nodeConnectionMock)));
 
         AsyncCommand<String, String, String> async = new AsyncCommand<>(new Command<String, String, String>(
                 CommandType.READONLY, null, null));
@@ -152,7 +151,7 @@ public class PooledClusterConnectionProviderUnitTests {
     public void shouldCloseConnectionOnConnectFailure() {
 
         when(clientMock.connectToNodeAsync(eq(CODEC), eq("localhost:2"), any(), any())).thenReturn(
-                Futures.createConnectionFuture(socketAddressMock, CompletableFuture.completedFuture(nodeConnectionMock)));
+                ConnectionFuture.from(socketAddressMock, CompletableFuture.completedFuture(nodeConnectionMock)));
 
         AsyncCommand<String, String, String> async = new AsyncCommand<>(new Command<String, String, String>(
                 CommandType.READONLY, null, null));
@@ -177,7 +176,7 @@ public class PooledClusterConnectionProviderUnitTests {
     public void shouldRetryConnectionAttemptAfterConnectionAttemptWasBroken() {
 
         when(clientMock.connectToNodeAsync(eq(CODEC), eq("localhost:2"), any(), any())).thenReturn(
-                Futures.createConnectionFuture(socketAddressMock, CompletableFuture.completedFuture(nodeConnectionMock)));
+                ConnectionFuture.from(socketAddressMock, CompletableFuture.completedFuture(nodeConnectionMock)));
 
         AsyncCommand<String, String, String> async = new AsyncCommand<>(new Command<String, String, String>(
                 CommandType.READONLY, null, null));
@@ -212,10 +211,10 @@ public class PooledClusterConnectionProviderUnitTests {
         failed.completeExceptionally(new IllegalStateException());
 
         when(clientMock.connectToNodeAsync(eq(CODEC), eq("localhost:1"), any(), any())).thenReturn(
-                Futures.createConnectionFuture(socketAddressMock, failed));
+                ConnectionFuture.from(socketAddressMock, failed));
 
         when(clientMock.connectToNodeAsync(eq(CODEC), eq("localhost:2"), any(), any())).thenReturn(
-                Futures.createConnectionFuture(socketAddressMock, CompletableFuture.completedFuture(nodeConnectionMock)));
+                ConnectionFuture.from(socketAddressMock, CompletableFuture.completedFuture(nodeConnectionMock)));
 
         AsyncCommand<String, String, String> async = new AsyncCommand<>(new Command<String, String, String>(
                 CommandType.READONLY, null, null));
@@ -244,10 +243,10 @@ public class PooledClusterConnectionProviderUnitTests {
         failed2.completeExceptionally(new IllegalStateException());
 
         when(clientMock.connectToNodeAsync(eq(CODEC), eq("localhost:1"), any(), any())).thenReturn(
-                Futures.createConnectionFuture(socketAddressMock, failed2));
+                ConnectionFuture.from(socketAddressMock, failed2));
 
         when(clientMock.connectToNodeAsync(eq(CODEC), eq("localhost:2"), any(), any())).thenReturn(
-                Futures.createConnectionFuture(socketAddressMock, failed2));
+                ConnectionFuture.from(socketAddressMock, failed2));
 
         AsyncCommand<String, String, String> async = new AsyncCommand<>(new Command<String, String, String>(
                 CommandType.READONLY, null, null));
@@ -271,8 +270,9 @@ public class PooledClusterConnectionProviderUnitTests {
     public void shouldCloseConnections() {
 
         when(channelHandlerMock.closeAsync()).thenReturn(CompletableFuture.completedFuture(null));
+
         when(clientMock.connectToNodeAsync(eq(CODEC), eq("localhost:1"), any(), any())).thenReturn(
-                Futures.createConnectionFuture(socketAddressMock, CompletableFuture.completedFuture(nodeConnectionMock)));
+                ConnectionFuture.from(socketAddressMock, CompletableFuture.completedFuture(nodeConnectionMock)));
 
         StatefulRedisConnection<String, String> connection = sut.getConnection(Intent.READ, 1);
         assertThat(connection).isNotNull();

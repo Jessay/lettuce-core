@@ -18,16 +18,32 @@ package io.lettuce.core;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.inject.Inject;
+
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
+import io.lettuce.test.LettuceExtension;
+import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.reactive.RedisReactiveCommands;
+import io.lettuce.core.api.sync.RedisCommands;
 
 /**
  * @author Mark Paluch
  */
-public class ScanStreamTest extends AbstractRedisClientTest {
+@ExtendWith(LettuceExtension.class)
+public class ScanStreamTest extends TestSupport {
+
+    private final StatefulRedisConnection<String, String> connection;
+    private final RedisCommands<String, String> redis;
+
+    @Inject
+    public ScanStreamTest(StatefulRedisConnection<String, String> connection) {
+        this.connection = connection;
+        this.redis = connection.sync();
+    }
 
     @Test
     public void shouldScanIteratively() {

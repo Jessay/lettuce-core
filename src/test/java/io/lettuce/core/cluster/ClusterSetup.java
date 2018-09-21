@@ -19,8 +19,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Stream;
 
-import io.lettuce.Wait;
-import io.lettuce.core.TestSettings;
+import io.lettuce.test.Wait;
+import io.lettuce.test.settings.TestSettings;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.cluster.api.async.RedisAdvancedClusterAsyncCommands;
 import io.lettuce.core.cluster.api.async.RedisClusterAsyncCommands;
@@ -34,7 +34,7 @@ import io.lettuce.core.cluster.models.partitions.RedisClusterNode;
 public class ClusterSetup {
 
     /**
-     * Setup a cluster consisting of two members (see {@link AbstractClusterTest#port5} to {@link AbstractClusterTest#port6}).
+     * Setup a cluster consisting of two members (see {@link ClusterTestSettings#port5} to {@link ClusterTestSettings#port6}).
      * Two masters (0-11999 and 12000-16383)
      *
      * @param clusterRule
@@ -46,8 +46,8 @@ public class ClusterSetup {
             throws InterruptedException, ExecutionException, TimeoutException {
 
         clusterRule.clusterReset();
-        clusterRule.meet(AbstractClusterTest.host, AbstractClusterTest.port5);
-        clusterRule.meet(AbstractClusterTest.host, AbstractClusterTest.port6);
+        clusterRule.meet(ClusterTestSettings.host, ClusterTestSettings.port5);
+        clusterRule.meet(ClusterTestSettings.host, ClusterTestSettings.port6);
 
         RedisAdvancedClusterAsyncCommands<String, String> connection = clusterRule.getClusterClient().connect().async();
         Wait.untilTrue(() -> {
@@ -69,13 +69,13 @@ public class ClusterSetup {
             }
         }
 
-        RedisClusterAsyncCommands<String, String> node1 = connection.getConnection(AbstractClusterTest.host,
-                AbstractClusterTest.port5);
-        node1.clusterAddSlots(AbstractClusterTest.createSlots(0, 12000));
+        RedisClusterAsyncCommands<String, String> node1 = connection.getConnection(ClusterTestSettings.host,
+                ClusterTestSettings.port5);
+        node1.clusterAddSlots(ClusterTestSettings.createSlots(0, 12000));
 
-        RedisClusterAsyncCommands<String, String> node2 = connection.getConnection(AbstractClusterTest.host,
-                AbstractClusterTest.port6);
-        node2.clusterAddSlots(AbstractClusterTest.createSlots(12000, 16384));
+        RedisClusterAsyncCommands<String, String> node2 = connection.getConnection(ClusterTestSettings.host,
+                ClusterTestSettings.port6);
+        node2.clusterAddSlots(ClusterTestSettings.createSlots(12000, 16384));
 
         Wait.untilTrue(clusterRule::isStable).waitOrTimeout();
 
@@ -90,7 +90,7 @@ public class ClusterSetup {
     }
 
     /**
-     * Setup a cluster consisting of two members (see {@link AbstractClusterTest#port5} to {@link AbstractClusterTest#port6}).
+     * Setup a cluster consisting of two members (see {@link ClusterTestSettings#port5} to {@link ClusterTestSettings#port6}).
      * One master (0-16383) and one slave.
      *
      * @param clusterRule
@@ -102,8 +102,8 @@ public class ClusterSetup {
             throws InterruptedException, ExecutionException, TimeoutException {
 
         clusterRule.clusterReset();
-        clusterRule.meet(AbstractClusterTest.host, AbstractClusterTest.port5);
-        clusterRule.meet(AbstractClusterTest.host, AbstractClusterTest.port6);
+        clusterRule.meet(ClusterTestSettings.host, ClusterTestSettings.port5);
+        clusterRule.meet(ClusterTestSettings.host, ClusterTestSettings.port6);
 
         RedisAdvancedClusterAsyncCommands<String, String> connection = clusterRule.getClusterClient().connect().async();
         StatefulRedisClusterConnection<String, String> statefulConnection = connection.getStatefulConnection();
@@ -114,12 +114,12 @@ public class ClusterSetup {
         }).waitOrTimeout();
 
         RedisClusterCommands<String, String> node1 = statefulConnection
-                .getConnection(TestSettings.hostAddr(), AbstractClusterTest.port5).sync();
-        node1.clusterAddSlots(AbstractClusterTest.createSlots(0, 16384));
+                .getConnection(TestSettings.hostAddr(), ClusterTestSettings.port5).sync();
+        node1.clusterAddSlots(ClusterTestSettings.createSlots(0, 16384));
 
         Wait.untilTrue(clusterRule::isStable).waitOrTimeout();
 
-        connection.getConnection(AbstractClusterTest.host, AbstractClusterTest.port6).clusterReplicate(node1.clusterMyId())
+        connection.getConnection(ClusterTestSettings.host, ClusterTestSettings.port6).clusterReplicate(node1.clusterMyId())
                 .get();
 
         clusterRule.getClusterClient().reloadPartitions();

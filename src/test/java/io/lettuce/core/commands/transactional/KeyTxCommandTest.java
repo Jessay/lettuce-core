@@ -15,7 +15,7 @@
  */
 package io.lettuce.core.commands.transactional;
 
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.commands.KeyCommandTest;
@@ -30,7 +30,7 @@ public class KeyTxCommandTest extends KeyCommandTest {
         return TxSyncInvocationHandler.sync(client.connect());
     }
 
-    @Ignore
+    @Disabled
     @Override
     public void move() {
     }

@@ -17,7 +17,7 @@ package io.lettuce.core.commands;
 
 import static io.lettuce.core.protocol.CommandType.XINFO;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.time.Instant;
 import java.util.*;
@@ -25,7 +25,8 @@ import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import io.lettuce.RedisConditions;
+import io.lettuce.test.condition.EnabledOnCommand;
+import io.lettuce.test.condition.RedisConditions;
 import io.lettuce.core.*;
 import io.lettuce.core.XReadArgs.StreamOffset;
 import io.lettuce.core.codec.StringCodec;
@@ -37,14 +38,8 @@ import io.lettuce.core.protocol.CommandArgs;
 /**
  * @author Mark Paluch
  */
+@EnabledOnCommand("XADD")
 public class StreamCommandTest extends AbstractRedisClientTest {
-
-    @BeforeEach
-    public void openConnection() throws Exception {
-
-        super.openConnection();
-        assumeTrue(RedisConditions.of(redis).hasCommand("XADD"));
-    }
 
     @Test
     public void xadd() {

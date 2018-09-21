@@ -15,7 +15,7 @@
  */
 package io.lettuce.core.cluster;
 
-import static io.lettuce.core.cluster.AbstractClusterTest.createSlots;
+import static io.lettuce.core.cluster.ClusterTestSettings.createSlots;
 import static io.lettuce.core.cluster.ClusterTestUtil.getNodeId;
 import static io.lettuce.core.cluster.ClusterTestUtil.getOwnPartition;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,15 +30,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 import org.junit.*;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 
-import io.lettuce.ConnectionTestUtil;
-import io.lettuce.Futures;
-import io.lettuce.TestClientResources;
-import io.lettuce.Wait;
 import io.lettuce.category.SlowTests;
 import io.lettuce.core.*;
 import io.lettuce.core.api.async.RedisAsyncCommands;
@@ -51,6 +43,13 @@ import io.lettuce.core.cluster.api.sync.RedisClusterCommands;
 import io.lettuce.core.cluster.models.partitions.ClusterPartitionParser;
 import io.lettuce.core.cluster.models.partitions.Partitions;
 import io.lettuce.core.cluster.models.partitions.RedisClusterNode;
+import io.lettuce.test.ConnectionTestUtil;
+import io.lettuce.test.Futures;
+import io.lettuce.test.Wait;
+import io.lettuce.test.resource.DefaultRedisClient;
+import io.lettuce.test.resource.FastShutdown;
+import io.lettuce.test.resource.TestClientResources;
+import io.lettuce.test.settings.TestSettings;
 
 /**
  * Test for mutable cluster setup scenarios.
@@ -60,7 +59,7 @@ import io.lettuce.core.cluster.models.partitions.RedisClusterNode;
  */
 @SuppressWarnings({ "unchecked" })
 @SlowTests
-public class RedisClusterSetupTest extends AbstractTest {
+public class RedisClusterSetupTest extends TestSupport {
 
     private static final String host = TestSettings.hostAddr();
 
@@ -74,27 +73,27 @@ public class RedisClusterSetupTest extends AbstractTest {
     private RedisCommands<String, String> redis2;
 
     @Rule
-    public ClusterRule clusterRule = new ClusterRule(clusterClient, AbstractClusterTest.port5, AbstractClusterTest.port6);
+    public ClusterRule clusterRule = new ClusterRule(clusterClient, ClusterTestSettings.port5, ClusterTestSettings.port6);
 
-    @BeforeAll
+    @BeforeClass
     public static void setupClient() {
         clusterClient = RedisClusterClient.create(TestClientResources.get(),
-                RedisURI.Builder.redis(host, AbstractClusterTest.port5).build());
+                RedisURI.Builder.redis(host, ClusterTestSettings.port5).build());
     }
 
-    @AfterAll
+    @AfterClass
     public static void shutdownClient() {
         FastShutdown.shutdown(clusterClient);
     }
 
-    @BeforeEach
+    @Before
     public void openConnection() throws Exception {
-        redis1 = client.connect(RedisURI.Builder.redis(AbstractClusterTest.host, AbstractClusterTest.port5).build()).sync();
-        redis2 = client.connect(RedisURI.Builder.redis(AbstractClusterTest.host, AbstractClusterTest.port6).build()).sync();
+        redis1 = client.connect(RedisURI.Builder.redis(ClusterTestSettings.host, ClusterTestSettings.port5).build()).sync();
+        redis2 = client.connect(RedisURI.Builder.redis(ClusterTestSettings.host, ClusterTestSettings.port6).build()).sync();
         clusterRule.clusterReset();
     }
 
-    @AfterEach
+    @After
     public void closeConnection() throws Exception {
         redis1.getStatefulConnection().close();
         redis2.getStatefulConnection().close();
@@ -108,7 +107,7 @@ public class RedisClusterSetupTest extends AbstractTest {
         Partitions partitionsBeforeMeet = ClusterPartitionParser.parse(redis1.clusterNodes());
         assertThat(partitionsBeforeMeet.getPartitions()).hasSize(1);
 
-        String result = redis1.clusterMeet(host, AbstractClusterTest.port6);
+        String result = redis1.clusterMeet(host, ClusterTestSettings.port6);
         assertThat(result).isEqualTo("OK");
 
         Wait.untilEquals(2, () -> ClusterPartitionParser.parse(redis1.clusterNodes()).size()).waitOrTimeout();
@@ -122,7 +121,7 @@ public class RedisClusterSetupTest extends AbstractTest {
 
         clusterRule.clusterReset();
 
-        String result = redis1.clusterMeet(host, AbstractClusterTest.port6);
+        String result = redis1.clusterMeet(host, ClusterTestSettings.port6);
         assertThat(result).isEqualTo("OK");
         Wait.untilTrue(() -> redis1.clusterNodes().contains(redis2.clusterMyId())).waitOrTimeout();
         Wait.untilTrue(() -> redis2.clusterNodes().contains(redis1.clusterMyId())).waitOrTimeout();

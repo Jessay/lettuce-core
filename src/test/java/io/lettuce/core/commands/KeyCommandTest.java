@@ -18,16 +18,15 @@ package io.lettuce.core.commands;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.time.Duration;
 import java.util.*;
 
-import org.junit.Rule;
 import org.junit.jupiter.api.Test;
-import org.junit.rules.ExpectedException;
 
-import io.lettuce.RedisConditions;
+import io.lettuce.test.ListStreamingAdapter;
+import io.lettuce.test.condition.EnabledOnCommand;
 import io.lettuce.core.*;
 
 /**
@@ -47,9 +46,8 @@ public class KeyCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
+    @EnabledOnCommand("UNLINK")
     public void unlink() {
-
-        assumeTrue(RedisConditions.of(redis).hasCommand("UNLINK"));
 
         redis.set(key, value);
         assertThat((long) redis.unlink(key)).isEqualTo(1);
@@ -264,9 +262,8 @@ public class KeyCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
+    @EnabledOnCommand("TOUCH")
     public void touch() {
-
-        assumeTrue(RedisConditions.of(redis).hasCommand("TOUCH"));
 
         assertThat((long) redis.touch(key)).isEqualTo(0);
         redis.set(key, value);

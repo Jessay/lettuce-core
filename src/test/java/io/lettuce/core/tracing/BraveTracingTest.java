@@ -35,8 +35,8 @@ import brave.Tracer;
 import brave.Tracing;
 import brave.propagation.CurrentTraceContext;
 import brave.propagation.TraceContext;
-import io.lettuce.Wait;
-import io.lettuce.core.AbstractTest;
+import io.lettuce.test.Wait;
+import io.lettuce.core.TestSupport;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.StatefulRedisConnection;
@@ -47,7 +47,7 @@ import io.netty.channel.unix.DomainSocketAddress;
 /**
  * @author Mark Paluch
  */
-public class BraveTracingTest extends AbstractTest {
+public class BraveTracingTest extends TestSupport {
 
     private static ClientResources clientResources;
     private static RedisClient client;

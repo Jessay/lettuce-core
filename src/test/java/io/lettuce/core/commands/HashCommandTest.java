@@ -17,7 +17,7 @@ package io.lettuce.core.commands;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.offset;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -26,7 +26,9 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-import io.lettuce.RedisConditions;
+import io.lettuce.test.KeyValueStreamingAdapter;
+import io.lettuce.test.ListStreamingAdapter;
+import io.lettuce.test.condition.EnabledOnCommand;
 import io.lettuce.core.*;
 
 /**
@@ -140,9 +142,8 @@ public class HashCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
+    @EnabledOnCommand("HSTRLEN")
     public void hstrlen() {
-
-        assumeTrue(RedisConditions.of(redis).hasCommand("HSTRLEN"));
 
         assertThat((long) redis.hstrlen(key, "one")).isEqualTo(0);
         redis.hset(key, "one", value);

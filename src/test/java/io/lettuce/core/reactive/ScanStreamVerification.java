@@ -23,13 +23,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.reactivestreams.Publisher;
 import org.reactivestreams.tck.PublisherVerification;
 import org.reactivestreams.tck.TestEnvironment;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 
-import io.lettuce.TestClientResources;
+import io.lettuce.test.resource.TestClientResources;
 import io.lettuce.core.*;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisCommands;
+import io.lettuce.test.resource.FastShutdown;
+import io.lettuce.test.settings.TestSettings;
 
 /**
  * Reactive Streams TCK for {@link ScanStream}.

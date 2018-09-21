@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import io.lettuce.Wait;
+import io.lettuce.test.Wait;
 import io.lettuce.core.AbstractRedisClientTest;
 import io.lettuce.core.RedisException;
 import io.lettuce.core.RedisNoScriptException;

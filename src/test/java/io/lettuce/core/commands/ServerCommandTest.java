@@ -19,8 +19,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assume.assumeFalse;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.util.Date;
 import java.util.List;
@@ -28,13 +28,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.junit.FixMethodOrder;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.runners.MethodSorters;
 
-import io.lettuce.RedisConditions;
-import io.lettuce.Wait;
 import io.lettuce.core.*;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisCommands;
@@ -43,12 +39,15 @@ import io.lettuce.core.models.command.CommandDetailParser;
 import io.lettuce.core.models.role.RedisInstance;
 import io.lettuce.core.models.role.RoleParser;
 import io.lettuce.core.protocol.CommandType;
+import io.lettuce.test.Wait;
+import io.lettuce.test.condition.EnabledOnCommand;
+import io.lettuce.test.condition.RedisConditions;
+import io.lettuce.test.settings.TestSettings;
 
 /**
  * @author Will Glozer
  * @author Mark Paluch
  */
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ServerCommandTest extends AbstractRedisClientTest {
 
     @Test
@@ -123,7 +122,7 @@ public class ServerCommandTest extends AbstractRedisClientTest {
         try {
             redis.clientUnblock(0, UnblockType.ERROR);
         } catch (Exception e) {
-            assumeFalse(e.getMessage(), true);
+            assumeFalse(true, e.getMessage());
         }
 
         StatefulRedisConnection<String, String> connection2 = client.connect();
@@ -212,7 +211,7 @@ public class ServerCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    @Ignore("Causes instabilities")
+    @Disabled("Causes instabilities")
     public void debugCrashAndRecover() {
         try {
             assertThat(redis.debugCrashAndRecover(1L)).isNotNull();
@@ -240,7 +239,7 @@ public class ServerCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    @Ignore("Causes instabilities")
+    @Disabled("Causes instabilities")
     public void debugRestart() {
         try {
             assertThat(redis.debugRestart(1L)).isNotNull();
@@ -379,9 +378,8 @@ public class ServerCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
+    @EnabledOnCommand("SWAPDB")
     public void swapdb() {
-
-        assumeTrue(RedisConditions.of(redis).hasCommand("SWAPDB"));
 
         redis.select(1);
         redis.set(key, "value1");

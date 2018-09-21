@@ -18,14 +18,14 @@ package io.lettuce.core.commands.reactive;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.offset;
 
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import reactor.test.StepVerifier;
 import io.lettuce.core.api.reactive.RedisReactiveCommands;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.commands.GeoCommandTest;
-import io.lettuce.util.ReactiveSyncInvocationHandler;
+import io.lettuce.test.ReactiveSyncInvocationHandler;
 
 /**
  * @author Mark Paluch
@@ -56,7 +56,7 @@ public class GeoReactiveCommandTest extends GeoCommandTest {
     }
 
     @Test
-    @Ignore("API differences")
+    @Disabled("API differences")
     @Override
     public void geoposInTransaction() {
     }

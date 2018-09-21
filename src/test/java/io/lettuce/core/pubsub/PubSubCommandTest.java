@@ -30,12 +30,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import io.lettuce.TestClientResources;
-import io.lettuce.Wait;
+import io.lettuce.test.resource.TestClientResources;
+import io.lettuce.test.Wait;
 import io.lettuce.core.*;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.internal.LettuceFactories;
 import io.lettuce.core.pubsub.api.async.RedisPubSubAsyncCommands;
+import io.lettuce.test.resource.FastShutdown;
 
 /**
  * @author Will Glozer

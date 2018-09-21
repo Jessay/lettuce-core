@@ -23,12 +23,13 @@ import java.util.concurrent.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import io.lettuce.ConnectionTestUtil;
-import io.lettuce.Wait;
+import io.lettuce.test.ConnectionTestUtil;
+import io.lettuce.test.Wait;
 import io.lettuce.core.*;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.server.RandomResponseServer;
+import io.lettuce.test.settings.TestSettings;
 
 /**
  * @author Mark Paluch

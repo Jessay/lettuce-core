@@ -15,31 +15,31 @@
  */
 package io.lettuce.core.sentinel;
 
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
 
-import io.lettuce.core.AbstractTest;
-import io.lettuce.core.FastShutdown;
 import io.lettuce.core.RedisClient;
+import io.lettuce.core.TestSupport;
 import io.lettuce.core.sentinel.api.sync.RedisSentinelCommands;
+import io.lettuce.test.resource.FastShutdown;
 
 /**
  * @author Mark Paluch
  */
-public abstract class AbstractSentinelTest extends AbstractTest {
+public abstract class AbstractSentinelTest extends TestSupport {
 
     public static final String MASTER_ID = "mymaster";
 
     protected static RedisClient sentinelClient;
     protected RedisSentinelCommands<String, String> sentinel;
 
-    @AfterAll
+    @AfterClass
     public static void shutdownClient() {
         FastShutdown.shutdown(sentinelClient);
     }
 
-    @BeforeEach
+    @Before
     public void openConnection() throws Exception {
         sentinel = sentinelClient.connectSentinel().sync();
     }
@@ -50,5 +50,4 @@ public abstract class AbstractSentinelTest extends AbstractTest {
             sentinel.getStatefulConnection().close();
         }
     }
-
 }

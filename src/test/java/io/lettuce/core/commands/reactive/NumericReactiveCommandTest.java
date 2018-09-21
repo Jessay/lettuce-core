@@ -17,7 +17,7 @@ package io.lettuce.core.commands.reactive;
 
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.commands.NumericCommandTest;
-import io.lettuce.util.ReactiveSyncInvocationHandler;
+import io.lettuce.test.ReactiveSyncInvocationHandler;
 
 /**
  * @author Mark Paluch

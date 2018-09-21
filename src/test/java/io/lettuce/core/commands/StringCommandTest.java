@@ -26,13 +26,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Rule;
 import org.junit.jupiter.api.Test;
-import org.junit.rules.ExpectedException;
 
 import io.lettuce.core.AbstractRedisClientTest;
 import io.lettuce.core.KeyValue;
-import io.lettuce.core.KeyValueStreamingAdapter;
+import io.lettuce.test.KeyValueStreamingAdapter;
 import io.lettuce.core.RedisException;
 
 /**

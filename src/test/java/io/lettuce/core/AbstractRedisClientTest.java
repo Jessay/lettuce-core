@@ -19,14 +19,16 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 
-import io.lettuce.TestClientResources;
+import io.lettuce.test.resource.TestClientResources;
 import io.lettuce.core.api.sync.RedisCommands;
+import io.lettuce.test.resource.DefaultRedisClient;
+import io.lettuce.test.resource.FastShutdown;
 
 /**
  * @author Will Glozer
  * @author Mark Paluch
  */
-public abstract class AbstractRedisClientTest extends AbstractTest {
+public abstract class AbstractRedisClientTest extends TestSupport {
 
     protected static RedisClient client;
     protected RedisCommands<String, String> redis;

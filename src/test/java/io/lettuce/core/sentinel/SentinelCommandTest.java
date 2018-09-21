@@ -15,7 +15,7 @@
  */
 package io.lettuce.core.sentinel;
 
-import static io.lettuce.core.TestSettings.hostAddr;
+import static io.lettuce.test.settings.TestSettings.hostAddr;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
@@ -24,17 +24,23 @@ import java.net.SocketAddress;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
-import io.lettuce.TestClientResources;
-import io.lettuce.Wait;
-import io.lettuce.core.*;
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.RedisConnectionException;
+import io.lettuce.core.RedisFuture;
+import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.sentinel.api.sync.RedisSentinelCommands;
+import io.lettuce.test.Wait;
+import io.lettuce.test.resource.DefaultRedisClient;
+import io.lettuce.test.resource.FastShutdown;
+import io.lettuce.test.resource.TestClientResources;
+import io.lettuce.test.settings.TestSettings;
 
 /**
  * @author Mark Paluch
@@ -44,13 +50,13 @@ public class SentinelCommandTest extends AbstractSentinelTest {
     @Rule
     public SentinelRule sentinelRule = new SentinelRule(sentinelClient, false, 26379, 26380);
 
-    @BeforeAll
+    @BeforeClass
     public static void setupClient() {
         sentinelClient = RedisClient.create(TestClientResources.get(), RedisURI.Builder
                 .sentinel(TestSettings.host(), MASTER_ID).build());
     }
 
-    @BeforeEach
+    @Before
     public void openConnection() throws Exception {
         super.openConnection();
 
@@ -227,10 +233,15 @@ public class SentinelCommandTest extends AbstractSentinelTest {
     }
 
     @Test
-    public void connectToRedisUsingSentinelWithReconnect() {
+    public void connectToRedisUsingSentinelWithReconnect() throws InterruptedException {
+
         RedisCommands<String, String> connect = sentinelClient.connect().sync();
+
         connect.ping();
         connect.quit();
+
+        Thread.sleep(50);
+        Wait.untilTrue(connect::isOpen).waitOrTimeout();
         connect.ping();
         connect.getStatefulConnection().close();
     }

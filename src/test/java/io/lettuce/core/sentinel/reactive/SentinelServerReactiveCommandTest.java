@@ -15,14 +15,14 @@
  */
 package io.lettuce.core.sentinel.reactive;
 
-import static io.lettuce.core.TestSettings.hostAddr;
+import static io.lettuce.test.settings.TestSettings.hostAddr;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.lettuce.core.TestSettings;
+import io.lettuce.test.settings.TestSettings;
 import io.lettuce.core.sentinel.SentinelServerCommandTest;
 import io.lettuce.core.sentinel.api.async.RedisSentinelAsyncCommands;
 import io.lettuce.core.sentinel.api.reactive.RedisSentinelReactiveCommands;
-import io.lettuce.util.ReactiveSyncInvocationHandler;
+import io.lettuce.test.ReactiveSyncInvocationHandler;
 
 /**
  * @author Mark Paluch

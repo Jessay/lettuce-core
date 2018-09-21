@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 
 import reactor.test.StepVerifier;
-import io.lettuce.core.FastShutdown;
+import io.lettuce.test.resource.FastShutdown;
 import io.lettuce.core.event.Event;
 import io.lettuce.core.event.EventBus;
 import io.lettuce.core.metrics.CommandLatencyCollector;
