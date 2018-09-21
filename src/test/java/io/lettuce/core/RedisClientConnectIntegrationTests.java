@@ -35,6 +35,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 import io.lettuce.core.sentinel.api.StatefulRedisSentinelConnection;
+import io.lettuce.test.Futures;
 import io.lettuce.test.LettuceExtension;
 
 /**
@@ -106,7 +107,7 @@ class RedisClientConnectIntegrationTests extends TestSupport {
     void connectAsyncCodecOwnUri() {
         RedisURI redisURI = redis(host, port).build();
         ConnectionFuture<StatefulRedisConnection<String, String>> future = client.connectAsync(UTF8, redisURI);
-        StatefulRedisConnection<String, String> connection = future.join();
+        StatefulRedisConnection<String, String> connection = Futures.get(future.toCompletableFuture());
         assertThat(connection.getTimeout()).isEqualTo(redisURI.getTimeout());
         connection.close();
     }
@@ -123,7 +124,7 @@ class RedisClientConnectIntegrationTests extends TestSupport {
 
     @Test
     @Disabled("Non-deterministic behavior. Can cause a deadlock")
-    void shutdownSyncInRedisFutureTest() throws Exception {
+    void shutdownSyncInRedisFutureTest() {
 
         RedisClient redisClient = RedisClient.create();
         StatefulRedisConnection<String, String> connection = redisClient.connect(redis(host, port).build());
@@ -133,11 +134,11 @@ class RedisClientConnectIntegrationTests extends TestSupport {
             redisClient.shutdown(0, 0, SECONDS); // deadlock expected.
             }).toCompletableFuture();
 
-        assertThatThrownBy(() -> f.get(1, SECONDS)).isInstanceOf(TimeoutException.class);
+        assertThatThrownBy(() -> Futures.await(f)).isInstanceOf(TimeoutException.class);
     }
 
     @Test
-    void shutdownAsyncInRedisFutureTest() throws Exception {
+    void shutdownAsyncInRedisFutureTest() {
 
         RedisClient redisClient = RedisClient.create();
         StatefulRedisConnection<String, String> connection = redisClient.connect(redis(host, port).build());
@@ -146,7 +147,7 @@ class RedisClientConnectIntegrationTests extends TestSupport {
             return redisClient.shutdownAsync(0, 0, SECONDS);
         }).toCompletableFuture();
 
-        f.get(5, SECONDS);
+        Futures.await(f);
     }
 
     /*

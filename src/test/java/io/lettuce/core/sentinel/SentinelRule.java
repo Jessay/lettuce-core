@@ -82,7 +82,7 @@ public class SentinelRule implements TestRule {
 
         final Statement before = new Statement() {
             @Override
-            public void evaluate() throws Exception {
+            public void evaluate() {
                 if (flushBeforeTest) {
                     flush();
                 }

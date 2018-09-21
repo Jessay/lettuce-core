@@ -20,7 +20,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.concurrent.CancellationException;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -32,6 +31,7 @@ import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.codec.Utf8StringCodec;
 import io.lettuce.core.output.CommandOutput;
 import io.lettuce.core.output.StatusOutput;
+import io.lettuce.test.Futures;
 
 /**
  * @author Mark Paluch
@@ -111,7 +111,7 @@ public class AsyncCommandUnitTests {
     void getErrorAsync() {
         sut.getOutput().setError("error");
         sut.complete();
-        assertThatThrownBy(() -> sut.get()).isInstanceOf(ExecutionException.class);
+        assertThat(sut).isCompletedExceptionally();
     }
 
     @Test
@@ -119,14 +119,14 @@ public class AsyncCommandUnitTests {
         sut.completeExceptionally(new RuntimeException("test"));
         assertThat(internal.getError()).isEqualTo("test");
 
-        assertThatThrownBy(() -> sut.get()).isInstanceOf(ExecutionException.class);
+        assertThat(sut).isCompletedExceptionally();
     }
 
     @Test
-    void asyncGet() throws Exception {
+    void asyncGet() {
         sut.getOutput().set(buffer("one"));
         sut.complete();
-        assertThat(sut.get()).isEqualTo("one");
+        assertThat(Futures.get(sut.toCompletableFuture())).isEqualTo("one");
         sut.getOutput().toString();
     }
 

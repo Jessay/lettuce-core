@@ -35,13 +35,13 @@ import io.lettuce.core.ClientOptions;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.api.StatefulConnection;
 import io.lettuce.core.api.StatefulRedisConnection;
-import io.lettuce.test.resource.DefaultRedisClusterClient;
 import io.lettuce.core.cluster.RedisClusterClient;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.dynamic.support.ResolvableType;
 import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 import io.lettuce.core.resource.ClientResources;
 import io.lettuce.test.resource.DefaultRedisClient;
+import io.lettuce.test.resource.DefaultRedisClusterClient;
 import io.lettuce.test.resource.TestClientResources;
 import io.netty.util.internal.logging.InternalLogger;
 import io.netty.util.internal.logging.InternalLoggerFactory;
@@ -191,7 +191,7 @@ public class LettuceExtension implements ParameterResolver, BeforeEachCallback, 
     }
 
     @Override
-    public void beforeEach(ExtensionContext context) throws Exception {
+    public void beforeEach(ExtensionContext context) {
 
         ExtensionContext.Store store = getStore(context);
         StatefulRedisConnection connection = store.get(StatefulRedisConnection.class, StatefulRedisConnection.class);

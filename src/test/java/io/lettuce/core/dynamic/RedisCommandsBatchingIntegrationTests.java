@@ -36,6 +36,7 @@ import io.lettuce.core.dynamic.batch.BatchException;
 import io.lettuce.core.dynamic.batch.BatchExecutor;
 import io.lettuce.core.dynamic.batch.BatchSize;
 import io.lettuce.core.dynamic.batch.CommandBatching;
+import io.lettuce.test.Futures;
 import io.lettuce.test.LettuceExtension;
 
 /**
@@ -139,7 +140,7 @@ class RedisCommandsBatchingIntegrationTests extends TestSupport {
     }
 
     @Test
-    void shouldExecuteBatchingAynchronously() throws Exception {
+    void shouldExecuteBatchingAynchronously() {
 
         RedisCommandFactory factory = new RedisCommandFactory(redis.getStatefulConnection());
 
@@ -151,7 +152,7 @@ class RedisCommandsBatchingIntegrationTests extends TestSupport {
         api.setAsync("k4", value);
 
         assertThat(redis.get("k1")).isNull();
-        assertThat(api.setAsync("k5", value).get()).isEqualTo("OK");
+        assertThat(Futures.get(api.setAsync("k5", value))).isEqualTo("OK");
 
         assertThat(redis.get("k1")).isEqualTo(value);
     }

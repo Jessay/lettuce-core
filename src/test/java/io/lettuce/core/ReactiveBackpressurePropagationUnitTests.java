@@ -64,7 +64,7 @@ class ReactiveBackpressurePropagationUnitTests {
     private StatefulConnection statefulConnection;
 
     @BeforeEach
-    void before() throws Exception {
+    void before() {
 
         when(clientResources.commandLatencyCollector()).thenReturn(latencyCollector);
         when(clientResources.tracing()).thenReturn(Tracing.disabled());

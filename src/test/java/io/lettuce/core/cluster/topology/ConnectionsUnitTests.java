@@ -47,7 +47,7 @@ class ConnectionsUnitTests {
     private StatefulRedisConnection<String, String> connection2;
 
     @BeforeEach
-    void before() throws Exception {
+    void before() {
 
         when(connection1.closeAsync()).thenReturn(CompletableFuture.completedFuture(null));
         when(connection2.closeAsync()).thenReturn(CompletableFuture.completedFuture(null));

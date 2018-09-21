@@ -96,7 +96,7 @@ class KeyValueUnitTests {
     }
 
     @Test
-    void equals() throws Exception {
+    void equals() {
         KeyValue<String, String> kv = kv("key", "value");
         assertThat(kv.equals(kv("key", "value"))).isTrue();
         assertThat(kv.equals(null)).isFalse();
@@ -105,7 +105,7 @@ class KeyValueUnitTests {
     }
 
     @Test
-    void testHashCode() throws Exception {
+    void testHashCode() {
         assertThat(kv("key", "value").hashCode() != 0).isTrue();
     }
 

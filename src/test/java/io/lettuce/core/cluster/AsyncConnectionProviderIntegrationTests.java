@@ -16,7 +16,7 @@
 package io.lettuce.core.cluster;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.IOException;
@@ -45,6 +45,7 @@ import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.cluster.ClusterNodeConnectionFactory.ConnectionKey;
 import io.lettuce.core.codec.StringCodec;
 import io.lettuce.core.internal.AsyncConnectionProvider;
+import io.lettuce.test.Futures;
 import io.lettuce.test.LettuceExtension;
 import io.lettuce.test.settings.TestSettings;
 import io.netty.channel.ConnectTimeoutException;
@@ -100,9 +101,10 @@ class AsyncConnectionProviderIntegrationTests {
 
         ConnectionKey connectionKey = new ConnectionKey(ClusterConnectionProvider.Intent.READ, TestSettings.host(),
                 TestSettings.port());
-        StatefulRedisConnection<String, String> connection = sut.getConnection(connectionKey).toCompletableFuture().join();
+        StatefulRedisConnection<String, String> connection = Futures
+                .get(sut.getConnection(connectionKey).toCompletableFuture());
 
-        assertThat(sut.getConnection(connectionKey).toCompletableFuture().join()).isSameAs(connection);
+        assertThat(Futures.get(sut.getConnection(connectionKey).toCompletableFuture())).isSameAs(connection);
         sut.close();
         serverSocket.accept();
     }
@@ -115,7 +117,7 @@ class AsyncConnectionProviderIntegrationTests {
 
         assertThat(sut.getConnectionCount()).isEqualTo(0);
 
-        sut.getConnection(connectionKey).toCompletableFuture().join();
+        Futures.await(sut.getConnection(connectionKey).toCompletableFuture());
 
         assertThat(sut.getConnectionCount()).isEqualTo(1);
         sut.close();
@@ -145,10 +147,10 @@ class AsyncConnectionProviderIntegrationTests {
                 TestSettings.port());
 
         sut.getConnection(connectionKey);
-        sut.close().join();
+        Futures.await(sut.close());
 
         assertThat(sut.getConnectionCount()).isEqualTo(0);
-        sut.close().join();
+        Futures.await(sut.close());
 
         serverSocket.accept();
     }
@@ -167,20 +169,13 @@ class AsyncConnectionProviderIntegrationTests {
 
         StopWatch stopWatch = new StopWatch();
 
-        try {
-            sut.getConnection(connectionKey).toCompletableFuture().get();
-            fail("Missing RedisConnectionException because of Timeout");
-        } catch (Exception e) {
-            assertThat(e).hasCauseInstanceOf(ConnectTimeoutException.class);
-        }
+        assertThatThrownBy(() -> Futures.await(sut.getConnection(connectionKey))).hasCauseInstanceOf(
+                ConnectTimeoutException.class);
+
         stopWatch.start();
 
-        try {
-            sut.getConnection(connectionKey).toCompletableFuture().join();
-            fail("Missing RedisConnectionException because of Timeout");
-        } catch (Exception e) {
-            assertThat(e).hasCauseInstanceOf(ConnectTimeoutException.class);
-        }
+        assertThatThrownBy(() -> Futures.await(sut.getConnection(connectionKey))).hasCauseInstanceOf(
+                ConnectTimeoutException.class);
 
         stopWatch.stop();
 
@@ -259,7 +254,7 @@ class AsyncConnectionProviderIntegrationTests {
                         .toCompletableFuture();
 
                 connectInitiated.countDown();
-                StatefulRedisConnection<String, String> connection = future.join();
+                StatefulRedisConnection<String, String> connection = Futures.get(future);
                 createdConnection.complete(connection);
             } catch (Exception e) {
                 createdConnection.completeExceptionally(e);

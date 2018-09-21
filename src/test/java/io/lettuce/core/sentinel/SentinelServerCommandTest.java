@@ -59,7 +59,7 @@ public class SentinelServerCommandTest extends AbstractSentinelTest {
     }
 
     @Test
-    public void clientGetSetname() throws Exception {
+    public void clientGetSetname() {
         assertThat(sentinel.clientGetname()).isNull();
         assertThat(sentinel.clientSetname("test")).isEqualTo("OK");
         assertThat(sentinel.clientGetname()).isEqualTo("test");
@@ -68,12 +68,12 @@ public class SentinelServerCommandTest extends AbstractSentinelTest {
     }
 
     @Test
-    public void clientPause() throws Exception {
+    public void clientPause() {
         assertThat(sentinel.clientPause(10)).isEqualTo("OK");
     }
 
     @Test
-    public void clientKill() throws Exception {
+    public void clientKill() {
         Pattern p = Pattern.compile(".*addr=([^ ]+).*");
         String clients = sentinel.clientList();
         Matcher m = p.matcher(clients);
@@ -83,7 +83,7 @@ public class SentinelServerCommandTest extends AbstractSentinelTest {
     }
 
     @Test
-    public void clientKillExtended() throws Exception {
+    public void clientKillExtended() {
 
         RedisSentinelCommands<String, String> connection2 = sentinelClient.connectSentinel().sync();
         connection2.clientSetname("killme");
@@ -105,12 +105,12 @@ public class SentinelServerCommandTest extends AbstractSentinelTest {
     }
 
     @Test
-    public void clientList() throws Exception {
+    public void clientList() {
         assertThat(sentinel.clientList().contains("addr=")).isTrue();
     }
 
     @Test
-    public void info() throws Exception {
+    public void info() {
         assertThat(sentinel.info().contains("redis_version")).isTrue();
         assertThat(sentinel.info("server").contains("redis_version")).isTrue();
     }

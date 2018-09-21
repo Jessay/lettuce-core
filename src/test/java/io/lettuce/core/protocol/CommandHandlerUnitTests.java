@@ -193,63 +193,63 @@ class CommandHandlerUnitTests {
     }
 
     @Test
-    void isConnectedShouldReportFalseForNOT_CONNECTED() throws Exception {
+    void isConnectedShouldReportFalseForNOT_CONNECTED() {
 
         sut.setState(CommandHandler.LifecycleState.NOT_CONNECTED);
         assertThat(sut.isConnected()).isFalse();
     }
 
     @Test
-    void isConnectedShouldReportFalseForREGISTERED() throws Exception {
+    void isConnectedShouldReportFalseForREGISTERED() {
 
         sut.setState(CommandHandler.LifecycleState.REGISTERED);
         assertThat(sut.isConnected()).isFalse();
     }
 
     @Test
-    void isConnectedShouldReportTrueForCONNECTED() throws Exception {
+    void isConnectedShouldReportTrueForCONNECTED() {
 
         sut.setState(CommandHandler.LifecycleState.CONNECTED);
         assertThat(sut.isConnected()).isTrue();
     }
 
     @Test
-    void isConnectedShouldReportTrueForACTIVATING() throws Exception {
+    void isConnectedShouldReportTrueForACTIVATING() {
 
         sut.setState(CommandHandler.LifecycleState.ACTIVATING);
         assertThat(sut.isConnected()).isTrue();
     }
 
     @Test
-    void isConnectedShouldReportTrueForACTIVE() throws Exception {
+    void isConnectedShouldReportTrueForACTIVE() {
 
         sut.setState(CommandHandler.LifecycleState.ACTIVE);
         assertThat(sut.isConnected()).isTrue();
     }
 
     @Test
-    void isConnectedShouldReportFalseForDISCONNECTED() throws Exception {
+    void isConnectedShouldReportFalseForDISCONNECTED() {
 
         sut.setState(CommandHandler.LifecycleState.DISCONNECTED);
         assertThat(sut.isConnected()).isFalse();
     }
 
     @Test
-    void isConnectedShouldReportFalseForDEACTIVATING() throws Exception {
+    void isConnectedShouldReportFalseForDEACTIVATING() {
 
         sut.setState(CommandHandler.LifecycleState.DEACTIVATING);
         assertThat(sut.isConnected()).isFalse();
     }
 
     @Test
-    void isConnectedShouldReportFalseForDEACTIVATED() throws Exception {
+    void isConnectedShouldReportFalseForDEACTIVATED() {
 
         sut.setState(CommandHandler.LifecycleState.DEACTIVATED);
         assertThat(sut.isConnected()).isFalse();
     }
 
     @Test
-    void isConnectedShouldReportFalseForCLOSED() throws Exception {
+    void isConnectedShouldReportFalseForCLOSED() {
 
         sut.setState(CommandHandler.LifecycleState.CLOSED);
         assertThat(sut.isConnected()).isFalse();

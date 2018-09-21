@@ -404,13 +404,13 @@ class DefaultEndpointUnitTests {
             };
         }
 
-        public void thread1() throws InterruptedException {
+        public void thread1() {
 
             waitForTick(1);
             handler.write(command);
         }
 
-        public void thread2() throws InterruptedException {
+        public void thread2() {
 
             waitForTick(1);
             handler.write(command);

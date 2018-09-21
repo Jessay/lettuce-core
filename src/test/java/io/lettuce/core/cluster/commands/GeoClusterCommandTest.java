@@ -42,7 +42,7 @@ public class GeoClusterCommandTest extends GeoCommandTest {
     private StatefulRedisClusterConnection<String, String> clusterConnection;
 
     @BeforeAll
-    static void setupClient() {
+    public static void setupClient() {
         redisClusterClient = RedisClusterClient.create(TestClientResources.get(),
                 RedisURI.Builder.redis(TestSettings.host(), TestSettings.port(900)).build());
 
@@ -57,7 +57,7 @@ public class GeoClusterCommandTest extends GeoCommandTest {
     }
 
     @BeforeEach
-    void openConnection() {
+    public void openConnection() {
         redis = connect();
         flushDatabaseOfAllNodes(clusterConnection);
     }
@@ -71,41 +71,41 @@ public class GeoClusterCommandTest extends GeoCommandTest {
 
     @Disabled("MULTI not available on Redis Cluster")
     @Override
-    void geoaddInTransaction() {
+    public void geoaddInTransaction() {
     }
 
     @Disabled("MULTI not available on Redis Cluster")
     @Override
-    void geoaddMultiInTransaction() {
+    public void geoaddMultiInTransaction() {
     }
 
     @Disabled("MULTI not available on Redis Cluster")
     @Override
-    void georadiusInTransaction() {
+    public void georadiusInTransaction() {
     }
 
     @Disabled("MULTI not available on Redis Cluster")
     @Override
-    void geodistInTransaction() {
+    public void geodistInTransaction() {
     }
 
     @Disabled("MULTI not available on Redis Cluster")
     @Override
-    void georadiusWithArgsAndTransaction() {
+    public void georadiusWithArgsAndTransaction() {
     }
 
     @Disabled("MULTI not available on Redis Cluster")
     @Override
-    void georadiusbymemberWithArgsInTransaction() {
+    public void georadiusbymemberWithArgsInTransaction() {
     }
 
     @Disabled("MULTI not available on Redis Cluster")
     @Override
-    void geoposInTransaction() {
+    public void geoposInTransaction() {
     }
 
     @Disabled("MULTI not available on Redis Cluster")
     @Override
-    void geohashInTransaction() {
+    public void geohashInTransaction() {
     }
 }

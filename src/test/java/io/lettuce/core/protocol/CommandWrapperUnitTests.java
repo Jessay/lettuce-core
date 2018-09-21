@@ -36,7 +36,7 @@ class CommandWrapperUnitTests {
     private Command<String, String, String> sut;
 
     @BeforeEach
-    final void createCommand() throws Exception {
+    final void createCommand() {
 
         CommandOutput<String, String, String> output = new StatusOutput<>(codec);
         sut = new Command<>(CommandType.INFO, output, null);

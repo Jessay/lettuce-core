@@ -38,7 +38,7 @@ class DefaultEventBusUnitTests {
     private Event event;
 
     @Test
-    void publishToSubscriber() throws Exception {
+    void publishToSubscriber() {
 
         EventBus sut = new DefaultEventBus(Schedulers.immediate());
 

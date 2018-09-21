@@ -19,7 +19,6 @@ import static io.lettuce.test.settings.TestSettings.host;
 import static io.lettuce.test.settings.TestSettings.sslPort;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.File;
@@ -28,7 +27,6 @@ import java.net.URL;
 import java.security.cert.CertificateException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -46,10 +44,7 @@ import io.lettuce.core.codec.StringCodec;
 import io.lettuce.core.masterslave.MasterSlave;
 import io.lettuce.core.pubsub.api.async.RedisPubSubAsyncCommands;
 import io.lettuce.core.pubsub.api.sync.RedisPubSubCommands;
-import io.lettuce.test.ConnectionTestUtil;
-import io.lettuce.test.LettuceExtension;
-import io.lettuce.test.Sockets;
-import io.lettuce.test.Wait;
+import io.lettuce.test.*;
 import io.netty.handler.codec.DecoderException;
 import io.netty.handler.ssl.OpenSsl;
 
@@ -139,7 +134,7 @@ class SslIntegrationTests extends TestSupport {
     }
 
     @Test
-    void standaloneWithClientCertificates() throws Exception {
+    void standaloneWithClientCertificates() {
 
         SslOptions sslOptions = SslOptions.builder() //
                 .jdkSslProvider() //
@@ -152,7 +147,7 @@ class SslIntegrationTests extends TestSupport {
     }
 
     @Test
-    void standaloneWithClientCertificatesWithoutKeystore() throws Exception {
+    void standaloneWithClientCertificatesWithoutKeystore() {
 
         SslOptions sslOptions = SslOptions.builder() //
                 .jdkSslProvider() //
@@ -370,26 +365,23 @@ class SslIntegrationTests extends TestSupport {
     }
 
     @Test
-    void pubSubSslAndBreakConnection() throws Exception {
+    void pubSubSslAndBreakConnection() {
 
         RedisURI redisURI = RedisURI.Builder.redis(host(), sslPort()).withSsl(true).withVerifyPeer(false).build();
         redisClient.setOptions(ClientOptions.builder().suspendReconnectOnProtocolFailure(true).build());
 
         RedisPubSubAsyncCommands<String, String> connection = redisClient.connectPubSub(redisURI).async();
-        RedisPubSubAsyncCommands<String, String> connection2 = redisClient.connectPubSub(redisURI).async();
+        RedisPubSubCommands<String, String> connection2 = redisClient.connectPubSub(redisURI).sync();
 
         redisURI.setVerifyPeer(true);
         connection.subscribe("c1");
         connection.subscribe("c2");
 
-        Wait.untilTrue(() -> connection2.pubsubChannels().get().containsAll(Arrays.asList("c1", "c2"))).waitOrTimeout();
+        Wait.untilTrue(() -> connection2.pubsubChannels().containsAll(Arrays.asList("c1", "c2"))).waitOrTimeout();
 
-        try {
-            connection.quit().get();
-        } catch (Exception e) {
-        }
+        Futures.await(connection.quit());
 
-        List<String> future = connection2.pubsubChannels().get();
+        List<String> future = connection2.pubsubChannels();
         assertThat(future).doesNotContain("c1", "c2");
 
         RedisChannelWriter channelWriter = ConnectionTestUtil.getChannelWriter(connection.getStatefulConnection());
@@ -397,15 +389,8 @@ class SslIntegrationTests extends TestSupport {
 
         RedisFuture<Void> defectFuture = connection.subscribe("foo");
 
-        try {
-            defectFuture.get();
-            fail("Missing ExecutionException with nested SSLHandshakeException");
-        } catch (InterruptedException e) {
-            fail("Missing ExecutionException with nested SSLHandshakeException");
-        } catch (ExecutionException e) {
-            assertThat(e).hasCauseInstanceOf(DecoderException.class);
-            assertThat(e).hasRootCauseInstanceOf(CertificateException.class);
-        }
+        assertThatThrownBy(() -> Futures.await(defectFuture)).hasCauseInstanceOf(DecoderException.class)
+                .hasRootCauseInstanceOf(CertificateException.class);
 
         assertThat(defectFuture.toCompletableFuture()).isDone();
 

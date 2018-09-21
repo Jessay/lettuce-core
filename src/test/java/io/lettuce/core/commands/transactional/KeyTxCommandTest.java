@@ -26,12 +26,12 @@ import io.lettuce.core.commands.KeyCommandTest;
 public class KeyTxCommandTest extends KeyCommandTest {
 
     @Override
-    RedisCommands<String, String> connect() {
+    public RedisCommands<String, String> connect() {
         return TxSyncInvocationHandler.sync(client.connect());
     }
 
     @Disabled
     @Override
-    void move() {
+    public void move() {
     }
 }

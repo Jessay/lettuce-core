@@ -57,12 +57,12 @@ public class MasterSlaveSentinelTest extends AbstractSentinelTest {
     private Pattern pattern = Pattern.compile("role:(\\w+)");
 
     @Before
-    public void before() throws Exception {
+    public void before() {
         sentinelRule.needMasterWithSlave(MASTER_ID, port(3), port(4));
     }
 
     @Test
-    public void testMasterSlaveSentinelBasic() throws Exception {
+    public void testMasterSlaveSentinelBasic() {
 
         RedisURI uri = RedisURI
                 .create("redis-sentinel://127.0.0.1:21379,127.0.0.1:22379,127.0.0.1:26379?sentinelMasterId=mymaster&timeout=5s");
@@ -77,7 +77,7 @@ public class MasterSlaveSentinelTest extends AbstractSentinelTest {
     }
 
     @Test
-    public void masterSlaveConnectionShouldSetClientName() throws Exception {
+    public void masterSlaveConnectionShouldSetClientName() {
 
         RedisURI redisURI = RedisURI.Builder.sentinel(TestSettings.host(), MASTER_ID).withClientName("my-client").build();
 
@@ -92,7 +92,7 @@ public class MasterSlaveSentinelTest extends AbstractSentinelTest {
     }
 
     @Test
-    public void testMasterSlaveSentinelWithTwoUnavailableSentinels() throws Exception {
+    public void testMasterSlaveSentinelWithTwoUnavailableSentinels() {
 
         RedisURI uri = RedisURI
                 .create("redis-sentinel://127.0.0.1:21379,127.0.0.1:22379,127.0.0.1:26379?sentinelMasterId=mymaster&timeout=5s");
@@ -107,7 +107,7 @@ public class MasterSlaveSentinelTest extends AbstractSentinelTest {
     }
 
     @Test
-    public void testMasterSlaveSentinelWithUnavailableSentinels() throws Exception {
+    public void testMasterSlaveSentinelWithUnavailableSentinels() {
 
         RedisURI uri = RedisURI.create("redis-sentinel://127.0.0.1:21379,127.0.0.1:21379?sentinelMasterId=mymaster&timeout=5s");
 
@@ -120,7 +120,7 @@ public class MasterSlaveSentinelTest extends AbstractSentinelTest {
     }
 
     @Test
-    public void testMasterSlaveSentinelConnectionCount() throws Exception {
+    public void testMasterSlaveSentinelConnectionCount() {
 
         ChannelGroup channels = (ChannelGroup) ReflectionTestUtils.getField(sentinelClient, "channels");
         int count = channels.size();
@@ -138,7 +138,7 @@ public class MasterSlaveSentinelTest extends AbstractSentinelTest {
     }
 
     @Test
-    public void testMasterSlaveSentinelClosesSentinelConnections() throws Exception {
+    public void testMasterSlaveSentinelClosesSentinelConnections() {
 
         ChannelGroup channels = (ChannelGroup) ReflectionTestUtils.getField(sentinelClient, "channels");
         int count = channels.size();

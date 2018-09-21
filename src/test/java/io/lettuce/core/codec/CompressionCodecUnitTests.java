@@ -18,7 +18,6 @@ package io.lettuce.core.codec;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
@@ -47,7 +46,7 @@ class CompressionCodecUnitTests {
     }
 
     @Test
-    void gzipValueTest() throws Exception {
+    void gzipValueTest() {
         RedisCodec<String, String> sut = CompressionCodec.valueCompressor(new Utf8StringCodec(),
                 CompressionCodec.CompressionType.GZIP);
         ByteBuffer byteBuffer = sut.encodeValue(key);
@@ -58,7 +57,7 @@ class CompressionCodecUnitTests {
     }
 
     @Test
-    void deflateValueTest() throws Exception {
+    void deflateValueTest() {
         RedisCodec<String, String> sut = CompressionCodec.valueCompressor(new Utf8StringCodec(),
                 CompressionCodec.CompressionType.DEFLATE);
         ByteBuffer byteBuffer = sut.encodeValue(key);
@@ -69,7 +68,7 @@ class CompressionCodecUnitTests {
     }
 
     @Test
-    void wrongCompressionTypeOnDecode() throws Exception {
+    void wrongCompressionTypeOnDecode() {
         RedisCodec<String, String> sut = CompressionCodec.valueCompressor(new Utf8StringCodec(),
                 CompressionCodec.CompressionType.DEFLATE);
 
@@ -77,7 +76,7 @@ class CompressionCodecUnitTests {
                 .isInstanceOf(IllegalStateException.class);
     }
 
-    private String toString(ByteBuffer buffer) throws IOException {
+    private String toString(ByteBuffer buffer) {
         byte[] bytes = toBytes(buffer);
         return new String(bytes, StandardCharsets.UTF_8);
     }

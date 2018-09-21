@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
 
+import io.lettuce.test.Futures;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.util.concurrent.Future;
 
@@ -30,24 +31,24 @@ import io.netty.util.concurrent.Future;
 class DefaultEventLoopGroupProviderUnitTests {
 
     @Test
-    void shutdownTerminatedEventLoopGroup() throws Exception {
+    void shutdownTerminatedEventLoopGroup() {
         DefaultEventLoopGroupProvider sut = new DefaultEventLoopGroupProvider(1);
 
         NioEventLoopGroup eventLoopGroup = sut.allocate(NioEventLoopGroup.class);
 
         Future<Boolean> shutdown = sut.release(eventLoopGroup, 10, 10, TimeUnit.MILLISECONDS);
-        shutdown.get();
+        Futures.await(shutdown);
 
         Future<Boolean> shutdown2 = sut.release(eventLoopGroup, 10, 10, TimeUnit.MILLISECONDS);
-        shutdown2.get();
+        Futures.await(shutdown2);
     }
 
     @Test
-    void getAfterShutdown() throws Exception {
+    void getAfterShutdown() {
 
         DefaultEventLoopGroupProvider sut = new DefaultEventLoopGroupProvider(1);
 
-        sut.shutdown(10, 10, TimeUnit.MILLISECONDS).get();
+        Futures.await(sut.shutdown(10, 10, TimeUnit.MILLISECONDS));
         assertThatThrownBy(() -> sut.allocate(NioEventLoopGroup.class)).isInstanceOf(IllegalStateException.class);
     }
 }

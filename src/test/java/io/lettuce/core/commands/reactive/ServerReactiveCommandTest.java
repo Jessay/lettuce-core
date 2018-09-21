@@ -33,13 +33,13 @@ public class ServerReactiveCommandTest extends ServerCommandTest {
     private RedisReactiveCommands<String, String> reactive;
 
     @BeforeEach
-    void openConnection() throws Exception {
+    public void openConnection() throws Exception {
         super.openConnection();
         reactive = redis.getStatefulConnection().reactive();
     }
 
     @Override
-    RedisCommands<String, String> connect() {
+    public RedisCommands<String, String> connect() {
         return ReactiveSyncInvocationHandler.sync(client.connect());
     }
 

@@ -16,9 +16,13 @@
 package io.lettuce.core.protocol;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.Duration;
-import java.util.concurrent.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -28,6 +32,7 @@ import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.server.RandomResponseServer;
 import io.lettuce.test.ConnectionTestUtil;
+import io.lettuce.test.Futures;
 import io.lettuce.test.Wait;
 import io.lettuce.test.settings.TestSettings;
 
@@ -100,14 +105,9 @@ class ConnectionFailureTest extends AbstractRedisClientTest {
 
             assertThat(connectionWatchdog.isListenOnChannelInactive()).isTrue();
 
-            try {
-                connection.info().get(5, TimeUnit.SECONDS);
-            } catch (ExecutionException e) {
-                assertThat(e).hasRootCauseExactlyInstanceOf(RedisException.class);
-                assertThat(e.getCause()).hasMessageStartingWith("Invalid first byte");
-            } catch (TimeoutException e) {
-                // happens once in a while...
-            }
+            assertThatThrownBy(() -> Futures.await(connection.info())).hasRootCauseInstanceOf(RedisException.class)
+                    .hasMessageContaining("Invalid first byte");
+
             connection.getStatefulConnection().close();
         } finally {
             ts.shutdown();
@@ -204,24 +204,11 @@ class ConnectionFailureTest extends AbstractRedisClientTest {
             Thread.sleep(500);
             assertThat(connection.getStatefulConnection().isOpen()).isFalse();
 
-            try {
-                set1.get();
-            } catch (CancellationException e) {
-                assertThat(e).hasNoCause();
-            }
+            assertThatThrownBy(set1::get).isInstanceOf(CancellationException.class).hasNoCause();
+            assertThatThrownBy(set2::get).isInstanceOf(CancellationException.class).hasNoCause();
 
-            try {
-                set2.get();
-            } catch (CancellationException e) {
-                assertThat(e).hasNoCause();
-            }
-
-            try {
-                connection.info().get();
-            } catch (ExecutionException e) {
-                assertThat(e).hasRootCauseExactlyInstanceOf(RedisException.class);
-                assertThat(e.getCause()).hasMessageStartingWith("Invalid first byte");
-            }
+            assertThatThrownBy(() -> Futures.await(connection.info())).isInstanceOf(RedisException.class).hasMessageContaining(
+                    "Invalid first byte");
 
             connection.getStatefulConnection().close();
         } finally {

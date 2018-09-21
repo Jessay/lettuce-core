@@ -38,7 +38,7 @@ public class HashClusterCommandTest extends HashCommandTest {
     private StatefulRedisClusterConnection<String, String> clusterConnection;
 
     @BeforeAll
-    static void setupClient() {
+    public static void setupClient() {
         redisClusterClient = RedisClusterClient.create(
                 TestClientResources.get(), RedisURI.Builder.redis(TestSettings.host(), TestSettings.port(900)).build());
     }
@@ -49,7 +49,7 @@ public class HashClusterCommandTest extends HashCommandTest {
     }
 
     @BeforeEach
-    void openConnection() {
+    public void openConnection() {
         redis = connect();
         ClusterTestUtil.flushDatabaseOfAllNodes(clusterConnection);
     }

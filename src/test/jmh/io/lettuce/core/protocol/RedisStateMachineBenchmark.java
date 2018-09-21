@@ -69,7 +69,7 @@ public class RedisStateMachineBenchmark {
             ":12\r\n").getBytes();
 
     @Setup(Level.Trial)
-    private void setup() {
+    public void setup() {
         masterBuffer = PooledByteBufAllocator.DEFAULT.ioBuffer(32);
         masterBuffer.writeBytes(payload);
     }
@@ -80,7 +80,7 @@ public class RedisStateMachineBenchmark {
     }
 
     @Benchmark
-    private void measureDecode() {
+    public void measureDecode() {
         stateMachine.decode(masterBuffer, byteArrayCommand, byteArrayCommand.getOutput());
         masterBuffer.readerIndex(0);
     }

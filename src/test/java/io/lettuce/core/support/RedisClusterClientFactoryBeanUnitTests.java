@@ -34,14 +34,14 @@ class RedisClusterClientFactoryBeanUnitTests {
     private RedisClusterClientFactoryBean sut = new RedisClusterClientFactoryBean();
 
     @Test
-    void invalidUri() throws Exception {
+    void invalidUri() {
 
         sut.setUri(URI.create("http://www.web.de"));
         assertThatThrownBy(() -> sut.afterPropertiesSet()).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    void sentinelUri() throws Exception {
+    void sentinelUri() {
 
         sut.setUri(URI.create(RedisURI.URI_SCHEME_REDIS_SENTINEL + "://www.web.de"));
         assertThatThrownBy(() -> sut.afterPropertiesSet()).isInstanceOf(IllegalArgumentException.class);

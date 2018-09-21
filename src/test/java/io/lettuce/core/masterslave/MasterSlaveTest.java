@@ -39,6 +39,7 @@ import io.lettuce.core.codec.Utf8StringCodec;
 import io.lettuce.core.models.role.RedisInstance;
 import io.lettuce.core.models.role.RedisNodeDescription;
 import io.lettuce.core.models.role.RoleParser;
+import io.lettuce.test.Futures;
 import io.lettuce.test.settings.TestSettings;
 
 /**
@@ -94,17 +95,17 @@ class MasterSlaveTest extends AbstractRedisClientTest {
     }
 
     @AfterEach
-    void after() throws Exception {
+    void after() {
 
         if (connectionToNode1 != null) {
             connectionToNode1.configSet("requirepass", "");
-            connectionToNode1.configSet("masterauth", "").get(1, TimeUnit.SECONDS);
+            Futures.await(connectionToNode1.configSet("masterauth", ""));
             connectionToNode1.getStatefulConnection().close();
         }
 
         if (connectionToNode2 != null) {
             connectionToNode2.configSet("requirepass", "");
-            connectionToNode2.configSet("masterauth", "").get(1, TimeUnit.SECONDS);
+            Futures.await(connectionToNode2.configSet("masterauth", ""));
             connectionToNode2.getStatefulConnection().close();
         }
 

@@ -31,6 +31,7 @@ import io.lettuce.core.event.Event;
 import io.lettuce.core.event.EventBus;
 import io.lettuce.core.metrics.CommandLatencyCollector;
 import io.lettuce.core.metrics.DefaultCommandLatencyCollectorOptions;
+import io.lettuce.test.Futures;
 import io.lettuce.test.resource.FastShutdown;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.util.Timer;
@@ -96,7 +97,7 @@ class DefaultClientResourcesUnitTests {
     }
 
     @Test
-    void testProvidedResources() throws Exception {
+    void testProvidedResources() {
 
         EventExecutorGroup executorMock = mock(EventExecutorGroup.class);
         EventLoopGroupProvider groupProviderMock = mock(EventLoopGroupProvider.class);
@@ -115,7 +116,7 @@ class DefaultClientResourcesUnitTests {
         assertThat(sut.eventBus()).isSameAs(eventBusMock);
         assertThat(sut.nettyCustomizer()).isSameAs(nettyCustomizer);
 
-        assertThat(sut.shutdown().get()).isTrue();
+        assertThat(Futures.get(sut.shutdown())).isTrue();
 
         verifyZeroInteractions(executorMock);
         verifyZeroInteractions(groupProviderMock);
@@ -125,7 +126,7 @@ class DefaultClientResourcesUnitTests {
     }
 
     @Test
-    void mutateResources() throws Exception {
+    void mutateResources() {
 
         EventExecutorGroup executorMock = mock(EventExecutorGroup.class);
         EventLoopGroupProvider groupProviderMock = mock(EventLoopGroupProvider.class);
@@ -146,7 +147,7 @@ class DefaultClientResourcesUnitTests {
         assertThat(copy.timer()).isSameAs(timerMock2).isNotSameAs(timerMock);
         assertThat(sut.eventBus()).isSameAs(eventBusMock);
 
-        assertThat(sut.shutdown().get()).isTrue();
+        assertThat(Futures.get(sut.shutdown())).isTrue();
 
         verifyZeroInteractions(executorMock);
         verifyZeroInteractions(groupProviderMock);
@@ -154,7 +155,7 @@ class DefaultClientResourcesUnitTests {
     }
 
     @Test
-    void testSmallPoolSize() throws Exception {
+    void testSmallPoolSize() {
 
         DefaultClientResources sut = DefaultClientResources.builder().ioThreadPoolSize(1).computationThreadPoolSize(1).build();
 
@@ -165,11 +166,11 @@ class DefaultClientResourcesUnitTests {
         assertThat(eventLoopGroup.executorCount()).isEqualTo(3);
         assertThat(sut.ioThreadPoolSize()).isEqualTo(3);
 
-        assertThat(sut.shutdown(0, 0, TimeUnit.MILLISECONDS).get()).isTrue();
+        assertThat(Futures.get(sut.shutdown(0, 0, TimeUnit.MILLISECONDS))).isTrue();
     }
 
     @Test
-    void testEventBus() throws Exception {
+    void testEventBus() {
 
         DefaultClientResources sut = DefaultClientResources.create();
 
@@ -178,7 +179,7 @@ class DefaultClientResourcesUnitTests {
 
         StepVerifier.create(eventBus.get()).then(() -> eventBus.publish(event)).expectNext(event).thenCancel().verify();
 
-        assertThat(sut.shutdown(0, 0, TimeUnit.MILLISECONDS).get()).isTrue();
+        assertThat(Futures.get(sut.shutdown(0, 0, TimeUnit.MILLISECONDS))).isTrue();
     }
 
     @Test

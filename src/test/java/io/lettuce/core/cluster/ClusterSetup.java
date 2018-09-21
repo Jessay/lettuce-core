@@ -15,8 +15,6 @@
  */
 package io.lettuce.core.cluster;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
 import java.util.stream.Stream;
 
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
@@ -25,6 +23,7 @@ import io.lettuce.core.cluster.api.async.RedisClusterAsyncCommands;
 import io.lettuce.core.cluster.api.sync.RedisClusterCommands;
 import io.lettuce.core.cluster.models.partitions.Partitions;
 import io.lettuce.core.cluster.models.partitions.RedisClusterNode;
+import io.lettuce.test.Futures;
 import io.lettuce.test.Wait;
 import io.lettuce.test.settings.TestSettings;
 
@@ -38,12 +37,8 @@ class ClusterSetup {
      * Two masters (0-11999 and 12000-16383)
      *
      * @param clusterRule
-     * @throws InterruptedException
-     * @throws ExecutionException
-     * @throws TimeoutException
      */
-    public static void setup2Masters(ClusterRule clusterRule)
-            throws InterruptedException, ExecutionException, TimeoutException {
+    public static void setup2Masters(ClusterRule clusterRule) {
 
         clusterRule.clusterReset();
         clusterRule.meet(ClusterTestSettings.host, ClusterTestSettings.port5);
@@ -94,12 +89,8 @@ class ClusterSetup {
      * One master (0-16383) and one slave.
      *
      * @param clusterRule
-     * @throws InterruptedException
-     * @throws ExecutionException
-     * @throws TimeoutException
      */
-    public static void setupMasterWithSlave(ClusterRule clusterRule)
-            throws InterruptedException, ExecutionException, TimeoutException {
+    public static void setupMasterWithSlave(ClusterRule clusterRule) {
 
         clusterRule.clusterReset();
         clusterRule.meet(ClusterTestSettings.host, ClusterTestSettings.port5);
@@ -119,8 +110,8 @@ class ClusterSetup {
 
         Wait.untilTrue(clusterRule::isStable).waitOrTimeout();
 
-        connection.getConnection(ClusterTestSettings.host, ClusterTestSettings.port6).clusterReplicate(node1.clusterMyId())
-                .get();
+        Futures.await(connection.getConnection(ClusterTestSettings.host, ClusterTestSettings.port6).clusterReplicate(
+                node1.clusterMyId()));
 
         clusterRule.getClusterClient().reloadPartitions();
 

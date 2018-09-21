@@ -63,7 +63,7 @@ public class ClusterRule implements TestRule {
 
         final Statement beforeCluster = new Statement() {
             @Override
-            public void evaluate() throws Throwable {
+            public void evaluate() {
                 flushdb();
             }
         };

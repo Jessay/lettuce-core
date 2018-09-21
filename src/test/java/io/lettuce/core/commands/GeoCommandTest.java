@@ -37,7 +37,7 @@ import io.lettuce.test.resource.DefaultRedisClient;
 public class GeoCommandTest extends AbstractRedisClientTest {
 
     @BeforeAll
-    static void setupClient() {
+    public static void setupClient() {
         client = DefaultRedisClient.get();
         client.setOptions(ClientOptions.create());
 
@@ -57,7 +57,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    void geoaddInTransaction() {
+    public void geoaddInTransaction() {
 
         redis.multi();
         redis.geoadd(key, -73.9454966, 40.747533, "lic market");
@@ -75,7 +75,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    void geoaddMultiInTransaction() {
+    public void geoaddMultiInTransaction() {
 
         redis.multi();
         redis.geoadd(key, 8.6638775, 49.5282537, "Weinheim", 8.3796281, 48.9978127, "EFS9", 8.665351, 49.553302, "Bahn");
@@ -101,7 +101,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    void georadiusInTransaction() {
+    public void georadiusInTransaction() {
 
         prepareGeo();
 
@@ -155,7 +155,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    void geodistInTransaction() {
+    public void geodistInTransaction() {
 
         prepareGeo();
 
@@ -168,7 +168,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    void geopos() {
+    public void geopos() {
 
         prepareGeo();
 
@@ -186,7 +186,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    void geoposInTransaction() {
+    public void geoposInTransaction() {
 
         prepareGeo();
 
@@ -233,7 +233,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    void georadiusWithArgsAndTransaction() {
+    public void georadiusWithArgsAndTransaction() {
 
         prepareGeo();
 
@@ -293,7 +293,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    void geohashInTransaction() {
+    public void geohashInTransaction() {
 
         prepareGeo();
 
@@ -448,7 +448,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    void georadiusbymemberWithArgsInTransaction() {
+    public void georadiusbymemberWithArgsInTransaction() {
 
         prepareGeo();
 

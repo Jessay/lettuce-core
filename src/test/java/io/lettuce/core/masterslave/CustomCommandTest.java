@@ -35,6 +35,7 @@ import io.lettuce.core.codec.StringCodec;
 import io.lettuce.core.codec.Utf8StringCodec;
 import io.lettuce.core.output.StatusOutput;
 import io.lettuce.core.protocol.*;
+import io.lettuce.test.Futures;
 import io.lettuce.test.LettuceExtension;
 
 /**
@@ -107,7 +108,7 @@ public class CustomCommandTest extends TestSupport {
     }
 
     @Test
-    void masterSlaveAsyncPing() throws Exception {
+    void masterSlaveAsyncPing() {
 
         RedisCommand<String, String, String> command = new Command<>(MyCommands.PING,
                 new StatusOutput<>(new Utf8StringCodec()), null);
@@ -115,11 +116,11 @@ public class CustomCommandTest extends TestSupport {
         AsyncCommand<String, String, String> async = new AsyncCommand<>(command);
         getStandaloneConnection().dispatch(async);
 
-        assertThat(async.get()).isEqualTo("PONG");
+        assertThat(Futures.get(async.toCompletableFuture())).isEqualTo("PONG");
     }
 
     @Test
-    void masterSlaveAsyncBatchPing() throws Exception {
+    void masterSlaveAsyncBatchPing() {
 
         RedisCommand<String, String, String> command1 = new Command<>(CommandType.SET, new StatusOutput<>(StringCodec.UTF8),
                 new CommandArgs<>(StringCodec.UTF8).addKey("key1").addValue("value"));
@@ -135,9 +136,9 @@ public class CustomCommandTest extends TestSupport {
         AsyncCommand<String, String, String> async3 = new AsyncCommand<>(command3);
         getStandaloneConnection().dispatch(Arrays.asList(async1, async2, async3));
 
-        assertThat(async1.get()).isEqualTo("OK");
-        assertThat(async2.get()).isEqualTo("value");
-        assertThat(async3.get()).isEqualTo("OK");
+        assertThat(Futures.get(async1.toCompletableFuture())).isEqualTo("OK");
+        assertThat(Futures.get(async2.toCompletableFuture())).isEqualTo("value");
+        assertThat(Futures.get(async3.toCompletableFuture())).isEqualTo("OK");
     }
 
     @Test

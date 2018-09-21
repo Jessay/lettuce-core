@@ -26,6 +26,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import io.lettuce.core.RedisCommandExecutionException;
+import io.lettuce.core.RedisFuture;
 import io.lettuce.core.TestSupport;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.cluster.api.sync.RedisAdvancedClusterCommands;
@@ -33,6 +34,7 @@ import io.lettuce.core.codec.StringCodec;
 import io.lettuce.core.commands.CustomCommandTest;
 import io.lettuce.core.output.StatusOutput;
 import io.lettuce.core.protocol.*;
+import io.lettuce.test.Futures;
 import io.lettuce.test.LettuceExtension;
 
 /**
@@ -86,7 +88,7 @@ class CustomClusterCommandTest extends TestSupport {
         AsyncCommand<String, String, String> async = new AsyncCommand<>(command);
         connection.dispatch(async);
 
-        assertThat(async.join()).isEqualTo("PONG");
+        assertThat(Futures.get((RedisFuture) async)).isEqualTo("PONG");
     }
 
     @Test
@@ -102,8 +104,8 @@ class CustomClusterCommandTest extends TestSupport {
         AsyncCommand<String, String, String> async2 = new AsyncCommand<>(command2);
         connection.dispatch(Arrays.asList(async1, async2));
 
-        assertThat(async1.join()).isEqualTo("PONG");
-        assertThat(async2.join()).isEqualTo("PONG");
+        assertThat(Futures.get(async1.toCompletableFuture())).isEqualTo("PONG");
+        assertThat(Futures.get(async2.toCompletableFuture())).isEqualTo("PONG");
     }
 
     @Test
@@ -123,9 +125,9 @@ class CustomClusterCommandTest extends TestSupport {
         AsyncCommand<String, String, String> async3 = new AsyncCommand<>(command3);
         connection.dispatch(Arrays.asList(async1, async2, async3));
 
-        assertThat(async1.join()).isEqualTo("OK");
-        assertThat(async2.join()).isEqualTo("value");
-        assertThat(async3.join()).isEqualTo("OK");
+        assertThat(Futures.get(async1.toCompletableFuture())).isEqualTo("OK");
+        assertThat(Futures.get(async2.toCompletableFuture())).isEqualTo("value");
+        assertThat(Futures.get(async3.toCompletableFuture())).isEqualTo("OK");
     }
 
     @Test

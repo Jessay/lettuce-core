@@ -30,6 +30,7 @@ import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.reactive.RedisStringReactiveCommands;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.commands.BitCommandTest;
+import io.lettuce.core.commands.BitStringCodec;
 import io.lettuce.test.ReactiveSyncInvocationHandler;
 
 /**
@@ -40,7 +41,7 @@ public class BitReactiveCommandTest extends BitCommandTest {
     private RedisStringReactiveCommands<String, String> reactive;
 
     @Override
-    RedisCommands<String, String> connect() {
+    public RedisCommands<String, String> connect() {
         bitstring = ReactiveSyncInvocationHandler.sync(client.connect(new BitStringCodec()));
 
         StatefulRedisConnection<String, String> connection = client.connect();

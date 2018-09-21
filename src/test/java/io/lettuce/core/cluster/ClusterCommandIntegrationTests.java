@@ -70,21 +70,19 @@ class ClusterCommandIntegrationTests extends TestSupport {
     }
 
     @Test
-    void testClusterBumpEpoch() throws Exception {
+    void testClusterBumpEpoch() {
 
         RedisFuture<String> future = async.clusterBumpepoch();
 
-        String result = future.get();
+        String result = Futures.get(future);
 
         assertThat(result).matches("(BUMPED|STILL).*");
     }
 
     @Test
-    void testClusterInfo() throws Exception {
+    void testClusterInfo() {
 
-        RedisFuture<String> future = async.clusterInfo();
-
-        String result = future.get();
+        String result = sync.clusterInfo();
 
         assertThat(result).contains("cluster_known_nodes:");
         assertThat(result).contains("cluster_slots_fail:0");
@@ -115,11 +113,11 @@ class ClusterCommandIntegrationTests extends TestSupport {
     }
 
     @Test
-    void testClusterSlaves() throws Exception {
+    void testClusterSlaves() {
 
         sync.set("b", value);
         RedisFuture<Long> replication = async.waitForReplication(1, 5);
-        assertThat(replication.get()).isGreaterThan(0L);
+        assertThat(Futures.get(replication)).isGreaterThan(0L);
     }
 
     @Test
@@ -128,21 +126,20 @@ class ClusterCommandIntegrationTests extends TestSupport {
     }
 
     @Test
-    void testReset() throws Exception {
+    void testReset() {
 
         clusterClient.reloadPartitions();
 
         StatefulRedisClusterConnection<String, String> clusterConnection = clusterClient.connect();
 
-        RedisFuture<String> setA = clusterConnection.async().set("a", "myValue1");
-        setA.get();
+        Futures.await(clusterConnection.async().set("a", "myValue1"));
 
         clusterConnection.reset();
 
-        setA = clusterConnection.async().set("a", "myValue1");
+        RedisFuture<String> setA = clusterConnection.async().set("a", "myValue1");
 
+        assertThat(Futures.get(setA)).isEqualTo("OK");
         assertThat(setA.getError()).isNull();
-        assertThat(setA.get()).isEqualTo("OK");
 
         connection.close();
 

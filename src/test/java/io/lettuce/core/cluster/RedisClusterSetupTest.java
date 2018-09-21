@@ -19,12 +19,11 @@ import static io.lettuce.core.cluster.ClusterTestSettings.createSlots;
 import static io.lettuce.core.cluster.ClusterTestUtil.getNodeId;
 import static io.lettuce.core.cluster.ClusterTestUtil.getOwnPartition;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Fail.fail;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
@@ -87,20 +86,20 @@ public class RedisClusterSetupTest extends TestSupport {
     }
 
     @Before
-    public void openConnection() throws Exception {
+    public void openConnection() {
         redis1 = client.connect(RedisURI.Builder.redis(ClusterTestSettings.host, ClusterTestSettings.port5).build()).sync();
         redis2 = client.connect(RedisURI.Builder.redis(ClusterTestSettings.host, ClusterTestSettings.port6).build()).sync();
         clusterRule.clusterReset();
     }
 
     @After
-    public void closeConnection() throws Exception {
+    public void closeConnection() {
         redis1.getStatefulConnection().close();
         redis2.getStatefulConnection().close();
     }
 
     @Test
-    public void clusterMeet() throws Exception {
+    public void clusterMeet() {
 
         clusterRule.clusterReset();
 
@@ -117,7 +116,7 @@ public class RedisClusterSetupTest extends TestSupport {
     }
 
     @Test
-    public void clusterForget() throws Exception {
+    public void clusterForget() {
 
         clusterRule.clusterReset();
 
@@ -292,14 +291,9 @@ public class RedisClusterSetupTest extends TestSupport {
         RedisFuture<String> set = clusterConnection.set("t", "value"); // 15891
 
         set.await(5, TimeUnit.SECONDS);
-        try {
-            set.get();
-            fail("Missing RedisException");
-        } catch (ExecutionException e) {
-            assertThat(e).hasRootCauseInstanceOf(RedisException.class).hasMessageContaining("not connected");
-        } finally {
+
+        assertThatThrownBy(() -> Futures.await(set)).hasRootCauseInstanceOf(RedisException.class);
             clusterConnection.getStatefulConnection().close();
-        }
     }
 
     @Test
@@ -484,7 +478,7 @@ public class RedisClusterSetupTest extends TestSupport {
         RedisAdvancedClusterAsyncCommands<String, String> clusterConnection = clusterClient.connect().async();
         clusterConnection.getStatefulConnection().setReadFrom(ReadFrom.SLAVE);
 
-        clusterConnection.set(key, value).get();
+        Futures.await(clusterConnection.set(key, value));
 
         try {
             clusterConnection.get(key);
@@ -522,10 +516,10 @@ public class RedisClusterSetupTest extends TestSupport {
         return (RedisChannelHandler<String, String>) clusterAsyncConnection.getStatefulConnection();
     }
 
-    private void assertExecuted(RedisFuture<String> set) throws Exception {
-        set.get(5, TimeUnit.SECONDS);
+    private void assertExecuted(RedisFuture<String> set) {
+        Futures.await(set);
         assertThat(set.getError()).isNull();
-        assertThat(set.get()).isEqualTo("OK");
+        assertThat(Futures.get(set)).isEqualTo("OK");
     }
 
     private void suspendConnection(RedisClusterAsyncCommands<String, String> asyncCommands) {
@@ -578,8 +572,7 @@ public class RedisClusterSetupTest extends TestSupport {
         return list.parallelStream().mapToInt(Integer::intValue).toArray();
     }
 
-    private void waitForSlots(RedisClusterCommands<String, String> connection, int slotCount) throws InterruptedException,
-            TimeoutException {
+    private void waitForSlots(RedisClusterCommands<String, String> connection, int slotCount) {
         Wait.untilEquals(slotCount, () -> getOwnPartition(connection).getSlots().size()).waitOrTimeout();
     }
 }

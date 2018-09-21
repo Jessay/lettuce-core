@@ -25,7 +25,7 @@ import org.openjdk.jmh.infra.Blackhole;
  * @author Mark Paluch
  */
 @State(Scope.Benchmark)
-class InvocationProxyFactoryBenchmark {
+public class InvocationProxyFactoryBenchmark {
 
     private final InvocationProxyFactory factory = new InvocationProxyFactory();
     private BenchmarkInterface proxy;

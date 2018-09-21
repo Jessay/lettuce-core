@@ -14,15 +14,14 @@
  */
 package io.lettuce.core.cluster;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.Queue;
-import java.util.concurrent.ExecutionException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,6 +40,7 @@ import io.lettuce.core.protocol.Command;
 import io.lettuce.core.protocol.CommandType;
 import io.lettuce.core.protocol.RedisCommand;
 import io.lettuce.core.resource.ClientResources;
+import io.lettuce.test.Futures;
 
 /**
  * @author Mark Paluch
@@ -102,7 +102,7 @@ class ClusterNodeEndpointUnitTests {
     }
 
     @Test
-    void closeWithQueuedCommandsFails() throws Exception {
+    void closeWithQueuedCommandsFails() {
 
         disconnectedBuffer.add(command);
         when(clusterChannelWriter.write(any(RedisCommand.class))).thenThrow(new RedisException("meh"));
@@ -111,13 +111,7 @@ class ClusterNodeEndpointUnitTests {
 
         assertThat(command.isDone()).isTrue();
 
-        try {
-
-            command.get();
-            fail("Expected ExecutionException");
-        } catch (ExecutionException e) {
-            assertThat(e).hasCauseExactlyInstanceOf(RedisException.class);
-        }
+        assertThatThrownBy(() -> Futures.await(command)).isInstanceOf(RedisException.class);
     }
 
     @Test
@@ -148,7 +142,7 @@ class ClusterNodeEndpointUnitTests {
     }
 
     @Test
-    void closeWithBufferedCommandsFails() throws Exception {
+    void closeWithBufferedCommandsFails() {
 
         when(clientOptions.getDisconnectedBehavior()).thenReturn(ClientOptions.DisconnectedBehavior.ACCEPT_COMMANDS);
         prepareNewEndpoint();
@@ -158,13 +152,7 @@ class ClusterNodeEndpointUnitTests {
 
         sut.close();
 
-        try {
-
-            command.get();
-            fail("Expected ExecutionException");
-        } catch (ExecutionException e) {
-            assertThat(e).hasCauseExactlyInstanceOf(RedisException.class);
-        }
+        assertThatThrownBy(() -> Futures.await(command)).isInstanceOf(RedisException.class);
     }
 
     private void prepareNewEndpoint() {

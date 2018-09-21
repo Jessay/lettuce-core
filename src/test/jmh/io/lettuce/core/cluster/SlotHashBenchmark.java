@@ -26,7 +26,7 @@ import org.openjdk.jmh.infra.Blackhole;
  * @author Mark Paluch
  */
 @State(Scope.Benchmark)
-class SlotHashBenchmark {
+public class SlotHashBenchmark {
 
     private static final byte[] data = "this is my buffer".getBytes();
     private static final byte[] tagged = "this is{my buffer}".getBytes();

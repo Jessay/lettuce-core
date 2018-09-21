@@ -44,7 +44,7 @@ public class TransactionReactiveCommandTest extends TransactionCommandTest {
     }
 
     @BeforeEach
-    void openConnection() {
+    public void openConnection() {
         client.setOptions(ClientOptions.builder().build());
         redis = connect();
         redis.flushall();
@@ -54,7 +54,7 @@ public class TransactionReactiveCommandTest extends TransactionCommandTest {
     }
 
     @AfterEach
-    void closeConnection() {
+    public void closeConnection() {
         redis.getStatefulConnection().close();
     }
 

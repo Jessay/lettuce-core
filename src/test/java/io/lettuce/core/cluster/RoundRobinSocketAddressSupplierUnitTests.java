@@ -60,7 +60,7 @@ class RoundRobinSocketAddressSupplierUnitTests {
     }
 
     @BeforeEach
-    void before() throws Exception {
+    void before() {
 
         when(clientResourcesMock.socketAddressResolver()).thenReturn(SocketAddressResolver.create(DnsResolvers.JVM_DEFAULT));
 

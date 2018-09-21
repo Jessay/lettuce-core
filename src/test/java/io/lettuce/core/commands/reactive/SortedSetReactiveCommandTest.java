@@ -25,7 +25,7 @@ import io.lettuce.test.ReactiveSyncInvocationHandler;
 public class SortedSetReactiveCommandTest extends SortedSetCommandTest {
 
     @Override
-    RedisCommands<String, String> connect() {
+    public RedisCommands<String, String> connect() {
         return ReactiveSyncInvocationHandler.sync(client.connect());
     }
 }

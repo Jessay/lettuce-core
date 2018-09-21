@@ -23,7 +23,6 @@ import static io.lettuce.core.BitFieldArgs.OverflowType.WRAP;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.nio.ByteBuffer;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -31,7 +30,6 @@ import org.junit.jupiter.api.Test;
 import io.lettuce.core.AbstractRedisClientTest;
 import io.lettuce.core.BitFieldArgs;
 import io.lettuce.core.api.sync.RedisCommands;
-import io.lettuce.core.codec.Utf8StringCodec;
 import io.lettuce.test.condition.EnabledOnCommand;
 
 /**
@@ -43,7 +41,7 @@ public class BitCommandTest extends AbstractRedisClientTest {
     protected RedisCommands<String, String> bitstring;
 
     @Override
-    RedisCommands<String, String> connect() {
+    public RedisCommands<String, String> connect() {
         connectBitString();
         return super.connect();
     }
@@ -53,7 +51,7 @@ public class BitCommandTest extends AbstractRedisClientTest {
     }
 
     @Override
-    void closeConnection() throws Exception {
+    public void closeConnection() throws Exception {
         bitstring.getStatefulConnection().close();
         super.closeConnection();
     }
@@ -267,17 +265,4 @@ public class BitCommandTest extends AbstractRedisClientTest {
         assertThat(redis.setbit(key, 0, 0)).isEqualTo(1);
     }
 
-    protected static class BitStringCodec extends Utf8StringCodec {
-        @Override
-        public String decodeValue(ByteBuffer bytes) {
-            StringBuilder bits = new StringBuilder(bytes.remaining() * 8);
-            while (bytes.remaining() > 0) {
-                byte b = bytes.get();
-                for (int i = 0; i < 8; i++) {
-                    bits.append(Integer.valueOf(b >>> i & 1));
-                }
-            }
-            return bits.toString();
-        }
-    }
 }

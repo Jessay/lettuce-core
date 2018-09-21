@@ -19,7 +19,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.inject.Inject;
@@ -43,6 +42,7 @@ import io.lettuce.core.cluster.pubsub.api.sync.NodeSelectionPubSubCommands;
 import io.lettuce.core.cluster.pubsub.api.sync.PubSubNodeSelection;
 import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 import io.lettuce.core.support.PubSubTestListener;
+import io.lettuce.test.Futures;
 import io.lettuce.test.LettuceExtension;
 
 /**
@@ -156,7 +156,8 @@ class RedisClusterPubSubConnectionIntegrationTests extends TestSupport {
 
         RedisClusterNode partition = pubSubConnection.getPartitions().getPartition(0);
 
-        StatefulRedisPubSubConnection<String, String> node = pubSubConnection.getConnectionAsync(partition.getNodeId()).join();
+        StatefulRedisPubSubConnection<String, String> node = Futures.get(pubSubConnection.getConnectionAsync(partition
+                .getNodeId()));
 
         assertThat(node.sync().ping()).isEqualTo("PONG");
     }
@@ -167,8 +168,8 @@ class RedisClusterPubSubConnectionIntegrationTests extends TestSupport {
         RedisClusterNode partition = pubSubConnection.getPartitions().getPartition(0);
 
         RedisURI uri = partition.getUri();
-        StatefulRedisPubSubConnection<String, String> node = pubSubConnection.getConnectionAsync(uri.getHost(), uri.getPort())
-                .join();
+        StatefulRedisPubSubConnection<String, String> node = Futures.get(pubSubConnection.getConnectionAsync(uri.getHost(),
+                uri.getPort()));
 
         assertThat(node.sync().ping()).isEqualTo("PONG");
     }
@@ -229,7 +230,7 @@ class RedisClusterPubSubConnectionIntegrationTests extends TestSupport {
         PubSubAsyncNodeSelection<String, String> masters = pubSubConnection.async().masters();
         NodeSelectionPubSubAsyncCommands<String, String> commands = masters.commands();
 
-        CompletableFuture.allOf(commands.psubscribe("chann*").futures()).get();
+        Futures.await(commands.psubscribe("chann*"));
 
         pubSubConnection2.sync().publish("channel", "message");
 

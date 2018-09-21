@@ -49,19 +49,19 @@ class ClusterCommandUnitTests {
             new StatusOutput<>(new Utf8StringCodec()), null);
 
     @BeforeEach
-    void before() throws Exception {
+    void before() {
         sut = new ClusterCommand<>(command, writerMock, 1);
     }
 
     @Test
-    void testException() throws Exception {
+    void testException() {
 
         sut.completeExceptionally(new Exception());
         assertThat(sut.isCompleted());
     }
 
     @Test
-    void testCancel() throws Exception {
+    void testCancel() {
 
         assertThat(command.isCancelled()).isFalse();
         sut.cancel();
@@ -69,7 +69,7 @@ class ClusterCommandUnitTests {
     }
 
     @Test
-    void testComplete() throws Exception {
+    void testComplete() {
 
         sut.complete();
         assertThat(sut.isCompleted()).isTrue();
@@ -77,7 +77,7 @@ class ClusterCommandUnitTests {
     }
 
     @Test
-    void testRedirect() throws Exception {
+    void testRedirect() {
 
         sut.getOutput().setError("MOVED 1234 127.0.0.1:1000");
         sut.complete();
@@ -88,7 +88,7 @@ class ClusterCommandUnitTests {
     }
 
     @Test
-    void testRedirectLimit() throws Exception {
+    void testRedirectLimit() {
 
         sut.getOutput().setError("MOVED 1234 127.0.0.1:1000");
         sut.complete();
@@ -102,7 +102,7 @@ class ClusterCommandUnitTests {
     }
 
     @Test
-    void testCompleteListener() throws Exception {
+    void testCompleteListener() {
 
         final List<String> someList = new ArrayList<>();
 

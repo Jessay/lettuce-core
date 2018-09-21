@@ -52,7 +52,7 @@ class ProtectedModeTests {
         server.addHandler(() -> {
             return new ChannelInboundHandlerAdapter() {
                 @Override
-                public void channelActive(ChannelHandlerContext ctx) throws Exception {
+                public void channelActive(ChannelHandlerContext ctx) {
 
                     String message = getMessage();
                     ByteBuf buffer = ctx.alloc().buffer(message.length() + 3);

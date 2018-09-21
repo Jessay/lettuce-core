@@ -26,47 +26,47 @@ import io.lettuce.core.commands.GeoCommandTest;
 public class GeoTxCommandTest extends GeoCommandTest {
 
     @Override
-    RedisCommands<String, String> connect() {
+    public RedisCommands<String, String> connect() {
         return TxSyncInvocationHandler.sync(client.connect());
     }
 
     @Disabled
     @Override
-    void georadiusbymemberWithArgsInTransaction() {
+    public void georadiusbymemberWithArgsInTransaction() {
     }
 
     @Disabled
     @Override
-    void geoaddInTransaction() {
+    public void geoaddInTransaction() {
     }
 
     @Disabled
     @Override
-    void geoaddMultiInTransaction() {
+    public void geoaddMultiInTransaction() {
     }
 
     @Disabled
     @Override
-    void geoposInTransaction() {
+    public void geoposInTransaction() {
     }
 
     @Disabled
     @Override
-    void georadiusWithArgsAndTransaction() {
+    public void georadiusWithArgsAndTransaction() {
     }
 
     @Disabled
     @Override
-    void georadiusInTransaction() {
+    public void georadiusInTransaction() {
     }
 
     @Disabled
     @Override
-    void geodistInTransaction() {
+    public void geodistInTransaction() {
     }
 
     @Disabled
     @Override
-    void geohashInTransaction() {
+    public void geohashInTransaction() {
     }
 }

@@ -20,7 +20,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -42,10 +41,7 @@ import io.lettuce.core.cluster.api.sync.RedisAdvancedClusterCommands;
 import io.lettuce.core.cluster.api.sync.RedisClusterCommands;
 import io.lettuce.core.cluster.models.partitions.RedisClusterNode;
 import io.lettuce.core.codec.Utf8StringCodec;
-import io.lettuce.test.KeyValueStreamingAdapter;
-import io.lettuce.test.KeysAndValues;
-import io.lettuce.test.LettuceExtension;
-import io.lettuce.test.ListStreamingAdapter;
+import io.lettuce.test.*;
 import io.lettuce.test.condition.EnabledOnCommand;
 import io.netty.util.internal.ConcurrentSet;
 
@@ -240,21 +236,21 @@ class AdvancedClusterReactiveIntegrationTests extends TestSupport {
     }
 
     @Test
-    void keysDoesNotRunIntoRaceConditions() throws Exception {
+    void keysDoesNotRunIntoRaceConditions() {
 
-        List<RedisFuture> futures = new ArrayList<>();
+        List<RedisFuture<?>> futures = new ArrayList<>();
         RedisClusterAsyncCommands<String, String> async = commands.getStatefulConnection().async();
-        async.flushall().get();
+        Futures.await(async.flushall());
 
         for (int i = 0; i < 1000; i++) {
             futures.add(async.set("key-" + i, "value-" + i));
         }
 
-        futures.forEach(f -> f.toCompletableFuture().join());
+        Futures.awaitAll(futures);
 
         for (int i = 0; i < 100; i++) {
             CompletableFuture<Long> future = commands.keys("*").count().toFuture();
-            future.get(5, TimeUnit.SECONDS);
+            Futures.await(future);
         }
     }
 
@@ -288,7 +284,7 @@ class AdvancedClusterReactiveIntegrationTests extends TestSupport {
     }
 
     @Test
-    void scriptLoad() throws Exception {
+    void scriptLoad() {
 
         scriptFlush();
 
@@ -310,7 +306,7 @@ class AdvancedClusterReactiveIntegrationTests extends TestSupport {
     }
 
     @Test
-    void readFromSlaves() throws Exception {
+    void readFromSlaves() {
 
         RedisClusterReactiveCommands<String, String> connection = commands.getConnection(ClusterTestSettings.host,
                 ClusterTestSettings.port4);

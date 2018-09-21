@@ -36,7 +36,7 @@ import io.lettuce.test.resource.TestClientResources;
 class ConnectionEventsTriggeredTest extends TestSupport {
 
     @Test
-    void testConnectionEvents() throws Exception {
+    void testConnectionEvents() {
 
         RedisClient client = RedisClient.create(TestClientResources.get(), RedisURI.Builder.redis(host, port).build());
 

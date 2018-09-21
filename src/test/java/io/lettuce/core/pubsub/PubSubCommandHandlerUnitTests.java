@@ -81,7 +81,7 @@ class PubSubCommandHandlerUnitTests {
 
     @SuppressWarnings("unchecked")
     @BeforeEach
-    void before() throws Exception {
+    void before() {
 
         when(channel.config()).thenReturn(channelConfig);
         when(context.alloc()).thenReturn(ByteBufAllocator.DEFAULT);

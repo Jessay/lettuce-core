@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2018 the original author or authors.
+ * Copyright 2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.lettuce.core.commands.transactional;
+package io.lettuce.core.commands;
 
-import io.lettuce.core.api.sync.RedisCommands;
-import io.lettuce.core.commands.BitCommandTest;
-import io.lettuce.core.commands.BitStringCodec;
+import java.nio.ByteBuffer;
+
+import io.lettuce.core.codec.Utf8StringCodec;
 
 /**
  * @author Mark Paluch
  */
-public class BitTxCommandTest extends BitCommandTest {
+public class BitStringCodec extends Utf8StringCodec {
 
     @Override
-    public RedisCommands<String, String> connect() {
-        bitstring = TxSyncInvocationHandler.sync(client.connect(new BitStringCodec()));
-        return TxSyncInvocationHandler.sync(client.connect());
+    public String decodeValue(ByteBuffer bytes) {
+        StringBuilder bits = new StringBuilder(bytes.remaining() * 8);
+        while (bytes.remaining() > 0) {
+            byte b = bytes.get();
+            for (int i = 0; i < 8; i++) {
+                bits.append(Integer.valueOf(b >>> i & 1));
+            }
+        }
+        return bits.toString();
     }
 }

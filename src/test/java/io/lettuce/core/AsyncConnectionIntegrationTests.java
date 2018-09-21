@@ -52,32 +52,32 @@ class AsyncConnectionIntegrationTests extends TestSupport {
     }
 
     @Test
-    void multi() throws Exception {
-        assertThat(async.multi().get()).isEqualTo("OK");
+    void multi() {
+        assertThat(Futures.get(async.multi())).isEqualTo("OK");
         Future<String> set = async.set(key, value);
         Future<Long> rpush = async.rpush("list", "1", "2");
         Future<List<String>> lrange = async.lrange("list", 0, -1);
 
         assertThat(!set.isDone() && !rpush.isDone() && !rpush.isDone()).isTrue();
-        assertThat(async.exec().get()).contains("OK", 2L, list("1", "2"));
+        assertThat(Futures.get(async.exec())).contains("OK", 2L, list("1", "2"));
 
-        assertThat(set.get()).isEqualTo("OK");
-        assertThat((long) rpush.get()).isEqualTo(2L);
-        assertThat(lrange.get()).isEqualTo(list("1", "2"));
+        assertThat(Futures.get(set)).isEqualTo("OK");
+        assertThat(Futures.get(rpush)).isEqualTo(2L);
+        assertThat(Futures.get(lrange)).isEqualTo(list("1", "2"));
     }
 
     @Test
-    void watch() throws Exception {
-        assertThat(async.watch(key).get()).isEqualTo("OK");
+    void watch() {
+        assertThat(Futures.get(async.watch(key))).isEqualTo("OK");
 
         async.set(key, value + "X");
 
         async.multi();
         Future<String> set = async.set(key, value);
         Future<Long> append = async.append(key, "foo");
-        assertThat(async.exec().get()).isEmpty();
-        assertThat(set.get()).isNull();
-        assertThat(append.get()).isNull();
+        assertThat(Futures.get(async.exec())).isEmpty();
+        assertThat(Futures.get(set)).isNull();
+        assertThat(Futures.get(append)).isNull();
     }
 
     @Test
@@ -138,7 +138,7 @@ class AsyncConnectionIntegrationTests extends TestSupport {
     }
 
     @Test
-    void discardCompletesFutures() throws Exception {
+    void discardCompletesFutures() {
         async.multi();
         Future<String> set = async.set(key, value);
         async.discard();

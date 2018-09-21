@@ -71,7 +71,7 @@ class RedisClusterPasswordSecuredSslTest extends TestSupport {
     }
 
     @Test
-    void defaultClusterConnectionShouldWork() throws Exception {
+    void defaultClusterConnectionShouldWork() {
 
         StatefulRedisClusterConnection<String, String> connection = redisClient.connect();
         assertThat(connection.sync().ping()).isEqualTo("PONG");
@@ -80,7 +80,7 @@ class RedisClusterPasswordSecuredSslTest extends TestSupport {
     }
 
     @Test
-    void partitionViewShouldContainClusterPorts() throws Exception {
+    void partitionViewShouldContainClusterPorts() {
 
         StatefulRedisClusterConnection<String, String> connection = redisClient.connect();
         List<Integer> ports = connection.getPartitions().stream().map(redisClusterNode -> redisClusterNode.getUri().getPort())
@@ -91,7 +91,7 @@ class RedisClusterPasswordSecuredSslTest extends TestSupport {
     }
 
     @Test
-    void routedOperationsAreWorking() throws Exception {
+    void routedOperationsAreWorking() {
 
         StatefulRedisClusterConnection<String, String> connection = redisClient.connect();
         RedisAdvancedClusterCommands<String, String> sync = connection.sync();
@@ -106,7 +106,7 @@ class RedisClusterPasswordSecuredSslTest extends TestSupport {
     }
 
     @Test
-    void nodeConnectionsShouldWork() throws Exception {
+    void nodeConnectionsShouldWork() {
 
         StatefulRedisClusterConnection<String, String> connection = redisClient.connect();
 
@@ -123,7 +123,7 @@ class RedisClusterPasswordSecuredSslTest extends TestSupport {
     }
 
     @Test
-    void nodeSelectionApiShouldWork() throws Exception {
+    void nodeSelectionApiShouldWork() {
 
         StatefulRedisClusterConnection<String, String> connection = redisClient.connect();
 
@@ -134,7 +134,7 @@ class RedisClusterPasswordSecuredSslTest extends TestSupport {
     }
 
     @Test
-    void connectionWithoutPasswordShouldFail() throws Exception {
+    void connectionWithoutPasswordShouldFail() {
 
         RedisURI redisURI = RedisURI.builder().redis(host(), CLUSTER_PORT_SSL_1).withSsl(true).withVerifyPeer(false).build();
         RedisClusterClient redisClusterClient = RedisClusterClient.create(TestClientResources.get(), redisURI);
@@ -149,7 +149,7 @@ class RedisClusterPasswordSecuredSslTest extends TestSupport {
     }
 
     @Test
-    void connectionWithoutPasswordShouldFail2() throws Exception {
+    void connectionWithoutPasswordShouldFail2() {
 
         RedisURI redisURI = RedisURI.builder().redis(host(), CLUSTER_PORT_SSL_1).withSsl(true).withVerifyPeer(false).build();
         RedisClusterClient redisClusterClient = RedisClusterClient.create(TestClientResources.get(), redisURI);
@@ -164,7 +164,7 @@ class RedisClusterPasswordSecuredSslTest extends TestSupport {
     }
 
     @Test
-    void clusterNodeRefreshWorksForMultipleIterations() throws Exception {
+    void clusterNodeRefreshWorksForMultipleIterations() {
 
         redisClient.reloadPartitions();
         redisClient.reloadPartitions();

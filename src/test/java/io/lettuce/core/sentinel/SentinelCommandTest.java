@@ -31,9 +31,7 @@ import org.junit.Test;
 
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisConnectionException;
-import io.lettuce.core.RedisFuture;
 import io.lettuce.core.RedisURI;
-import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.sentinel.api.sync.RedisSentinelCommands;
 import io.lettuce.test.Wait;
@@ -156,14 +154,12 @@ public class SentinelCommandTest extends AbstractSentinelTest {
     }
 
     @Test
-    public void role() throws Exception {
+    public void role() {
 
-        RedisAsyncCommands<String, String> connection = sentinelClient.connect(RedisURI.Builder.redis(host, 26380).build())
-                .async();
+        RedisCommands<String, String> connection = sentinelClient.connect(RedisURI.Builder.redis(host, 26380).build()).sync();
         try {
 
-            RedisFuture<List<Object>> role = connection.role();
-            List<Object> objects = role.get();
+            List<Object> objects = connection.role();
 
             assertThat(objects).hasSize(2);
 

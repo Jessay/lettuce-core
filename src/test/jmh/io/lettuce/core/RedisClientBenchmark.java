@@ -20,11 +20,11 @@ import java.util.concurrent.TimeUnit;
 
 import org.openjdk.jmh.annotations.*;
 
-import io.lettuce.test.settings.TestSettings;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.codec.ByteArrayCodec;
+import io.lettuce.test.settings.TestSettings;
 
 /**
  * Benchmark for {@link RedisClient}.
@@ -55,7 +55,7 @@ public class RedisClientBenchmark {
     private Mono monos[];
 
     @Setup
-    private void setup() {
+    public void setup() {
 
         redisClient = RedisClient.create(RedisURI.create(TestSettings.host(), TestSettings.port()));
         redisClient.setOptions(ClientOptions.builder()
@@ -114,7 +114,7 @@ public class RedisClientBenchmark {
     }
 
     @Benchmark
-    private void syncList() {
+    public void syncList() {
         connection.async().del(FOO);
         connection.sync().lpush(FOO, FOO, FOO, FOO, FOO, FOO, FOO, FOO, FOO, FOO, FOO, FOO, FOO, FOO, FOO, FOO, FOO, FOO, FOO,
                 FOO);
@@ -128,7 +128,7 @@ public class RedisClientBenchmark {
 
     @Benchmark
     @OperationsPerInvocation(BATCH_SIZE)
-    public void reactiveSetBatch() throws Exception {
+    public void reactiveSetBatch() {
 
         for (int i = 0; i < BATCH_SIZE; i++) {
             monos[i] = connection.reactive().set(KEY, KEY);
@@ -139,7 +139,7 @@ public class RedisClientBenchmark {
 
     @Benchmark
     @OperationsPerInvocation(BATCH_SIZE)
-    public void reactiveSetBatchFlush() throws Exception {
+    public void reactiveSetBatchFlush() {
 
         connection.setAutoFlushCommands(false);
 

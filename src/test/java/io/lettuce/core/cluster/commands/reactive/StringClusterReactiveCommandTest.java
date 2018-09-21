@@ -48,7 +48,7 @@ public class StringClusterReactiveCommandTest extends StringCommandTest {
     private StatefulRedisClusterConnection<String, String> clusterConnection;
 
     @BeforeAll
-    static void setupClient() {
+    public static void setupClient() {
         redisClusterClient = RedisClusterClient.create(TestClientResources.get(),
                 RedisURI.Builder.redis(TestSettings.host(), TestSettings.port(900)).build());
     }
@@ -59,7 +59,7 @@ public class StringClusterReactiveCommandTest extends StringCommandTest {
     }
 
     @BeforeEach
-    void openConnection() {
+    public void openConnection() {
         redis = connect();
         ClusterTestUtil.flushDatabaseOfAllNodes(clusterConnection);
     }

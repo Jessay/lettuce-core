@@ -35,6 +35,7 @@ import io.lettuce.core.codec.ByteArrayCodec;
 import io.lettuce.core.sentinel.api.StatefulRedisSentinelConnection;
 import io.lettuce.core.sentinel.api.async.RedisSentinelAsyncCommands;
 import io.lettuce.core.sentinel.api.sync.RedisSentinelCommands;
+import io.lettuce.test.Futures;
 import io.lettuce.test.Wait;
 import io.lettuce.test.resource.TestClientResources;
 import io.lettuce.test.settings.TestSettings;
@@ -54,18 +55,18 @@ public class SentinelConnectionTest extends AbstractSentinelTest {
     }
 
     @BeforeEach
-    void openConnection() {
+    public void openConnection() {
         connection = sentinelClient.connectSentinel();
         sentinel = connection.sync();
         sentinelAsync = connection.async();
     }
 
     @Test
-    void testAsync() throws Exception {
+    void testAsync() {
 
         RedisFuture<List<Map<String, String>>> future = sentinelAsync.masters();
 
-        assertThat(future.get()).isNotNull();
+        assertThat(Futures.get(future)).isNotNull();
         assertThat(future.isDone()).isTrue();
         assertThat(future.isCancelled()).isFalse();
     }

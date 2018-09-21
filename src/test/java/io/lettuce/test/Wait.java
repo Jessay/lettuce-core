@@ -165,7 +165,7 @@ public class Wait {
     @FunctionalInterface
     public interface VoidWaitCondition {
 
-        void test() throws Exception;
+        void test();
     }
 
     @FunctionalInterface

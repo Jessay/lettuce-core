@@ -43,6 +43,7 @@ import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.codec.StringCodec;
 import io.lettuce.core.output.StatusOutput;
 import io.lettuce.core.protocol.*;
+import io.lettuce.test.Futures;
 import io.lettuce.test.LettuceExtension;
 import io.lettuce.test.Wait;
 import io.lettuce.test.WithPassword;
@@ -177,14 +178,14 @@ class ClientOptionsIntegrationTests extends TestSupport {
         watchdog.scheduleReconnect();
 
         for (RedisFuture<String> ping : pings) {
-            assertThat(ping.toCompletableFuture().join()).isEqualTo("PONG");
+            assertThat(Futures.get(ping)).isEqualTo("PONG");
         }
 
         connection.getStatefulConnection().close();
     }
 
     @Test
-    void requestQueueSizeOvercommittedReconnect() throws Exception {
+    void requestQueueSizeOvercommittedReconnect() {
 
         client.setOptions(ClientOptions.builder().requestQueueSize(10).build());
 
@@ -211,10 +212,10 @@ class ClientOptionsIntegrationTests extends TestSupport {
         watchdog.scheduleReconnect();
 
         for (int i = 0; i < 10; i++) {
-            assertThat(pings.get(i).get()).isEqualTo("PONG");
+            assertThat(Futures.get(pings.get(i))).isEqualTo("PONG");
         }
 
-        assertThatThrownBy(() -> pings.get(10).toCompletableFuture().join()).hasCauseInstanceOf(IllegalStateException.class)
+        assertThatThrownBy(() -> Futures.await(pings.get(10))).hasCauseInstanceOf(IllegalStateException.class)
                 .hasMessage("java.lang.IllegalStateException: Queue full");
 
         connection.close();
@@ -482,8 +483,8 @@ class ClientOptionsIntegrationTests extends TestSupport {
         ConnectionWatchdog connectionWatchdog = getConnectionWatchdog(redisConnection);
         connectionWatchdog.setReconnectSuspended(true);
 
-        channel.close().get();
-        sleep.get();
+        Futures.await(channel.close());
+        Futures.await(sleep);
 
         redisConnection.async().get(key).cancel(true);
 
@@ -494,8 +495,8 @@ class ClientOptionsIntegrationTests extends TestSupport {
         connectionWatchdog.setReconnectSuspended(false);
         connectionWatchdog.scheduleReconnect();
 
-        assertThat(getFuture1.get()).isEqualTo("value1");
-        assertThat(getFuture2.get()).isEqualTo("value2");
+        assertThat(Futures.get(getFuture1)).isEqualTo("value1");
+        assertThat(Futures.get(getFuture2)).isEqualTo("value2");
 
         controlConnection.close();
         redisConnection.close();
@@ -527,8 +528,8 @@ class ClientOptionsIntegrationTests extends TestSupport {
                     ConnectionWatchdog connectionWatchdog = getConnectionWatchdog(redisConnection);
                     connectionWatchdog.setReconnectSuspended(true);
 
-                    channel.close().get();
-                    sleep.get();
+                    Futures.await(channel.close());
+                    Futures.await(sleep);
 
                     redisConnection.async().get(key).cancel(true);
 
@@ -539,8 +540,8 @@ class ClientOptionsIntegrationTests extends TestSupport {
                     connectionWatchdog.setReconnectSuspended(false);
                     connectionWatchdog.scheduleReconnect();
 
-                    assertThat(getFuture1.get()).isEqualTo("value1");
-                    assertThat(getFuture2.get()).isEqualTo("value2");
+                    assertThat(Futures.get(getFuture1)).isEqualTo("value1");
+                    assertThat(Futures.get(getFuture2)).isEqualTo("value2");
 
                     controlConnection.close();
                     redisConnection.close();

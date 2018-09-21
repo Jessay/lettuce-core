@@ -46,7 +46,7 @@ class ClusterPartitionParserUnitTests {
             + "5f4a2236d00008fba7ac0dd24b95762b446767bd 127.0.0.1:7382@17382 slave 3d005a179da7d8dc1adae6409d47b39c369e992b 0 1454482721690 2 connected";
 
     @Test
-    void shouldParseNodesCorrectly() throws Exception {
+    void shouldParseNodesCorrectly() {
 
         Partitions result = ClusterPartitionParser.parse(nodes);
 
@@ -78,7 +78,7 @@ class ClusterPartitionParserUnitTests {
     }
 
     @Test
-    void shouldParseNodesWithBusPort() throws Exception {
+    void shouldParseNodesWithBusPort() {
 
         Partitions result = ClusterPartitionParser.parse(nodesWithBusPort);
 
@@ -92,7 +92,7 @@ class ClusterPartitionParserUnitTests {
     }
 
     @Test
-    void shouldParseNodesIPv6Address() throws Exception {
+    void shouldParseNodesIPv6Address() {
 
         Partitions result = ClusterPartitionParser.parse(nodesWithIPv6Addresses);
 
@@ -110,7 +110,7 @@ class ClusterPartitionParserUnitTests {
     }
 
     @Test
-    void getNodeByHashShouldReturnCorrectNode() throws Exception {
+    void getNodeByHashShouldReturnCorrectNode() {
 
         Partitions partitions = ClusterPartitionParser.parse(nodes);
         assertThat(partitions.getPartitionBySlot(7000).getNodeId()).isEqualTo("c37ab8396be428403d4e55c0d317348be27ed973");
@@ -118,7 +118,7 @@ class ClusterPartitionParserUnitTests {
     }
 
     @Test
-    void testModel() throws Exception {
+    void testModel() {
         RedisClusterNode node = mockRedisClusterNode();
 
         assertThat(node.toString()).contains(RedisClusterNode.class.getSimpleName());
@@ -141,7 +141,7 @@ class ClusterPartitionParserUnitTests {
     }
 
     @Test
-    void createNode() throws Exception {
+    void createNode() {
         RedisClusterNode original = mockRedisClusterNode();
         RedisClusterNode created = RedisClusterNode.of(original.getNodeId());
 

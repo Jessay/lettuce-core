@@ -45,7 +45,7 @@ public abstract class AbstractSentinelTest extends TestSupport {
     }
 
     @AfterEach
-    public void closeConnection() throws Exception {
+    public void closeConnection() {
         if (sentinel != null) {
             sentinel.getStatefulConnection().close();
         }

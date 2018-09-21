@@ -21,6 +21,8 @@ import java.util.HashMap;
 
 import org.junit.jupiter.api.Test;
 
+import io.lettuce.test.Futures;
+
 /**
  * @author Mark Paluch
  */
@@ -29,26 +31,26 @@ class PipelinedRedisFutureUnitTests {
     private PipelinedRedisFuture<String> sut;
 
     @Test
-    void testComplete() throws Exception {
+    void testComplete() {
 
         String other = "other";
 
         sut = new PipelinedRedisFuture<>(new HashMap<>(), o -> other);
 
         sut.complete("");
-        assertThat(sut.get()).isEqualTo(other);
+        assertThat(Futures.get(sut.toCompletableFuture())).isEqualTo(other);
         assertThat(sut.getError()).isNull();
     }
 
     @Test
-    void testCompleteExceptionally() throws Exception {
+    void testCompleteExceptionally() {
 
         String other = "other";
 
         sut = new PipelinedRedisFuture<>(new HashMap<>(), o -> other);
 
         sut.completeExceptionally(new Exception());
-        assertThat(sut.get()).isEqualTo(other);
+        assertThat(Futures.get(sut.toCompletableFuture())).isEqualTo(other);
         assertThat(sut.getError()).isNull();
     }
 }

@@ -48,7 +48,7 @@ class InvocationProxyFactoryUnitTests {
     }
 
     @Test
-    void shouldCallInterceptorsInOrder() throws InterruptedException {
+    void shouldCallInterceptorsInOrder() {
 
         InvocationProxyFactory factory = new InvocationProxyFactory();
         factory.addInterface(TargetWithStringMethod.class);

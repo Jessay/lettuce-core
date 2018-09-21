@@ -21,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.concurrent.Future;
 
 import javax.inject.Inject;
 
@@ -263,8 +264,9 @@ class NodeSelectionAsyncIntegrationTests extends TestSupport {
 
                 Futures.await(future);
 
-                if (future.get() != null) {
-                    return future.get();
+                String result = Futures.get((Future<String>) future);
+                if (result != null) {
+                    return result;
                 }
             }
             return null;

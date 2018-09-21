@@ -69,7 +69,7 @@ class AbstractInvocationHandlerUnitTests {
     static class InvocationHandler extends AbstractInvocationHandler {
 
         @Override
-        protected Object handleInvocation(Object proxy, Method method, Object[] args) throws Throwable {
+        protected Object handleInvocation(Object proxy, Method method, Object[] args) {
             return 1;
         }
     }

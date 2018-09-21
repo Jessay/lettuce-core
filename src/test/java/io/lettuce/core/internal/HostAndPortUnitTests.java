@@ -138,7 +138,7 @@ class HostAndPortUnitTests {
     }
 
     @Test
-    void shouldApplyCompatibilityParsing() throws Exception {
+    void shouldApplyCompatibilityParsing() {
 
         checkFromCompatCase("affe::123:6379", "affe::123", 6379);
         checkFromCompatCase("1:2:3:4:5:6:7:8:6379", "1:2:3:4:5:6:7:8", 6379);

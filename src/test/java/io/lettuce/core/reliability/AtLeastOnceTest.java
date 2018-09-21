@@ -48,7 +48,7 @@ class AtLeastOnceTest extends AbstractRedisClientTest {
     private String key = "key";
 
     @BeforeEach
-    void before() throws Exception {
+    void before() {
         client.setOptions(ClientOptions.builder().autoReconnect(true).build());
 
         // needs to be increased on slow systems...perhaps...
@@ -61,7 +61,7 @@ class AtLeastOnceTest extends AbstractRedisClientTest {
     }
 
     @Test
-    void connectionIsConnectedAfterConnect() throws Exception {
+    void connectionIsConnectedAfterConnect() {
 
         StatefulRedisConnection<String, String> connection = client.connect();
 
@@ -71,7 +71,7 @@ class AtLeastOnceTest extends AbstractRedisClientTest {
     }
 
     @Test
-    void reconnectIsActiveHandler() throws Exception {
+    void reconnectIsActiveHandler() {
 
         RedisCommands<String, String> connection = client.connect().sync();
 
@@ -84,7 +84,7 @@ class AtLeastOnceTest extends AbstractRedisClientTest {
     }
 
     @Test
-    void basicOperations() throws Exception {
+    void basicOperations() {
 
         RedisCommands<String, String> connection = client.connect().sync();
 
@@ -95,7 +95,7 @@ class AtLeastOnceTest extends AbstractRedisClientTest {
     }
 
     @Test
-    void noBufferedCommandsAfterExecute() throws Exception {
+    void noBufferedCommandsAfterExecute() {
 
         RedisCommands<String, String> connection = client.connect().sync();
 
@@ -108,7 +108,7 @@ class AtLeastOnceTest extends AbstractRedisClientTest {
     }
 
     @Test
-    void commandIsExecutedOnce() throws Exception {
+    void commandIsExecutedOnce() {
 
         RedisCommands<String, String> connection = client.connect().sync();
 
@@ -126,7 +126,7 @@ class AtLeastOnceTest extends AbstractRedisClientTest {
     }
 
     @Test
-    void commandFailsWhenFailOnEncode() throws Exception {
+    void commandFailsWhenFailOnEncode() {
 
         RedisCommands<String, String> connection = client.connect().sync();
         RedisChannelWriter channelWriter = ConnectionTestUtil.getChannelWriter(connection.getStatefulConnection());
@@ -162,7 +162,7 @@ class AtLeastOnceTest extends AbstractRedisClientTest {
     }
 
     @Test
-    void commandNotFailedChannelClosesWhileFlush() throws Exception {
+    void commandNotFailedChannelClosesWhileFlush() {
 
         assumeTrue(Version.identify().get("netty-transport").artifactVersion().startsWith("4.0.2"));
 
@@ -204,7 +204,7 @@ class AtLeastOnceTest extends AbstractRedisClientTest {
     }
 
     @Test
-    void commandRetriedChannelClosesWhileFlush() throws Exception {
+    void commandRetriedChannelClosesWhileFlush() {
 
         assumeTrue(Version.identify().get("netty-transport").artifactVersion().startsWith("4.0.2"));
 
@@ -267,7 +267,7 @@ class AtLeastOnceTest extends AbstractRedisClientTest {
     }
 
     @Test
-    void commandFailsDuringDecode() throws Exception {
+    void commandFailsDuringDecode() {
 
         RedisCommands<String, String> connection = client.connect().sync();
         RedisChannelWriter channelWriter = ConnectionTestUtil.getChannelWriter(connection.getStatefulConnection());

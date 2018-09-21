@@ -177,18 +177,18 @@ class AdvancedClusterClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    void msetnxCrossSlot() throws Exception {
+    void msetnxCrossSlot() {
 
         Map<String, String> mset = prepareMset();
 
         String key = mset.keySet().iterator().next();
         Map<String, String> submap = Collections.singletonMap(key, mset.get(key));
 
-        assertThat(async.msetnx(submap).get()).isTrue();
-        assertThat(async.msetnx(mset).get()).isFalse();
+        assertThat(sync.msetnx(submap)).isTrue();
+        assertThat(sync.msetnx(mset)).isFalse();
 
         for (String mykey : mset.keySet()) {
-            String s1 = async.get(mykey).get();
+            String s1 = sync.get(mykey);
             assertThat(s1).isEqualTo("value-" + mykey);
         }
     }
@@ -222,13 +222,13 @@ class AdvancedClusterClientIntegrationTests extends TestSupport {
 
     @Test
     @EnabledOnCommand("UNLINK")
-    void delRegular() throws Exception {
+    void delRegular() {
 
         msetRegular();
         Long result = sync.unlink(key);
 
         assertThat(result).isEqualTo(1);
-        assertThat(async.get(key).get()).isNull();
+        assertThat(Futures.get(async.get(key))).isNull();
     }
 
     @Test

@@ -41,7 +41,7 @@ class KnownMajorityPartitionsConsensusUnitTests {
     private RedisClusterNode node5 = createNode(5);
 
     @Test
-    void sameSharedViewShouldDecideForKnownMajority() throws Exception {
+    void sameSharedViewShouldDecideForKnownMajority() {
 
         Partitions current = createPartitions(node1, node2, node3, node4, node5);
 
@@ -57,7 +57,7 @@ class KnownMajorityPartitionsConsensusUnitTests {
     }
 
     @Test
-    void addedNodeViewShouldDecideForKnownMajority() throws Exception {
+    void addedNodeViewShouldDecideForKnownMajority() {
 
         Partitions current = createPartitions(node1, node2, node3, node4);
 
@@ -73,7 +73,7 @@ class KnownMajorityPartitionsConsensusUnitTests {
     }
 
     @Test
-    void removedNodeViewShouldDecideForKnownMajority() throws Exception {
+    void removedNodeViewShouldDecideForKnownMajority() {
 
         Partitions current = createPartitions(node1, node2, node3, node4, node5);
 
@@ -89,7 +89,7 @@ class KnownMajorityPartitionsConsensusUnitTests {
     }
 
     @Test
-    void mixedViewShouldDecideForKnownMajority() throws Exception {
+    void mixedViewShouldDecideForKnownMajority() {
 
         Partitions current = createPartitions(node1, node2, node3, node4, node5);
 
@@ -105,7 +105,7 @@ class KnownMajorityPartitionsConsensusUnitTests {
     }
 
     @Test
-    void clusterSplitViewShouldDecideForKnownMajority() throws Exception {
+    void clusterSplitViewShouldDecideForKnownMajority() {
 
         Partitions current = createPartitions(node1, node2, node3, node4, node5);
 
@@ -121,7 +121,7 @@ class KnownMajorityPartitionsConsensusUnitTests {
     }
 
     @Test
-    void strangeClusterSplitViewShouldDecideForKnownMajority() throws Exception {
+    void strangeClusterSplitViewShouldDecideForKnownMajority() {
 
         Partitions current = createPartitions(node1, node2, node3, node4, node5);
 

@@ -35,7 +35,7 @@ class StringCodecUnitTests {
     private String teststringPlain = "hello uufadsfasdfadssdfadfs";
 
     @Test
-    void encodeUtf8Buf() throws Exception {
+    void encodeUtf8Buf() {
 
         StringCodec codec = new StringCodec(LettuceCharsets.UTF8);
 
@@ -46,7 +46,7 @@ class StringCodecUnitTests {
     }
 
     @Test
-    void encodeAsciiBuf() throws Exception {
+    void encodeAsciiBuf() {
 
         StringCodec codec = new StringCodec(LettuceCharsets.ASCII);
 
@@ -57,7 +57,7 @@ class StringCodecUnitTests {
     }
 
     @Test
-    void encodeIso88591Buf() throws Exception {
+    void encodeIso88591Buf() {
 
         StringCodec codec = new StringCodec(StandardCharsets.ISO_8859_1);
 
@@ -68,7 +68,7 @@ class StringCodecUnitTests {
     }
 
     @Test
-    void encodeAndDecodeUtf8Buf() throws Exception {
+    void encodeAndDecodeUtf8Buf() {
 
         StringCodec codec = new StringCodec(LettuceCharsets.UTF8);
 
@@ -79,7 +79,7 @@ class StringCodecUnitTests {
     }
 
     @Test
-    void encodeAndDecodeUtf8() throws Exception {
+    void encodeAndDecodeUtf8() {
 
         StringCodec codec = new StringCodec(LettuceCharsets.UTF8);
         ByteBuffer byteBuffer = codec.encodeKey(teststring);
@@ -88,7 +88,7 @@ class StringCodecUnitTests {
     }
 
     @Test
-    void encodeAndDecodeAsciiBuf() throws Exception {
+    void encodeAndDecodeAsciiBuf() {
 
         StringCodec codec = new StringCodec(LettuceCharsets.ASCII);
 
@@ -99,7 +99,7 @@ class StringCodecUnitTests {
     }
 
     @Test
-    void encodeAndDecodeIso88591Buf() throws Exception {
+    void encodeAndDecodeIso88591Buf() {
 
         StringCodec codec = new StringCodec(StandardCharsets.ISO_8859_1);
 
@@ -110,7 +110,7 @@ class StringCodecUnitTests {
     }
 
     @Test
-    void estimateSize() throws Exception {
+    void estimateSize() {
 
         assertThat(new StringCodec(LettuceCharsets.UTF8).estimateSize(teststring)).isEqualTo((int) (teststring.length() * 1.1));
         assertThat(new StringCodec(LettuceCharsets.ASCII).estimateSize(teststring)).isEqualTo(teststring.length());

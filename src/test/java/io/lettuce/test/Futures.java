@@ -56,6 +56,7 @@ public class Futures {
      * Await completion for all {@link Future} guarded by the global {@link #TIMEOUT}.
      */
     public static boolean await(Future<?> future) {
+
         if (!LettuceFutures.awaitAll(TIMEOUT, future)) {
             throw new IllegalStateException("Future timeout");
         }
@@ -111,7 +112,7 @@ public class Futures {
      * @param future
      * @param <T>
      */
-    private static <T> T get(CompletableFuture<T> future) {
+    public static <T> T get(CompletableFuture<T> future) {
         return get((Future<T>) future);
     }
 

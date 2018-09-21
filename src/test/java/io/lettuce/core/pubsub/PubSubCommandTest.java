@@ -34,6 +34,7 @@ import io.lettuce.core.*;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.internal.LettuceFactories;
 import io.lettuce.core.pubsub.api.async.RedisPubSubAsyncCommands;
+import io.lettuce.test.Futures;
 import io.lettuce.test.Wait;
 import io.lettuce.test.resource.FastShutdown;
 import io.lettuce.test.resource.TestClientResources;
@@ -171,7 +172,7 @@ class PubSubCommandTest extends AbstractRedisClientTest implements RedisPubSubLi
     @Test
     void psubscribe() throws Exception {
         RedisFuture<Void> psubscribe = pubsub.psubscribe(pattern);
-        assertThat(psubscribe.get()).isNull();
+        assertThat(Futures.get(psubscribe)).isNull();
         assertThat(psubscribe.getError()).isNull();
         assertThat(psubscribe.isCancelled()).isFalse();
         assertThat(psubscribe.isDone()).isTrue();
@@ -199,18 +200,16 @@ class PubSubCommandTest extends AbstractRedisClientTest implements RedisPubSubLi
     }
 
     @Test
-    void pubsubChannels() throws Exception {
-        RedisFuture<Void> future = pubsub.subscribe(channel);
-        future.get(1, TimeUnit.MINUTES);
+    void pubsubChannels() {
+        Futures.await(pubsub.subscribe(channel));
         List<String> result = redis.pubsubChannels();
         assertThat(result).contains(channel);
 
     }
 
     @Test
-    void pubsubMultipleChannels() throws Exception {
-        RedisFuture<Void> future = pubsub.subscribe(channel, "channel1", "channel3");
-        future.get();
+    void pubsubMultipleChannels() {
+        Futures.await(pubsub.subscribe(channel, "channel1", "channel3"));
 
         List<String> result = redis.pubsubChannels();
         assertThat(result).contains(channel, "channel1", "channel3");
@@ -218,17 +217,16 @@ class PubSubCommandTest extends AbstractRedisClientTest implements RedisPubSubLi
     }
 
     @Test
-    void pubsubChannelsWithArg() throws Exception {
-        pubsub.subscribe(channel).get();
+    void pubsubChannelsWithArg() {
+        Futures.await(pubsub.subscribe(channel));
         List<String> result = redis.pubsubChannels(pattern);
         assertThat(result, hasItem(channel));
     }
 
     @Test
-    void pubsubNumsub() throws Exception {
+    void pubsubNumsub() {
 
-        pubsub.subscribe(channel);
-        Thread.sleep(100);
+        Futures.await(pubsub.subscribe(channel));
 
         Map<String, Long> result = redis.pubsubNumsub(channel);
         assertThat(result.size()).isGreaterThan(0);
@@ -236,16 +234,16 @@ class PubSubCommandTest extends AbstractRedisClientTest implements RedisPubSubLi
     }
 
     @Test
-    void pubsubNumpat() throws Exception {
+    void pubsubNumpat() {
 
-        pubsub.psubscribe(pattern).get();
+        Futures.await(pubsub.psubscribe(pattern));
         Long result = redis.pubsubNumpat();
         assertThat(result.longValue()).isGreaterThan(0); // Redis sometimes keeps old references
     }
 
     @Test
     void punsubscribe() throws Exception {
-        pubsub.punsubscribe(pattern).get();
+        Futures.await(pubsub.punsubscribe(pattern));
         assertThat(patterns.take()).isEqualTo(pattern);
         assertThat((long) counts.take()).isEqualTo(0);
 
@@ -260,13 +258,13 @@ class PubSubCommandTest extends AbstractRedisClientTest implements RedisPubSubLi
 
     @Test
     void unsubscribe() throws Exception {
-        pubsub.unsubscribe(channel).get();
+        Futures.await(pubsub.unsubscribe(channel));
         assertThat(channels.take()).isEqualTo(channel);
         assertThat((long) counts.take()).isEqualTo(0);
 
         RedisFuture<Void> future = pubsub.unsubscribe();
 
-        assertThat(future.get()).isNull();
+        assertThat(Futures.get(future)).isNull();
         assertThat(future.getError()).isNull();
 
         assertThat(channels).isEmpty();
@@ -383,16 +381,17 @@ class PubSubCommandTest extends AbstractRedisClientTest implements RedisPubSubLi
     }
 
     @Test
-    void pingNotAllowedInSubscriptionState() throws Exception {
+    void pingNotAllowedInSubscriptionState() {
 
-        pubsub.subscribe(channel).get();
+        Futures.await(pubsub.subscribe(channel));
 
-        assertThatThrownBy(() -> pubsub.ping().get()).isInstanceOf(RedisException.class).hasMessageContaining("not allowed");
+        assertThatThrownBy(() -> Futures.get(pubsub.ping())).isInstanceOf(RedisException.class).hasMessageContaining(
+                "not allowed");
         pubsub.unsubscribe(channel);
 
         Wait.untilTrue(() -> channels.size() == 2).waitOrTimeout();
 
-        assertThat(pubsub.ping().get()).isEqualTo("PONG");
+        assertThat(Futures.get(pubsub.ping())).isEqualTo("PONG");
     }
 
     // RedisPubSubListener implementation

@@ -25,7 +25,7 @@ import io.lettuce.test.ReactiveSyncInvocationHandler;
 public class HLLReactiveCommandTest extends HLLCommandTest {
 
     @Override
-    RedisCommands<String, String> connect() {
+    public RedisCommands<String, String> connect() {
         return ReactiveSyncInvocationHandler.sync(client.connect());
     }
 }

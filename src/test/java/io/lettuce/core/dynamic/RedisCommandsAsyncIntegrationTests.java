@@ -44,7 +44,7 @@ class RedisCommandsAsyncIntegrationTests extends TestSupport {
     }
 
     @Test
-    void async() throws Exception {
+    void async() {
 
         RedisCommandFactory factory = new RedisCommandFactory(redis.getStatefulConnection());
 
@@ -52,7 +52,6 @@ class RedisCommandsAsyncIntegrationTests extends TestSupport {
 
         Future<String> set = api.set(key, value);
         assertThat(set).isInstanceOf(CompletableFuture.class);
-        set.get();
     }
 
     static interface MultipleExecutionModels extends Commands {

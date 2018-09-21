@@ -34,7 +34,7 @@ class ReactiveTypeAdaptersUnitTests {
     private ConversionService conversionService = new ConversionService();
 
     @BeforeEach
-    void before() throws Exception {
+    void before() {
         ReactiveTypeAdapters.registerIn(conversionService);
     }
 

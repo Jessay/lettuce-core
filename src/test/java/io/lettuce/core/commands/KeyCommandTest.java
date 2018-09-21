@@ -129,7 +129,7 @@ public class KeyCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    void move() {
+    public void move() {
         redis.set(key, value);
         redis.move(key, 1);
         assertThat(redis.get(key)).isNull();

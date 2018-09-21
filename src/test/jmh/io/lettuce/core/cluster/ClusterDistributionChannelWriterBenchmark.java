@@ -42,7 +42,7 @@ import io.lettuce.core.protocol.CommandType;
  * @author Mark Paluch
  */
 @State(Scope.Benchmark)
-class ClusterDistributionChannelWriterBenchmark {
+public class ClusterDistributionChannelWriterBenchmark {
 
     private static final ClientOptions CLIENT_OPTIONS = ClientOptions.create();
     private static final RedisChannelWriter EMPTY_WRITER = EmptyRedisChannelWriter.INSTANCE;

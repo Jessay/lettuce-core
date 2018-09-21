@@ -38,7 +38,7 @@ import io.lettuce.core.output.ValueOutput;
  * @author Mark Paluch
  */
 @State(Scope.Benchmark)
-class CommandBenchmark {
+public class CommandBenchmark {
 
     private static final ByteArrayCodec BYTE_ARRAY_CODEC = new ByteArrayCodec();
     private static final Utf8StringCodec OLD_STRING_CODEC = new Utf8StringCodec();

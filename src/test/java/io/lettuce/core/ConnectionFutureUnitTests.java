@@ -78,6 +78,7 @@ class ConnectionFutureUnitTests {
         Throwable t = new Throwable();
         foo.completeExceptionally(t);
 
+
         assertThat(transformed.toCompletableFuture()).isDone();
         assertThat(transformed.toCompletableFuture()).isCompletedExceptionally();
 

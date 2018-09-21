@@ -24,6 +24,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Test;
 
+import io.lettuce.test.Futures;
+
 /**
  * @author Mark Paluch
  */
@@ -55,7 +57,7 @@ class BoundedAsyncPoolUnitTests {
 
         BoundedAsyncPool<String> pool = new BoundedAsyncPool<>(STRING_OBJECT_FACTORY, BoundedPoolConfig.create());
 
-        String object = pool.acquire().join();
+        String object = Futures.get(pool.acquire());
 
         assertThat(pool.getIdle()).isEqualTo(0);
         assertThat(object).isEqualTo("1");
@@ -77,7 +79,7 @@ class BoundedAsyncPoolUnitTests {
         BoundedAsyncPool<String> pool = new BoundedAsyncPool<>(STRING_OBJECT_FACTORY, BoundedPoolConfig.builder().minIdle(2)
                 .build());
 
-        pool.acquire().join();
+        Futures.await(pool.acquire());
 
         assertThat(pool.getIdle()).isEqualTo(2);
         assertThat(pool.getObjectCount()).isEqualTo(3);
@@ -89,7 +91,7 @@ class BoundedAsyncPoolUnitTests {
         BoundedAsyncPool<String> pool = new BoundedAsyncPool<>(STRING_OBJECT_FACTORY, BoundedPoolConfig.builder().minIdle(2)
                 .maxTotal(2).build());
 
-        pool.acquire().join();
+        Futures.await(pool.acquire());
 
         assertThat(pool.getIdle()).isEqualTo(1);
         assertThat(pool.getObjectCount()).isEqualTo(2);
@@ -100,7 +102,7 @@ class BoundedAsyncPoolUnitTests {
 
         BoundedAsyncPool<String> pool = new BoundedAsyncPool<>(STRING_OBJECT_FACTORY, BoundedPoolConfig.create());
 
-        String object = pool.acquire().join();
+        String object = Futures.get(pool.acquire());
         assertThat(pool.getObjectCount()).isEqualTo(1);
         pool.release(object);
 
@@ -112,9 +114,9 @@ class BoundedAsyncPoolUnitTests {
 
         BoundedAsyncPool<String> pool = new BoundedAsyncPool<>(STRING_OBJECT_FACTORY, BoundedPoolConfig.create());
 
-        pool.release(pool.acquire().join());
+        pool.release(Futures.get(pool.acquire()));
 
-        assertThat(pool.acquire().join()).isEqualTo("1");
+        assertThat(Futures.get(pool.acquire())).isEqualTo("1");
         assertThat(pool.getIdle()).isEqualTo(0);
     }
 
@@ -126,7 +128,7 @@ class BoundedAsyncPoolUnitTests {
 
         List<String> objects = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            objects.add(pool.acquire().join());
+            objects.add(Futures.get(pool.acquire()));
         }
 
         for (int i = 0; i < 2; i++) {
@@ -148,10 +150,10 @@ class BoundedAsyncPoolUnitTests {
         BoundedAsyncPool<String> pool = new BoundedAsyncPool<>(STRING_OBJECT_FACTORY, BoundedPoolConfig.builder().maxTotal(4)
                 .build());
 
-        String object1 = pool.acquire().join();
-        String object2 = pool.acquire().join();
-        String object3 = pool.acquire().join();
-        String object4 = pool.acquire().join();
+        String object1 = Futures.get(pool.acquire());
+        String object2 = Futures.get(pool.acquire());
+        String object3 = Futures.get(pool.acquire());
+        String object4 = Futures.get(pool.acquire());
 
         assertThat(pool.getIdle()).isZero();
         assertThat(pool.getObjectCount()).isEqualTo(4);
@@ -178,10 +180,10 @@ class BoundedAsyncPoolUnitTests {
 
         for (int i = 0; i < 20; i++) {
 
-            String object1 = pool.acquire().join();
-            String object2 = pool.acquire().join();
-            String object3 = pool.acquire().join();
-            String object4 = pool.acquire().join();
+            String object1 = Futures.get(pool.acquire());
+            String object2 = Futures.get(pool.acquire());
+            String object3 = Futures.get(pool.acquire());
+            String object4 = Futures.get(pool.acquire());
 
             assertThat(pool.acquire()).isCompletedExceptionally();
 
