@@ -24,10 +24,10 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Mark Paluch
  */
-public class ExceptionFactoryUnitTests {
+class ExceptionFactoryUnitTests {
 
     @Test
-    public void shouldCreateBusyException() {
+    void shouldCreateBusyException() {
 
         assertThat(ExceptionFactory.createExecutionException("BUSY foo bar")).isInstanceOf(RedisBusyException.class)
                 .hasMessage("BUSY foo bar").hasNoCause();
@@ -37,7 +37,7 @@ public class ExceptionFactoryUnitTests {
     }
 
     @Test
-    public void shouldCreateNoscriptException() {
+    void shouldCreateNoscriptException() {
 
         assertThat(ExceptionFactory.createExecutionException("NOSCRIPT foo bar")).isInstanceOf(RedisNoScriptException.class)
                 .hasMessage("NOSCRIPT foo bar").hasNoCause();
@@ -47,7 +47,7 @@ public class ExceptionFactoryUnitTests {
     }
 
     @Test
-    public void shouldCreateExecutionException() {
+    void shouldCreateExecutionException() {
 
         assertThat(ExceptionFactory.createExecutionException("ERR foo bar")).isInstanceOf(RedisCommandExecutionException.class)
                 .hasMessage("ERR foo bar").hasNoCause();
@@ -59,7 +59,7 @@ public class ExceptionFactoryUnitTests {
     }
 
     @Test
-    public void shouldCreateLoadingException() {
+    void shouldCreateLoadingException() {
 
         assertThat(ExceptionFactory.createExecutionException("LOADING foo bar")).isInstanceOf(RedisLoadingException.class)
                 .hasMessage("LOADING foo bar").hasNoCause();
@@ -69,7 +69,7 @@ public class ExceptionFactoryUnitTests {
     }
 
     @Test
-    public void shouldFormatExactUnits() {
+    void shouldFormatExactUnits() {
 
         assertThat(ExceptionFactory.formatTimeout(Duration.ofMinutes(2))).isEqualTo("2 minute(s)");
         assertThat(ExceptionFactory.formatTimeout(Duration.ofMinutes(1))).isEqualTo("1 minute(s)");
@@ -85,7 +85,7 @@ public class ExceptionFactoryUnitTests {
     }
 
     @Test
-    public void shouldFormatToMinmalApplicableTimeunit() {
+    void shouldFormatToMinmalApplicableTimeunit() {
 
         assertThat(ExceptionFactory.formatTimeout(Duration.ofMinutes(2).plus(Duration.ofSeconds(10)))).isEqualTo(
                 "130 second(s)");

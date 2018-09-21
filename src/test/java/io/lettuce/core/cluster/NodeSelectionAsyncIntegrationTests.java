@@ -27,9 +27,6 @@ import javax.inject.Inject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import io.lettuce.test.Futures;
-import io.lettuce.test.LettuceExtension;
-import io.lettuce.test.Wait;
 import io.lettuce.core.TestSupport;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
@@ -40,18 +37,21 @@ import io.lettuce.core.cluster.api.async.RedisClusterAsyncCommands;
 import io.lettuce.core.cluster.models.partitions.Partitions;
 import io.lettuce.core.cluster.models.partitions.RedisClusterNode;
 import io.lettuce.core.internal.LettuceSets;
+import io.lettuce.test.Futures;
+import io.lettuce.test.LettuceExtension;
+import io.lettuce.test.Wait;
 
 /**
  * @author Mark Paluch
  */
 @ExtendWith(LettuceExtension.class)
-public class NodeSelectionAsyncIntegrationTests extends TestSupport {
+class NodeSelectionAsyncIntegrationTests extends TestSupport {
 
     private final RedisClusterClient clusterClient;
     private final RedisAdvancedClusterAsyncCommands<String, String> commands;
 
     @Inject
-    public NodeSelectionAsyncIntegrationTests(RedisClusterClient clusterClient,
+    NodeSelectionAsyncIntegrationTests(RedisClusterClient clusterClient,
             StatefulRedisClusterConnection<String, String> connection) {
 
         this.clusterClient = clusterClient;
@@ -60,7 +60,7 @@ public class NodeSelectionAsyncIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testMultiNodeOperations() {
+    void testMultiNodeOperations() {
 
         List<String> expectation = new ArrayList<>();
         for (char c = 'a'; c < 'z'; c++) {
@@ -82,7 +82,7 @@ public class NodeSelectionAsyncIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testNodeSelectionCount() {
+    void testNodeSelectionCount() {
         assertThat(commands.all().size()).isEqualTo(4);
         assertThat(commands.slaves().size()).isEqualTo(2);
         assertThat(commands.masters().size()).isEqualTo(2);
@@ -92,7 +92,7 @@ public class NodeSelectionAsyncIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testNodeSelection() {
+    void testNodeSelection() {
 
         AsyncNodeSelection<String, String> onlyMe = commands.nodes(redisClusterNode -> redisClusterNode.getFlags().contains(
                 RedisClusterNode.NodeFlag.MYSELF));
@@ -110,7 +110,7 @@ public class NodeSelectionAsyncIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testDynamicNodeSelection() {
+    void testDynamicNodeSelection() {
 
         Partitions partitions = commands.getStatefulConnection().getPartitions();
         partitions.forEach(redisClusterNode -> redisClusterNode.setFlags(Collections
@@ -132,7 +132,7 @@ public class NodeSelectionAsyncIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testNodeSelectionAsyncPing() {
+    void testNodeSelectionAsyncPing() {
 
         AsyncNodeSelection<String, String> onlyMe = commands.nodes(redisClusterNode -> redisClusterNode.getFlags().contains(
                 RedisClusterNode.NodeFlag.MYSELF));
@@ -147,7 +147,7 @@ public class NodeSelectionAsyncIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testStaticNodeSelection() {
+    void testStaticNodeSelection() {
 
         AsyncNodeSelection<String, String> selection = commands.nodes(
                 redisClusterNode -> redisClusterNode.getFlags().contains(RedisClusterNode.NodeFlag.MYSELF), false);
@@ -163,7 +163,7 @@ public class NodeSelectionAsyncIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testAsynchronicityOfMultiNodeExecution() throws InterruptedException {
+    void testAsynchronicityOfMultiNodeExecution() throws InterruptedException {
 
         StatefulRedisClusterConnection<String, String> connection2 = clusterClient.connect();
         RedisAdvancedClusterAsyncCommands<String, String> async2 = connection2.async();
@@ -195,7 +195,7 @@ public class NodeSelectionAsyncIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testSlavesReadWrite() {
+    void testSlavesReadWrite() {
 
         AsyncNodeSelection<String, String> nodes = commands.nodes(redisClusterNode -> redisClusterNode.getFlags().contains(
                 RedisClusterNode.NodeFlag.SLAVE));
@@ -221,7 +221,7 @@ public class NodeSelectionAsyncIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testSlavesWithReadOnly() {
+    void testSlavesWithReadOnly() {
 
         AsyncNodeSelection<String, String> nodes = commands.slaves(redisClusterNode -> redisClusterNode
                 .is(RedisClusterNode.NodeFlag.SLAVE));
@@ -249,11 +249,11 @@ public class NodeSelectionAsyncIntegrationTests extends TestSupport {
         assertThat(strings).hasSize(1).contains(value);
     }
 
-    protected void waitForReplication(String key, int port) {
+    void waitForReplication(String key, int port) {
         waitForReplication(commands, key, port);
     }
 
-    protected static void waitForReplication(RedisAdvancedClusterAsyncCommands<String, String> commands, String key, int port)
+    static void waitForReplication(RedisAdvancedClusterAsyncCommands<String, String> commands, String key, int port)
  {
 
         AsyncNodeSelection<String, String> selection = commands

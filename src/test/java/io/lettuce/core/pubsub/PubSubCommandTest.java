@@ -30,19 +30,19 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import io.lettuce.test.resource.TestClientResources;
-import io.lettuce.test.Wait;
 import io.lettuce.core.*;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.internal.LettuceFactories;
 import io.lettuce.core.pubsub.api.async.RedisPubSubAsyncCommands;
+import io.lettuce.test.Wait;
 import io.lettuce.test.resource.FastShutdown;
+import io.lettuce.test.resource.TestClientResources;
 
 /**
  * @author Will Glozer
  * @author Mark Paluch
  */
-public class PubSubCommandTest extends AbstractRedisClientTest implements RedisPubSubListener<String, String> {
+class PubSubCommandTest extends AbstractRedisClientTest implements RedisPubSubListener<String, String> {
     private RedisPubSubAsyncCommands<String, String> pubsub;
 
     private BlockingQueue<String> channels;
@@ -55,7 +55,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
     private String message = "msg!";
 
     @BeforeEach
-    public void openPubSubConnection() {
+    void openPubSubConnection() {
         pubsub = client.connectPubSub().async();
         pubsub.getStatefulConnection().addListener(this);
         channels = LettuceFactories.newBlockingQueue();
@@ -65,12 +65,12 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
     }
 
     @AfterEach
-    public void closePubSubConnection() {
+    void closePubSubConnection() {
         pubsub.getStatefulConnection().close();
     }
 
     @Test
-    public void auth() {
+    void auth() {
         new WithPasswordRequired() {
             @Override
             protected void run(RedisClient client) throws Exception {
@@ -85,7 +85,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
     }
 
     @Test
-    public void authWithReconnect() {
+    void authWithReconnect() {
 
         new WithPasswordRequired() {
             @Override
@@ -106,7 +106,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
     }
 
     @Test
-    public void message() throws Exception {
+    void message() throws Exception {
         pubsub.subscribe(channel);
         assertThat(channels.take()).isEqualTo(channel);
 
@@ -116,7 +116,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
     }
 
     @Test
-    public void pipelinedMessage() throws Exception {
+    void pipelinedMessage() throws Exception {
         pubsub.subscribe(channel);
         assertThat(channels.take()).isEqualTo(channel);
         RedisAsyncCommands<String, String> connection = client.connect().async();
@@ -135,7 +135,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
     }
 
     @Test
-    public void pmessage() throws Exception {
+    void pmessage() throws Exception {
         pubsub.psubscribe(pattern).await(1, TimeUnit.MINUTES);
         assertThat(patterns.take()).isEqualTo(pattern);
 
@@ -151,7 +151,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
     }
 
     @Test
-    public void pipelinedSubscribe() throws Exception {
+    void pipelinedSubscribe() throws Exception {
 
         pubsub.setAutoFlushCommands(false);
         pubsub.subscribe(channel);
@@ -169,7 +169,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
     }
 
     @Test
-    public void psubscribe() throws Exception {
+    void psubscribe() throws Exception {
         RedisFuture<Void> psubscribe = pubsub.psubscribe(pattern);
         assertThat(psubscribe.get()).isNull();
         assertThat(psubscribe.getError()).isNull();
@@ -181,7 +181,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
     }
 
     @Test
-    public void psubscribeWithListener() throws Exception {
+    void psubscribeWithListener() throws Exception {
         RedisFuture<Void> psubscribe = pubsub.psubscribe(pattern);
         final List<Object> listener = new ArrayList<>();
 
@@ -194,12 +194,12 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
     }
 
     @Test
-    public void pubsubEmptyChannels() {
+    void pubsubEmptyChannels() {
         assertThatThrownBy(() -> pubsub.subscribe()).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void pubsubChannels() throws Exception {
+    void pubsubChannels() throws Exception {
         RedisFuture<Void> future = pubsub.subscribe(channel);
         future.get(1, TimeUnit.MINUTES);
         List<String> result = redis.pubsubChannels();
@@ -208,7 +208,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
     }
 
     @Test
-    public void pubsubMultipleChannels() throws Exception {
+    void pubsubMultipleChannels() throws Exception {
         RedisFuture<Void> future = pubsub.subscribe(channel, "channel1", "channel3");
         future.get();
 
@@ -218,14 +218,14 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
     }
 
     @Test
-    public void pubsubChannelsWithArg() throws Exception {
+    void pubsubChannelsWithArg() throws Exception {
         pubsub.subscribe(channel).get();
         List<String> result = redis.pubsubChannels(pattern);
         assertThat(result, hasItem(channel));
     }
 
     @Test
-    public void pubsubNumsub() throws Exception {
+    void pubsubNumsub() throws Exception {
 
         pubsub.subscribe(channel);
         Thread.sleep(100);
@@ -236,7 +236,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
     }
 
     @Test
-    public void pubsubNumpat() throws Exception {
+    void pubsubNumpat() throws Exception {
 
         pubsub.psubscribe(pattern).get();
         Long result = redis.pubsubNumpat();
@@ -244,7 +244,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
     }
 
     @Test
-    public void punsubscribe() throws Exception {
+    void punsubscribe() throws Exception {
         pubsub.punsubscribe(pattern).get();
         assertThat(patterns.take()).isEqualTo(pattern);
         assertThat((long) counts.take()).isEqualTo(0);
@@ -252,14 +252,14 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
     }
 
     @Test
-    public void subscribe() throws Exception {
+    void subscribe() throws Exception {
         pubsub.subscribe(channel);
         assertThat(channels.take()).isEqualTo(channel);
         assertThat((long) counts.take()).isEqualTo(1);
     }
 
     @Test
-    public void unsubscribe() throws Exception {
+    void unsubscribe() throws Exception {
         pubsub.unsubscribe(channel).get();
         assertThat(channels.take()).isEqualTo(channel);
         assertThat((long) counts.take()).isEqualTo(0);
@@ -275,7 +275,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
     }
 
     @Test
-    public void pubsubCloseOnClientShutdown() {
+    void pubsubCloseOnClientShutdown() {
 
         RedisClient redisClient = RedisClient.create(TestClientResources.get(), RedisURI.Builder.redis(host, port).build());
 
@@ -287,7 +287,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
     }
 
     @Test
-    public void utf8Channel() throws Exception {
+    void utf8Channel() throws Exception {
         String channel = "channelλ";
         String message = "αβγ";
 
@@ -300,7 +300,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
     }
 
     @Test
-    public void resubscribeChannelsOnReconnect() throws Exception {
+    void resubscribeChannelsOnReconnect() throws Exception {
         pubsub.subscribe(channel);
         assertThat(channels.take()).isEqualTo(channel);
         assertThat((long) counts.take()).isEqualTo(1);
@@ -318,7 +318,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
     }
 
     @Test
-    public void resubscribePatternsOnReconnect() throws Exception {
+    void resubscribePatternsOnReconnect() throws Exception {
         pubsub.psubscribe(pattern);
         assertThat(patterns.take()).isEqualTo(pattern);
         assertThat((long) counts.take()).isEqualTo(1);
@@ -336,7 +336,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
     }
 
     @Test
-    public void adapter() throws Exception {
+    void adapter() throws Exception {
         final BlockingQueue<Long> localCounts = LettuceFactories.newBlockingQueue();
 
         RedisPubSubAdapter<String, String> adapter = new RedisPubSubAdapter<String, String>() {
@@ -367,7 +367,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
     }
 
     @Test
-    public void removeListener() throws Exception {
+    void removeListener() throws Exception {
         pubsub.subscribe(channel);
         assertThat(channels.take()).isEqualTo(channel);
 
@@ -383,7 +383,7 @@ public class PubSubCommandTest extends AbstractRedisClientTest implements RedisP
     }
 
     @Test
-    public void pingNotAllowedInSubscriptionState() throws Exception {
+    void pingNotAllowedInSubscriptionState() throws Exception {
 
         pubsub.subscribe(channel).get();
 

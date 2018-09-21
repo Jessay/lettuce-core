@@ -28,30 +28,30 @@ import javax.inject.Inject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import io.lettuce.test.KeysAndValues;
-import io.lettuce.test.LettuceExtension;
 import io.lettuce.core.*;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.cluster.api.sync.RedisClusterCommands;
+import io.lettuce.test.KeysAndValues;
+import io.lettuce.test.LettuceExtension;
 
 /**
  * @author Mark Paluch
  */
 @ExtendWith(LettuceExtension.class)
-public class ScanIteratorIntegrationTests extends TestSupport {
+class ScanIteratorIntegrationTests extends TestSupport {
 
     private final StatefulRedisClusterConnection<String, String> connection;
     private final RedisClusterCommands<String, String> redis;
 
     @Inject
-    public ScanIteratorIntegrationTests(StatefulRedisClusterConnection<String, String> connection) {
+    ScanIteratorIntegrationTests(StatefulRedisClusterConnection<String, String> connection) {
         this.connection = connection;
         this.redis = connection.sync();
         this.redis.flushall();
     }
 
     @Test
-    public void scanShouldThrowNoSuchElementExceptionOnEmpty() {
+    void scanShouldThrowNoSuchElementExceptionOnEmpty() {
 
         redis.mset(KeysAndValues.MAP);
 
@@ -67,7 +67,7 @@ public class ScanIteratorIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void keysSinglePass() {
+    void keysSinglePass() {
 
         redis.mset(KeysAndValues.MAP);
 
@@ -85,7 +85,7 @@ public class ScanIteratorIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void keysMultiPass() {
+    void keysMultiPass() {
 
         redis.mset(KeysAndValues.MAP);
 
@@ -97,7 +97,7 @@ public class ScanIteratorIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void hscanShouldThrowNoSuchElementExceptionOnEmpty() {
+    void hscanShouldThrowNoSuchElementExceptionOnEmpty() {
 
         redis.mset(KeysAndValues.MAP);
 
@@ -114,7 +114,7 @@ public class ScanIteratorIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void hashSinglePass() {
+    void hashSinglePass() {
 
         redis.hmset(key, KeysAndValues.MAP);
 
@@ -133,7 +133,7 @@ public class ScanIteratorIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void hashMultiPass() {
+    void hashMultiPass() {
 
         redis.hmset(key, KeysAndValues.MAP);
 
@@ -146,7 +146,7 @@ public class ScanIteratorIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void sscanShouldThrowNoSuchElementExceptionOnEmpty() {
+    void sscanShouldThrowNoSuchElementExceptionOnEmpty() {
 
         redis.sadd(key, KeysAndValues.VALUES.toArray(new String[0]));
 
@@ -162,7 +162,7 @@ public class ScanIteratorIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void setSinglePass() {
+    void setSinglePass() {
 
         redis.sadd(key, KeysAndValues.KEYS.toArray(new String[0]));
 
@@ -180,7 +180,7 @@ public class ScanIteratorIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void setMultiPass() {
+    void setMultiPass() {
 
         redis.sadd(key, KeysAndValues.KEYS.toArray(new String[0]));
 
@@ -192,7 +192,7 @@ public class ScanIteratorIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void zscanShouldThrowNoSuchElementExceptionOnEmpty() {
+    void zscanShouldThrowNoSuchElementExceptionOnEmpty() {
 
         for (int i = 0; i < KeysAndValues.COUNT; i++) {
             redis.zadd(key, ScoredValue.just(i, KeysAndValues.KEYS.get(i)));
@@ -210,7 +210,7 @@ public class ScanIteratorIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void zsetSinglePass() {
+    void zsetSinglePass() {
 
         for (int i = 0; i < KeysAndValues.COUNT; i++) {
             redis.zadd(key, ScoredValue.just(i, KeysAndValues.KEYS.get(i)));
@@ -230,7 +230,7 @@ public class ScanIteratorIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void zsetMultiPass() {
+    void zsetMultiPass() {
 
         List<ScoredValue<String>> expected = new ArrayList<>();
         for (int i = 0; i < KeysAndValues.COUNT; i++) {

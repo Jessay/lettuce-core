@@ -29,19 +29,19 @@ import io.lettuce.core.codec.Utf8StringCodec;
 /**
  * @author Mark Paluch
  */
-public class GeoWithinListOutputUnitTests {
+class GeoWithinListOutputUnitTests {
 
     private GeoWithinListOutput<String, String> sut = new GeoWithinListOutput<>(new Utf8StringCodec(), false, false, false);
 
     @Test
-    public void defaultSubscriberIsSet() {
+    void defaultSubscriberIsSet() {
 
         sut.multi(1);
         assertThat(sut.getSubscriber()).isNotNull().isInstanceOf(ListSubscriber.class);
     }
 
     @Test
-    public void commandOutputKeyOnlyDecoded() {
+    void commandOutputKeyOnlyDecoded() {
 
         sut.multi(1);
         sut.set(ByteBuffer.wrap("key".getBytes()));
@@ -52,7 +52,7 @@ public class GeoWithinListOutputUnitTests {
     }
 
     @Test
-    public void commandOutputKeyAndDistanceDecoded() {
+    void commandOutputKeyAndDistanceDecoded() {
 
         sut = new GeoWithinListOutput<>(new Utf8StringCodec(), true, false, false);
 
@@ -65,7 +65,7 @@ public class GeoWithinListOutputUnitTests {
     }
 
     @Test
-    public void commandOutputKeyAndHashDecoded() {
+    void commandOutputKeyAndHashDecoded() {
 
         sut = new GeoWithinListOutput<>(new Utf8StringCodec(), false, true, false);
 
@@ -78,7 +78,7 @@ public class GeoWithinListOutputUnitTests {
     }
 
     @Test
-    public void commandOutputLongKeyAndHashDecoded() {
+    void commandOutputLongKeyAndHashDecoded() {
 
         GeoWithinListOutput<Long, Long> sut = new GeoWithinListOutput<>((RedisCodec) new Utf8StringCodec(), false, true, false);
 
@@ -91,7 +91,7 @@ public class GeoWithinListOutputUnitTests {
     }
 
     @Test
-    public void commandOutputKeyAndCoordinatesDecoded() {
+    void commandOutputKeyAndCoordinatesDecoded() {
 
         sut = new GeoWithinListOutput<>(new Utf8StringCodec(), false, false, true);
 

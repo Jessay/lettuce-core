@@ -32,17 +32,17 @@ import io.lettuce.test.LettuceExtension;
  * @author Mark Paluch
  */
 @ExtendWith(LettuceExtension.class)
-public class RedisCommandsReactiveIntegrationTests extends TestSupport {
+class RedisCommandsReactiveIntegrationTests extends TestSupport {
 
     private final RedisCommands<String, String> redis;
 
     @Inject
-    public RedisCommandsReactiveIntegrationTests(StatefulRedisConnection<String, String> connection) {
+    RedisCommandsReactiveIntegrationTests(StatefulRedisConnection<String, String> connection) {
         this.redis = connection.sync();
     }
 
     @Test
-    public void reactive() {
+    void reactive() {
 
         RedisCommandFactory factory = new RedisCommandFactory(redis.getStatefulConnection());
 

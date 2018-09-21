@@ -39,12 +39,12 @@ import io.lettuce.test.resource.TestClientResources;
  */
 public class RedisCommandsClusterSyncTest extends TestSupport {
 
-    public static final int port1 = 7379;
-    public static final int port2 = port1 + 1;
-    public static final int port3 = port1 + 2;
-    public static final int port4 = port1 + 3;
+    private static final int port1 = 7379;
+    private static final int port2 = port1 + 1;
+    private static final int port3 = port1 + 2;
+    private static final int port4 = port1 + 3;
 
-    protected static RedisClusterClient clusterClient;
+    private static RedisClusterClient clusterClient;
 
     @Rule
     public ClusterRule clusterRule = new ClusterRule(clusterClient, port1, port2, port3, port4);

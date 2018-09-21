@@ -142,7 +142,7 @@ public class RedisConditions {
          *
          * @param parts must not be {@literal null} or empty.
          */
-        public Version(int... parts) {
+        Version(int... parts) {
 
             Assert.notNull(parts, "Parts must not be null!");
             Assert.isTrue(parts.length > 0 && parts.length < 5, String.format("Invalid parts length. 0 < %s < 5", parts.length));
@@ -164,7 +164,7 @@ public class RedisConditions {
          * @param version must not be {@literal null} or empty.
          * @return
          */
-        public static Version parse(String version) {
+        static Version parse(String version) {
 
             Assert.hasText(version, "Version must not be null o empty!");
 
@@ -203,7 +203,7 @@ public class RedisConditions {
          * @param version
          * @return
          */
-        public boolean isGreaterThanOrEqualTo(Version version) {
+        boolean isGreaterThanOrEqualTo(Version version) {
             return compareTo(version) >= 0;
         }
 

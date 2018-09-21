@@ -36,7 +36,7 @@ import io.lettuce.core.internal.LettuceLists;
 /**
  * @author Mark Paluch
  */
-public class TopologyComparatorsUnitTests {
+class TopologyComparatorsUnitTests {
 
     private RedisClusterNodeSnapshot node1 = createNode("1");
     private RedisClusterNodeSnapshot node2 = createNode("2");
@@ -50,7 +50,7 @@ public class TopologyComparatorsUnitTests {
     }
 
     @Test
-    public void latenciesForAllNodes() {
+    void latenciesForAllNodes() {
 
         Map<String, Long> map = new HashMap<>();
         map.put(node1.getNodeId(), 1L);
@@ -63,7 +63,7 @@ public class TopologyComparatorsUnitTests {
     }
 
     @Test
-    public void latenciesForTwoNodes_N1_N2() {
+    void latenciesForTwoNodes_N1_N2() {
 
         Map<String, Long> map = new HashMap<>();
         map.put(node1.getNodeId(), 1L);
@@ -75,7 +75,7 @@ public class TopologyComparatorsUnitTests {
     }
 
     @Test
-    public void latenciesForTwoNodes_N2_N3() {
+    void latenciesForTwoNodes_N2_N3() {
 
         Map<String, Long> map = new HashMap<>();
         map.put(node3.getNodeId(), 1L);
@@ -87,7 +87,7 @@ public class TopologyComparatorsUnitTests {
     }
 
     @Test
-    public void latenciesForOneNode() {
+    void latenciesForOneNode() {
 
         Map<String, Long> map = Collections.singletonMap(node2.getNodeId(), 2L);
 
@@ -97,7 +97,7 @@ public class TopologyComparatorsUnitTests {
     }
 
     @Test
-    public void shouldFail() {
+    void shouldFail() {
 
         Map<String, Long> map = Collections.singletonMap(node2.getNodeId(), 2L);
 
@@ -106,7 +106,7 @@ public class TopologyComparatorsUnitTests {
     }
 
     @Test
-    public void testLatencyComparator() {
+    void testLatencyComparator() {
 
         RedisClusterNodeSnapshot node1 = new RedisClusterNodeSnapshot();
         node1.setLatencyNs(1L);
@@ -124,7 +124,7 @@ public class TopologyComparatorsUnitTests {
     }
 
     @Test
-    public void testLatencyComparatorWithSomeNodesWithoutStats() {
+    void testLatencyComparatorWithSomeNodesWithoutStats() {
 
         RedisClusterNodeSnapshot node1 = new RedisClusterNodeSnapshot();
         node1.setLatencyNs(1L);
@@ -142,7 +142,7 @@ public class TopologyComparatorsUnitTests {
     }
 
     @Test
-    public void testClientComparator() {
+    void testClientComparator() {
 
         RedisClusterNodeSnapshot node1 = new RedisClusterNodeSnapshot();
         node1.setConnectedClients(1);
@@ -160,7 +160,7 @@ public class TopologyComparatorsUnitTests {
     }
 
     @Test
-    public void testClientComparatorWithSomeNodesWithoutStats() {
+    void testClientComparatorWithSomeNodesWithoutStats() {
 
         RedisClusterNodeSnapshot node1 = new RedisClusterNodeSnapshot();
         node1.setConnectedClients(1);
@@ -178,7 +178,7 @@ public class TopologyComparatorsUnitTests {
     }
 
     @Test
-    public void testLatencyComparatorWithoutClients() {
+    void testLatencyComparatorWithoutClients() {
 
         RedisClusterNodeSnapshot node1 = new RedisClusterNodeSnapshot();
         node1.setConnectedClients(1);
@@ -196,7 +196,7 @@ public class TopologyComparatorsUnitTests {
     }
 
     @Test
-    public void testFixedOrdering1() {
+    void testFixedOrdering1() {
 
         List<RedisClusterNode> list = LettuceLists.newList(node2, node3, node1);
         List<RedisURI> fixedOrder = LettuceLists.newList(node1.getUri(), node2.getUri(), node3.getUri());
@@ -205,7 +205,7 @@ public class TopologyComparatorsUnitTests {
     }
 
     @Test
-    public void testFixedOrdering2() {
+    void testFixedOrdering2() {
 
         List<RedisClusterNode> list = LettuceLists.newList(node2, node3, node1);
         List<RedisURI> fixedOrder = LettuceLists.newList(node3.getUri(), node2.getUri(), node1.getUri());
@@ -214,7 +214,7 @@ public class TopologyComparatorsUnitTests {
     }
 
     @Test
-    public void testFixedOrderingNoFixedPart() {
+    void testFixedOrderingNoFixedPart() {
 
         List<RedisClusterNode> list = LettuceLists.newList(node2, node3, node1);
         List<RedisURI> fixedOrder = LettuceLists.newList();
@@ -223,7 +223,7 @@ public class TopologyComparatorsUnitTests {
     }
 
     @Test
-    public void testFixedOrderingPartiallySpecifiedOrder() {
+    void testFixedOrderingPartiallySpecifiedOrder() {
 
         List<RedisClusterNode> list = LettuceLists.newList(node2, node3, node1);
         List<RedisURI> fixedOrder = LettuceLists.newList(node3.getUri(), node1.getUri());
@@ -232,7 +232,7 @@ public class TopologyComparatorsUnitTests {
     }
 
     @Test
-    public void isChangedSamePartitions() {
+    void isChangedSamePartitions() {
 
         String nodes = "c37ab8396be428403d4e55c0d317348be27ed973 127.0.0.1:7381 master - 111 1401258245007 222 connected 7000 12000 12002-16383\n"
                 + "3d005a179da7d8dc1adae6409d47b39c369e992b 127.0.0.1:7380 master - 0 1401258245007 2 disconnected 8000-11999\n";
@@ -243,7 +243,7 @@ public class TopologyComparatorsUnitTests {
     }
 
     @Test
-    public void isChangedDifferentOrder() {
+    void isChangedDifferentOrder() {
         String nodes1 = "3d005a179da7d8dc1adae6409d47b39c369e992b 127.0.0.1:7380 master,myself - 0 1401258245007 2 disconnected 8000-11999\n"
                 + "c37ab8396be428403d4e55c0d317348be27ed973 127.0.0.1:7381 master - 111 1401258245007 222 connected 7000 12000 12002-16383\n";
 
@@ -257,7 +257,7 @@ public class TopologyComparatorsUnitTests {
     }
 
     @Test
-    public void isChangedPortChanged() {
+    void isChangedPortChanged() {
         String nodes1 = "3d005a179da7d8dc1adae6409d47b39c369e992b 127.0.0.1:7382 master - 0 1401258245007 2 disconnected 8000-11999\n"
                 + "c37ab8396be428403d4e55c0d317348be27ed973 127.0.0.1:7381 master - 111 1401258245007 222 connected 7000 12000 12002-16383\n";
 
@@ -270,7 +270,7 @@ public class TopologyComparatorsUnitTests {
     }
 
     @Test
-    public void isChangedSlotsChanged() {
+    void isChangedSlotsChanged() {
         String nodes1 = "3d005a179da7d8dc1adae6409d47b39c369e992b 127.0.0.1:7380 master - 0 1401258245007 2 disconnected 8000-11999\n"
                 + "c37ab8396be428403d4e55c0d317348be27ed973 127.0.0.1:7381 master - 111 1401258245007 222 connected 7000 12000 12002-16383\n";
 
@@ -283,7 +283,7 @@ public class TopologyComparatorsUnitTests {
     }
 
     @Test
-    public void isChangedNodeIdChanged() {
+    void isChangedNodeIdChanged() {
         String nodes1 = "3d005a179da7d8dc1adae6409d47b39c369e992b 127.0.0.1:7380 master - 0 1401258245007 2 disconnected 8000-11999\n"
                 + "c37ab8396be428403d4e55c0d317348be27ed973 127.0.0.1:7381 master - 111 1401258245007 222 connected 7000 12000 12002-16383\n";
 
@@ -296,7 +296,7 @@ public class TopologyComparatorsUnitTests {
     }
 
     @Test
-    public void isChangedFlagsChangedSlaveToMaster() {
+    void isChangedFlagsChangedSlaveToMaster() {
         String nodes1 = "3d005a179da7d8dc1adae6409d47b39c369e992b 127.0.0.1:7380 slave - 0 1401258245007 2 disconnected 8000-11999\n"
                 + "c37ab8396be428403d4e55c0d317348be27ed973 127.0.0.1:7381 master - 111 1401258245007 222 connected 7000 12000 12002-16383\n";
 
@@ -309,7 +309,7 @@ public class TopologyComparatorsUnitTests {
     }
 
     @Test
-    public void isChangedFlagsChangedMasterToSlave() {
+    void isChangedFlagsChangedMasterToSlave() {
         String nodes1 = "3d005a179da7d8dc1adae6409d47b39c369e992b 127.0.0.1:7380 master - 0 1401258245007 2 disconnected 8000-11999\n"
                 + "c37ab8396be428403d4e55c0d317348be27ed973 127.0.0.1:7381 master - 111 1401258245007 222 connected 7000 12000 12002-16383\n";
 
@@ -321,8 +321,7 @@ public class TopologyComparatorsUnitTests {
         assertThat(isChanged(partitions1, partitions2)).isTrue();
     }
 
-    protected void runTest(Map<String, Long> map, List<RedisClusterNodeSnapshot> expectation,
-            List<RedisClusterNodeSnapshot> nodes) {
+    void runTest(Map<String, Long> map, List<RedisClusterNodeSnapshot> expectation, List<RedisClusterNodeSnapshot> nodes) {
 
         for (RedisClusterNodeSnapshot node : nodes) {
             node.setLatencyNs(map.get(node.getNodeId()));

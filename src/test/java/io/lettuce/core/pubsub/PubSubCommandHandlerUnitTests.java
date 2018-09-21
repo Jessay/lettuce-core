@@ -25,10 +25,8 @@ import java.util.Queue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -51,7 +49,7 @@ import io.netty.channel.*;
  * @author Mark Paluch
  */
 @ExtendWith(MockitoExtension.class)
-public class PubSubCommandHandlerUnitTests {
+class PubSubCommandHandlerUnitTests {
 
     private Queue<RedisCommand<String, String, ?>> stack;
 
@@ -83,7 +81,7 @@ public class PubSubCommandHandlerUnitTests {
 
     @SuppressWarnings("unchecked")
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
 
         when(channel.config()).thenReturn(channelConfig);
         when(context.alloc()).thenReturn(ByteBufAllocator.DEFAULT);
@@ -105,7 +103,7 @@ public class PubSubCommandHandlerUnitTests {
     }
 
     @Test
-    public void shouldCompleteCommandExceptionallyOnOutputFailure() throws Exception {
+    void shouldCompleteCommandExceptionallyOnOutputFailure() throws Exception {
 
         sut.channelRegistered(context);
         sut.channelActive(context);
@@ -117,7 +115,7 @@ public class PubSubCommandHandlerUnitTests {
     }
 
     @Test
-    public void shouldDecodeRegularCommand() throws Exception {
+    void shouldDecodeRegularCommand() throws Exception {
 
         sut.channelRegistered(context);
         sut.channelActive(context);
@@ -129,7 +127,7 @@ public class PubSubCommandHandlerUnitTests {
     }
 
     @Test
-    public void shouldDecodeTwoCommands() throws Exception {
+    void shouldDecodeTwoCommands() throws Exception {
 
         Command<String, String, String> command1 = new Command<>(CommandType.APPEND, new StatusOutput<>(new Utf8StringCodec()),
                 null);
@@ -148,7 +146,7 @@ public class PubSubCommandHandlerUnitTests {
     }
 
     @Test
-    public void shouldPropagatePubSubResponseToOutput() throws Exception {
+    void shouldPropagatePubSubResponseToOutput() throws Exception {
 
         Command<String, String, String> command1 = new Command<>(CommandType.APPEND, new StatusOutput<>(new Utf8StringCodec()),
                 null);
@@ -165,7 +163,7 @@ public class PubSubCommandHandlerUnitTests {
     }
 
     @Test
-    public void shouldPropagateInterleavedPubSubResponseToOutput() throws Exception {
+    void shouldPropagateInterleavedPubSubResponseToOutput() throws Exception {
 
         Command<String, String, String> command1 = new Command<>(CommandType.APPEND, new StatusOutput<>(new Utf8StringCodec()),
                 null);

@@ -17,7 +17,6 @@ package io.lettuce.core.commands;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.offset;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -26,10 +25,10 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
+import io.lettuce.core.*;
 import io.lettuce.test.KeyValueStreamingAdapter;
 import io.lettuce.test.ListStreamingAdapter;
 import io.lettuce.test.condition.EnabledOnCommand;
-import io.lettuce.core.*;
 
 /**
  * @author Will Glozer
@@ -38,7 +37,7 @@ import io.lettuce.core.*;
 public class HashCommandTest extends AbstractRedisClientTest {
 
     @Test
-    public void hdel() {
+    void hdel() {
         assertThat(redis.hdel(key, "one")).isEqualTo(0);
         redis.hset(key, "two", "2");
         assertThat(redis.hdel(key, "one")).isEqualTo(0);
@@ -49,7 +48,7 @@ public class HashCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void hexists() {
+    void hexists() {
         assertThat(redis.hexists(key, "one")).isFalse();
         redis.hset(key, "two", "2");
         assertThat(redis.hexists(key, "one")).isFalse();
@@ -58,14 +57,14 @@ public class HashCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void hget() {
+    void hget() {
         assertThat(redis.hget(key, "one")).isNull();
         redis.hset(key, "one", "1");
         assertThat(redis.hget(key, "one")).isEqualTo("1");
     }
 
     @Test
-    public void hgetall() {
+    void hgetall() {
         assertThat(redis.hgetall(key).isEmpty()).isTrue();
 
         redis.hset(key, "zero", "0");
@@ -79,9 +78,9 @@ public class HashCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void hgetallStreaming() {
+    void hgetallStreaming() {
 
-        KeyValueStreamingAdapter<String, String> adapter = new KeyValueStreamingAdapter<String, String>();
+        KeyValueStreamingAdapter<String, String> adapter = new KeyValueStreamingAdapter<>();
 
         assertThat(redis.hgetall(key).isEmpty()).isTrue();
         redis.hset(key, "one", "1");
@@ -95,20 +94,20 @@ public class HashCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void hincrby() {
+    void hincrby() {
         assertThat(redis.hincrby(key, "one", 1)).isEqualTo(1);
         assertThat(redis.hincrby(key, "one", -2)).isEqualTo(-1);
     }
 
     @Test
-    public void hincrbyfloat() {
+    void hincrbyfloat() {
         assertThat(redis.hincrbyfloat(key, "one", 1.0)).isEqualTo(1.0);
         assertThat(redis.hincrbyfloat(key, "one", -2.0)).isEqualTo(-1.0);
         assertThat(redis.hincrbyfloat(key, "one", 1.23)).isEqualTo(0.23, offset(0.001));
     }
 
     @Test
-    public void hkeys() {
+    void hkeys() {
         setup();
         List<String> keys = redis.hkeys(key);
         assertThat(keys).hasSize(2);
@@ -116,9 +115,9 @@ public class HashCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void hkeysStreaming() {
+    void hkeysStreaming() {
         setup();
-        ListStreamingAdapter<String> streamingAdapter = new ListStreamingAdapter<String>();
+        ListStreamingAdapter<String> streamingAdapter = new ListStreamingAdapter<>();
 
         Long count = redis.hkeys(streamingAdapter, key);
         assertThat(count.longValue()).isEqualTo(2);
@@ -135,7 +134,7 @@ public class HashCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void hlen() {
+    void hlen() {
         assertThat((long) redis.hlen(key)).isEqualTo(0);
         redis.hset(key, "one", "1");
         assertThat((long) redis.hlen(key)).isEqualTo(1);
@@ -143,7 +142,7 @@ public class HashCommandTest extends AbstractRedisClientTest {
 
     @Test
     @EnabledOnCommand("HSTRLEN")
-    public void hstrlen() {
+    void hstrlen() {
 
         assertThat((long) redis.hstrlen(key, "one")).isEqualTo(0);
         redis.hset(key, "one", value);
@@ -151,7 +150,7 @@ public class HashCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void hmget() {
+    void hmget() {
         setupHmget();
         List<KeyValue<String, String>> values = redis.hmget(key, "one", "two");
         assertThat(values).hasSize(2);
@@ -165,7 +164,7 @@ public class HashCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void hmgetStreaming() {
+    void hmgetStreaming() {
         setupHmget();
 
         KeyValueStreamingAdapter<String, String> streamingAdapter = new KeyValueStreamingAdapter<>();
@@ -177,7 +176,7 @@ public class HashCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void hmset() {
+    void hmset() {
         Map<String, String> hash = new LinkedHashMap<>();
         hash.put("one", "1");
         hash.put("two", "2");
@@ -186,7 +185,7 @@ public class HashCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void hmsetWithNulls() {
+    void hmsetWithNulls() {
         Map<String, String> hash = new LinkedHashMap<>();
         hash.put("one", null);
         assertThat(redis.hmset(key, hash)).isEqualTo("OK");
@@ -198,20 +197,20 @@ public class HashCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void hset() {
+    void hset() {
         assertThat(redis.hset(key, "one", "1")).isTrue();
         assertThat(redis.hset(key, "one", "1")).isFalse();
     }
 
     @Test
-    public void hsetnx() {
+    void hsetnx() {
         redis.hset(key, "one", "1");
         assertThat(redis.hsetnx(key, "one", "2")).isFalse();
         assertThat(redis.hget(key, "one")).isEqualTo("1");
     }
 
     @Test
-    public void hvals() {
+    void hvals() {
         assertThat(redis.hvals(key)).isEqualTo(list());
         redis.hset(key, "one", "1");
         redis.hset(key, "two", "2");
@@ -221,12 +220,12 @@ public class HashCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void hvalsStreaming() {
+    void hvalsStreaming() {
         assertThat(redis.hvals(key)).isEqualTo(list());
         redis.hset(key, "one", "1");
         redis.hset(key, "two", "2");
 
-        ListStreamingAdapter<String> channel = new ListStreamingAdapter<String>();
+        ListStreamingAdapter<String> channel = new ListStreamingAdapter<>();
         Long count = redis.hvals(channel, key);
         assertThat(count.intValue()).isEqualTo(2);
         assertThat(channel.getList()).hasSize(2);
@@ -234,7 +233,7 @@ public class HashCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void hscan() {
+    void hscan() {
         redis.hset(key, key, value);
         MapScanCursor<String, String> cursor = redis.hscan(key);
 
@@ -244,7 +243,7 @@ public class HashCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void hscanWithCursor() {
+    void hscanWithCursor() {
         redis.hset(key, key, value);
 
         MapScanCursor<String, String> cursor = redis.hscan(key, ScanCursor.INITIAL);
@@ -255,7 +254,7 @@ public class HashCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void hscanWithCursorAndArgs() {
+    void hscanWithCursorAndArgs() {
         redis.hset(key, key, value);
 
         MapScanCursor<String, String> cursor = redis.hscan(key, ScanCursor.INITIAL, ScanArgs.Builder.limit(2));
@@ -266,9 +265,9 @@ public class HashCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void hscanStreaming() {
+    void hscanStreaming() {
         redis.hset(key, key, value);
-        KeyValueStreamingAdapter<String, String> adapter = new KeyValueStreamingAdapter<String, String>();
+        KeyValueStreamingAdapter<String, String> adapter = new KeyValueStreamingAdapter<>();
 
         StreamScanCursor cursor = redis.hscan(adapter, key, ScanArgs.Builder.limit(100).match("*"));
 
@@ -279,9 +278,9 @@ public class HashCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void hscanStreamingWithCursor() {
+    void hscanStreamingWithCursor() {
         redis.hset(key, key, value);
-        KeyValueStreamingAdapter<String, String> adapter = new KeyValueStreamingAdapter<String, String>();
+        KeyValueStreamingAdapter<String, String> adapter = new KeyValueStreamingAdapter<>();
 
         StreamScanCursor cursor = redis.hscan(adapter, key, ScanCursor.INITIAL);
 
@@ -291,9 +290,9 @@ public class HashCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void hscanStreamingWithCursorAndArgs() {
+    void hscanStreamingWithCursorAndArgs() {
         redis.hset(key, key, value);
-        KeyValueStreamingAdapter<String, String> adapter = new KeyValueStreamingAdapter<String, String>();
+        KeyValueStreamingAdapter<String, String> adapter = new KeyValueStreamingAdapter<>();
 
         StreamScanCursor cursor3 = redis.hscan(adapter, key, ScanCursor.INITIAL, ScanArgs.Builder.limit(100).match("*"));
 
@@ -303,9 +302,9 @@ public class HashCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void hscanStreamingWithArgs() {
+    void hscanStreamingWithArgs() {
         redis.hset(key, key, value);
-        KeyValueStreamingAdapter<String, String> adapter = new KeyValueStreamingAdapter<String, String>();
+        KeyValueStreamingAdapter<String, String> adapter = new KeyValueStreamingAdapter<>();
 
         StreamScanCursor cursor = redis.hscan(adapter, key);
 
@@ -315,7 +314,7 @@ public class HashCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void hscanMultiple() {
+    void hscanMultiple() {
 
         Map<String, String> expect = new LinkedHashMap<>();
         Map<String, String> check = new LinkedHashMap<>();
@@ -340,7 +339,7 @@ public class HashCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void hscanMatch() {
+    void hscanMatch() {
 
         Map<String, String> expect = new LinkedHashMap<>();
         setup100KeyValues(expect);
@@ -353,7 +352,7 @@ public class HashCommandTest extends AbstractRedisClientTest {
         assertThat(cursor.getMap()).hasSize(11);
     }
 
-    protected void setup100KeyValues(Map<String, String> expect) {
+    void setup100KeyValues(Map<String, String> expect) {
         for (int i = 0; i < 100; i++) {
             expect.put(key + i, value + 1);
         }

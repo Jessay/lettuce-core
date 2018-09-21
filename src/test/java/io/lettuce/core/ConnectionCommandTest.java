@@ -25,34 +25,33 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import io.lettuce.test.LettuceExtension;
-import io.lettuce.test.Wait;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.api.sync.RedisCommands;
+import io.lettuce.test.LettuceExtension;
+import io.lettuce.test.Wait;
 import io.lettuce.test.WithPassword;
-import io.lettuce.test.resource.DefaultRedisClient;
 
 /**
  * @author Will Glozer
  * @author Mark Paluch
  */
 @ExtendWith(LettuceExtension.class)
-public class ConnectionCommandTest extends TestSupport {
+class ConnectionCommandTest extends TestSupport {
 
     private final RedisClient client;
     private final StatefulRedisConnection<String, String> connection;
     private final RedisCommands<String, String> redis;
 
     @Inject
-    public ConnectionCommandTest(RedisClient client, StatefulRedisConnection<String, String> connection) {
+    ConnectionCommandTest(RedisClient client, StatefulRedisConnection<String, String> connection) {
         this.client = client;
         this.connection = connection;
         this.redis = connection.sync();
     }
 
     @Test
-    public void auth()  {
+    void auth() {
 
         WithPassword.run(client, () -> {
             RedisCommands<String, String> connection = client.connect().sync();
@@ -74,34 +73,34 @@ public class ConnectionCommandTest extends TestSupport {
     }
 
     @Test
-    public void echo()  {
+    void echo() {
         assertThat(redis.echo("hello")).isEqualTo("hello");
     }
 
     @Test
-    public void ping()  {
+    void ping() {
         assertThat(redis.ping()).isEqualTo("PONG");
     }
 
     @Test
-    public void select()  {
+    void select() {
         redis.set(key, value);
         assertThat(redis.select(1)).isEqualTo("OK");
         assertThat(redis.get(key)).isNull();
     }
 
     @Test
-    public void authNull()  {
+    void authNull() {
         assertThatThrownBy(() -> redis.auth(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void authEmpty()  {
+    void authEmpty() {
         assertThatThrownBy(() -> redis.auth("")).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void authReconnect()  {
+    void authReconnect() {
         WithPassword.run(client, () -> {
 
             RedisCommands<String, String> connection = client.connect().sync();
@@ -117,7 +116,7 @@ public class ConnectionCommandTest extends TestSupport {
     }
 
     @Test
-    public void selectReconnect()  {
+    void selectReconnect() {
         redis.select(1);
         redis.set(key, value);
         redis.quit();
@@ -127,7 +126,7 @@ public class ConnectionCommandTest extends TestSupport {
     }
 
     @Test
-    public void getSetReconnect(){
+    void getSetReconnect() {
         redis.set(key, value);
         redis.quit();
         Wait.untilTrue(redis::isOpen).waitOrTimeout();
@@ -136,7 +135,7 @@ public class ConnectionCommandTest extends TestSupport {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void authInvalidPassword()  {
+    void authInvalidPassword() {
         RedisAsyncCommands<String, String> async = client.connect().async();
         try {
             async.auth("invalid");
@@ -152,7 +151,7 @@ public class ConnectionCommandTest extends TestSupport {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void selectInvalid()  {
+    void selectInvalid() {
         RedisAsyncCommands<String, String> async = client.connect().async();
         try {
             async.select(1024);
@@ -167,7 +166,7 @@ public class ConnectionCommandTest extends TestSupport {
     }
 
     @Test
-    public void testDoubleToString()  {
+    void testDoubleToString() {
 
         assertThat(LettuceStrings.string(1.1)).isEqualTo("1.1");
         assertThat(LettuceStrings.string(Double.POSITIVE_INFINITY)).isEqualTo("+inf");

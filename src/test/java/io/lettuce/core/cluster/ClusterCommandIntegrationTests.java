@@ -26,13 +26,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import io.lettuce.test.Futures;
-import io.lettuce.test.LettuceExtension;
-import io.lettuce.test.Wait;
-import io.lettuce.core.TestSupport;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisFuture;
 import io.lettuce.core.RedisURI;
+import io.lettuce.core.TestSupport;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
@@ -40,12 +37,15 @@ import io.lettuce.core.cluster.api.async.RedisClusterAsyncCommands;
 import io.lettuce.core.cluster.api.sync.RedisClusterCommands;
 import io.lettuce.core.cluster.models.slots.ClusterSlotRange;
 import io.lettuce.core.cluster.models.slots.ClusterSlotsParser;
+import io.lettuce.test.Futures;
+import io.lettuce.test.LettuceExtension;
+import io.lettuce.test.Wait;
 
 /**
  * @author Mark Paluch
  */
 @ExtendWith(LettuceExtension.class)
-public class ClusterCommandIntegrationTests extends TestSupport {
+class ClusterCommandIntegrationTests extends TestSupport {
 
     private final RedisClient client;
     private final RedisClusterClient clusterClient;
@@ -54,7 +54,7 @@ public class ClusterCommandIntegrationTests extends TestSupport {
     private final RedisClusterCommands<String, String> sync;
 
     @Inject
-    public ClusterCommandIntegrationTests(RedisClient client, RedisClusterClient clusterClient) {
+    ClusterCommandIntegrationTests(RedisClient client, RedisClusterClient clusterClient) {
 
         this.client = client;
         this.clusterClient = clusterClient;
@@ -65,12 +65,12 @@ public class ClusterCommandIntegrationTests extends TestSupport {
     }
 
     @AfterEach
-    public void after() {
+    void after() {
         connection.close();
     }
 
     @Test
-    public void testClusterBumpEpoch() throws Exception {
+    void testClusterBumpEpoch() throws Exception {
 
         RedisFuture<String> future = async.clusterBumpepoch();
 
@@ -80,7 +80,7 @@ public class ClusterCommandIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testClusterInfo() throws Exception {
+    void testClusterInfo() throws Exception {
 
         RedisFuture<String> future = async.clusterInfo();
 
@@ -92,7 +92,7 @@ public class ClusterCommandIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testClusterNodes() {
+    void testClusterNodes() {
 
         String result = sync.clusterNodes();
 
@@ -102,7 +102,7 @@ public class ClusterCommandIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testClusterNodesSync() {
+    void testClusterNodesSync() {
 
         StatefulRedisClusterConnection<String, String> connection = clusterClient.connect();
 
@@ -115,7 +115,7 @@ public class ClusterCommandIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testClusterSlaves() throws Exception {
+    void testClusterSlaves() throws Exception {
 
         sync.set("b", value);
         RedisFuture<Long> replication = async.waitForReplication(1, 5);
@@ -123,12 +123,12 @@ public class ClusterCommandIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testAsking() {
+    void testAsking() {
         assertThat(sync.asking()).isEqualTo("OK");
     }
 
     @Test
-    public void testReset() throws Exception {
+    void testReset() throws Exception {
 
         clusterClient.reloadPartitions();
 
@@ -149,7 +149,7 @@ public class ClusterCommandIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testClusterSlots() {
+    void testClusterSlots() {
 
         List<Object> reply = sync.clusterSlots();
         assertThat(reply.size()).isGreaterThan(1);
@@ -165,7 +165,7 @@ public class ClusterCommandIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void readOnly() throws Exception {
+    void readOnly() throws Exception {
 
         // cluster node 3 is a slave for key "b"
         String key = "b";
@@ -188,7 +188,7 @@ public class ClusterCommandIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void readOnlyWithReconnect() throws Exception {
+    void readOnlyWithReconnect() throws Exception {
 
         // cluster node 3 is a slave for key "b"
         String key = "b";
@@ -208,7 +208,7 @@ public class ClusterCommandIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void readOnlyReadWrite() throws Exception {
+    void readOnlyReadWrite() throws Exception {
 
         // cluster node 3 is a slave for key "b"
         String key = "b";
@@ -237,7 +237,7 @@ public class ClusterCommandIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void clusterSlaves() {
+    void clusterSlaves() {
 
         String nodeId = getNodeId(sync);
         List<String> result = sync.clusterSlaves(nodeId);

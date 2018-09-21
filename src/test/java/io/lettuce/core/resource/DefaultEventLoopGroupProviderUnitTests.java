@@ -27,10 +27,10 @@ import io.netty.util.concurrent.Future;
 /**
  * @author Mark Paluch
  */
-public class DefaultEventLoopGroupProviderUnitTests {
+class DefaultEventLoopGroupProviderUnitTests {
 
     @Test
-    public void shutdownTerminatedEventLoopGroup() throws Exception {
+    void shutdownTerminatedEventLoopGroup() throws Exception {
         DefaultEventLoopGroupProvider sut = new DefaultEventLoopGroupProvider(1);
 
         NioEventLoopGroup eventLoopGroup = sut.allocate(NioEventLoopGroup.class);
@@ -43,7 +43,7 @@ public class DefaultEventLoopGroupProviderUnitTests {
     }
 
     @Test
-    public void getAfterShutdown() throws Exception {
+    void getAfterShutdown() throws Exception {
 
         DefaultEventLoopGroupProvider sut = new DefaultEventLoopGroupProvider(1);
 

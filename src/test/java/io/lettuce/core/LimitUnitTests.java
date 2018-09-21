@@ -22,10 +22,10 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Mark Paluch
  */
-public class LimitUnitTests {
+class LimitUnitTests {
 
     @Test
-    public void create() {
+    void create() {
 
         Limit limit = Limit.create(1, 2);
 
@@ -35,7 +35,7 @@ public class LimitUnitTests {
     }
 
     @Test
-    public void unlimited() {
+    void unlimited() {
 
         Limit limit = Limit.unlimited();
 

@@ -27,9 +27,7 @@ import java.util.function.Function;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -42,18 +40,18 @@ import io.lettuce.core.internal.HostAndPort;
  */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class MappingSocketAddressResolverUnitTests {
+class MappingSocketAddressResolverUnitTests {
 
     @Mock
     DnsResolver dnsResolver;
 
     @BeforeEach
-    public void before() throws UnknownHostException {
+    void before() throws UnknownHostException {
         when(dnsResolver.resolve(anyString())).thenReturn(new InetAddress[0]);
     }
 
     @Test
-    public void shouldPassThruHostAndPort() {
+    void shouldPassThruHostAndPort() {
 
         RedisURI localhost = RedisURI.create("localhost", RedisURI.DEFAULT_REDIS_PORT);
         MappingSocketAddressResolver resolver = MappingSocketAddressResolver.create(dnsResolver, Function.identity());
@@ -65,7 +63,7 @@ public class MappingSocketAddressResolverUnitTests {
     }
 
     @Test
-    public void shouldMapHostAndPort() {
+    void shouldMapHostAndPort() {
 
         RedisURI localhost = RedisURI.create("localhost", RedisURI.DEFAULT_REDIS_PORT);
         MappingSocketAddressResolver resolver = MappingSocketAddressResolver.create(dnsResolver,

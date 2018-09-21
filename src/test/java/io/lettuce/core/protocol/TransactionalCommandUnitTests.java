@@ -26,10 +26,10 @@ import io.lettuce.core.output.StatusOutput;
 /**
  * @author Mark Paluch
  */
-public class TransactionalCommandUnitTests {
+class TransactionalCommandUnitTests {
 
     @Test
-    public void shouldCompleteOnException() {
+    void shouldCompleteOnException() {
 
         RedisCommand<String, String, String> inner = new Command<>(CommandType.SET, new StatusOutput<>(StringCodec.UTF8));
 

@@ -24,46 +24,46 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import io.lettuce.test.LettuceExtension;
-import io.lettuce.core.TestSupport;
 import io.lettuce.core.ReadFrom;
+import io.lettuce.core.TestSupport;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.cluster.api.sync.RedisAdvancedClusterCommands;
+import io.lettuce.test.LettuceExtension;
 
 /**
  * @author Mark Paluch
  */
 @SuppressWarnings("unchecked")
 @ExtendWith(LettuceExtension.class)
-public class RedisClusterReadFromIntegrationTests extends TestSupport {
+class RedisClusterReadFromIntegrationTests extends TestSupport {
 
     private final RedisClusterClient clusterClient;
     private StatefulRedisClusterConnection<String, String> connection;
     private RedisAdvancedClusterCommands<String, String> sync;
 
     @Inject
-    public RedisClusterReadFromIntegrationTests(RedisClusterClient clusterClient) {
+    RedisClusterReadFromIntegrationTests(RedisClusterClient clusterClient) {
         this.clusterClient = clusterClient;
     }
 
     @BeforeEach
-    public void before() {
+    void before() {
         connection = clusterClient.connect();
         sync = connection.sync();
     }
 
     @AfterEach
-    public void after() {
+    void after() {
         connection.close();
     }
 
     @Test
-    public void defaultTest() {
+    void defaultTest() {
         assertThat(connection.getReadFrom()).isEqualTo(ReadFrom.MASTER);
     }
 
     @Test
-    public void readWriteMaster() {
+    void readWriteMaster() {
 
         connection.setReadFrom(ReadFrom.MASTER);
 
@@ -72,7 +72,7 @@ public class RedisClusterReadFromIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void readWriteMasterPreferred() {
+    void readWriteMasterPreferred() {
 
         connection.setReadFrom(ReadFrom.MASTER_PREFERRED);
 
@@ -81,7 +81,7 @@ public class RedisClusterReadFromIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void readWriteSlave() {
+    void readWriteSlave() {
 
         connection.setReadFrom(ReadFrom.SLAVE);
 
@@ -92,7 +92,7 @@ public class RedisClusterReadFromIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void readWriteSlavePreferred() {
+    void readWriteSlavePreferred() {
 
         connection.setReadFrom(ReadFrom.SLAVE_PREFERRED);
 
@@ -103,7 +103,7 @@ public class RedisClusterReadFromIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void readWriteNearest() {
+    void readWriteNearest() {
 
         connection.setReadFrom(ReadFrom.NEAREST);
 

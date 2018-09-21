@@ -44,14 +44,14 @@ import io.lettuce.test.settings.TestSettings;
  * @author Mark Paluch
  */
 @ExtendWith(LettuceExtension.class)
-public class RunOnlyOnceServerCommandIntegrationTests extends TestSupport {
+class RunOnlyOnceServerCommandIntegrationTests extends TestSupport {
 
     private final RedisClient client;
     private final StatefulRedisConnection<String, String> connection;
     private final RedisCommands<String, String> redis;
 
     @Inject
-    public RunOnlyOnceServerCommandIntegrationTests(RedisClient client, StatefulRedisConnection<String, String> connection) {
+    RunOnlyOnceServerCommandIntegrationTests(RedisClient client, StatefulRedisConnection<String, String> connection) {
 
         this.client = client;
         this.connection = connection;
@@ -63,7 +63,7 @@ public class RunOnlyOnceServerCommandIntegrationTests extends TestSupport {
      * redis.
      */
     @Test
-    public void debugSegfault() {
+    void debugSegfault() {
 
         assumeTrue(CanConnect.to(host(), port(1)));
 
@@ -83,7 +83,7 @@ public class RunOnlyOnceServerCommandIntegrationTests extends TestSupport {
      * Executed in order: 2
      */
     @Test
-    public void migrate() {
+    void migrate() {
 
         assumeTrue(CanConnect.to(host(), port(2)));
 
@@ -97,7 +97,7 @@ public class RunOnlyOnceServerCommandIntegrationTests extends TestSupport {
      * Executed in order: 3
      */
     @Test
-    public void migrateCopyReplace() {
+    void migrateCopyReplace() {
 
         assumeTrue(CanConnect.to(host(), port(2)));
 
@@ -118,7 +118,7 @@ public class RunOnlyOnceServerCommandIntegrationTests extends TestSupport {
      * redis.
      */
     @Test
-    public void shutdown() {
+    void shutdown() {
 
         assumeTrue(CanConnect.to(host(), port(2)));
 

@@ -51,13 +51,13 @@ import io.lettuce.test.settings.TestSettings;
 public class ServerCommandTest extends AbstractRedisClientTest {
 
     @Test
-    public void bgrewriteaof() {
+    void bgrewriteaof() {
         String msg = "Background append only file rewriting";
         assertThat(redis.bgrewriteaof(), containsString(msg));
     }
 
     @Test
-    public void bgsave() {
+    void bgsave() {
 
         Wait.untilTrue(this::noSaveInProgress).waitOrTimeout();
 
@@ -66,7 +66,7 @@ public class ServerCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void clientGetSetname() {
+    void clientGetSetname() {
         assertThat(redis.clientGetname()).isNull();
         assertThat(redis.clientSetname("test")).isEqualTo("OK");
         assertThat(redis.clientGetname()).isEqualTo("test");
@@ -75,12 +75,12 @@ public class ServerCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void clientPause() {
+    void clientPause() {
         assertThat(redis.clientPause(10)).isEqualTo("OK");
     }
 
     @Test
-    public void clientKill() {
+    void clientKill() {
         Pattern p = Pattern.compile(".*addr=([^ ]+).*");
         String clients = redis.clientList();
         Matcher m = p.matcher(clients);
@@ -90,7 +90,7 @@ public class ServerCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void clientKillExtended() {
+    void clientKillExtended() {
 
         RedisCommands<String, String> connection2 = client.connect().sync();
         connection2.clientSetname("killme");
@@ -112,12 +112,12 @@ public class ServerCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void clientList() {
+    void clientList() {
         assertThat(redis.clientList().contains("addr=")).isTrue();
     }
 
     @Test
-    public void clientUnblock() throws InterruptedException {
+    void clientUnblock() throws InterruptedException {
 
         try {
             redis.clientUnblock(0, UnblockType.ERROR);
@@ -145,12 +145,12 @@ public class ServerCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void commandCount() {
+    void commandCount() {
         assertThat(redis.commandCount()).isGreaterThan(100);
     }
 
     @Test
-    public void command() {
+    void command() {
 
         List<Object> result = redis.command();
 
@@ -161,7 +161,7 @@ public class ServerCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void commandInfo() {
+    void commandInfo() {
 
         List<Object> result = redis.commandInfo(CommandType.GETRANGE, CommandType.SET);
 
@@ -176,12 +176,12 @@ public class ServerCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void configGet() {
+    void configGet() {
         assertThat(redis.configGet("maxmemory")).containsEntry("maxmemory", "0");
     }
 
     @Test
-    public void configResetstat() {
+    void configResetstat() {
         redis.get(key);
         redis.get(key);
         assertThat(redis.configResetstat()).isEqualTo("OK");
@@ -189,7 +189,7 @@ public class ServerCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void configSet() {
+    void configSet() {
         String maxmemory = redis.configGet("maxmemory").get("maxmemory");
         assertThat(redis.configSet("maxmemory", "1024")).isEqualTo("OK");
         assertThat(redis.configGet("maxmemory")).containsEntry("maxmemory", "1024");
@@ -197,14 +197,14 @@ public class ServerCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void configRewrite() {
+    void configRewrite() {
 
         String result = redis.configRewrite();
         assertThat(result).isEqualTo("OK");
     }
 
     @Test
-    public void dbsize() {
+    void dbsize() {
         assertThat(redis.dbsize()).isEqualTo(0);
         redis.set(key, value);
         assertThat(redis.dbsize()).isEqualTo(1);
@@ -212,7 +212,7 @@ public class ServerCommandTest extends AbstractRedisClientTest {
 
     @Test
     @Disabled("Causes instabilities")
-    public void debugCrashAndRecover() {
+    void debugCrashAndRecover() {
         try {
             assertThat(redis.debugCrashAndRecover(1L)).isNotNull();
         } catch (Exception e) {
@@ -221,26 +221,26 @@ public class ServerCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void debugHtstats() {
+    void debugHtstats() {
         redis.set(key, value);
         String result = redis.debugHtstats(0);
         assertThat(result).contains("table size");
     }
 
     @Test
-    public void debugObject() {
+    void debugObject() {
         redis.set(key, value);
         redis.debugObject(key);
     }
 
     @Test
-    public void debugReload() {
+    void debugReload() {
         assertThat(redis.debugReload()).isEqualTo("OK");
     }
 
     @Test
     @Disabled("Causes instabilities")
-    public void debugRestart() {
+    void debugRestart() {
         try {
             assertThat(redis.debugRestart(1L)).isNotNull();
         } catch (Exception e) {
@@ -249,7 +249,7 @@ public class ServerCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void debugSdslen() {
+    void debugSdslen() {
         redis.set(key, value);
         String result = redis.debugSdslen(key);
         assertThat(result).contains("key_sds_len");
@@ -261,14 +261,14 @@ public class ServerCommandTest extends AbstractRedisClientTest {
      * @
      */
     @Test
-    public void flushall() {
+    void flushall() {
         redis.set(key, value);
         assertThat(redis.flushall()).isEqualTo("OK");
         assertThat(redis.get(key)).isNull();
     }
 
     @Test
-    public void flushallAsync() {
+    void flushallAsync() {
 
         assumeTrue(RedisConditions.of(redis).hasVersionGreaterOrEqualsTo("3.4"));
 
@@ -278,7 +278,7 @@ public class ServerCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void flushdb() {
+    void flushdb() {
         redis.set(key, value);
         redis.select(1);
         redis.set(key, value + "X");
@@ -289,7 +289,7 @@ public class ServerCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void flushdbAsync() {
+    void flushdbAsync() {
 
         assumeTrue(RedisConditions.of(redis).hasVersionGreaterOrEqualsTo("3.4"));
 
@@ -303,19 +303,19 @@ public class ServerCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void info() {
+    void info() {
         assertThat(redis.info().contains("redis_version")).isTrue();
         assertThat(redis.info("server").contains("redis_version")).isTrue();
     }
 
     @Test
-    public void lastsave() {
+    void lastsave() {
         Date start = new Date(System.currentTimeMillis() / 1000);
         assertThat(start.compareTo(redis.lastsave()) <= 0).isTrue();
     }
 
     @Test
-    public void save() {
+    void save() {
 
         Wait.untilTrue(this::noSaveInProgress).waitOrTimeout();
 
@@ -323,19 +323,19 @@ public class ServerCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void slaveof() {
+    void slaveof() {
 
         assertThat(redis.slaveof(TestSettings.host(), 0)).isEqualTo("OK");
         redis.slaveofNoOne();
     }
 
     @Test
-    public void slaveofEmptyHost() {
+    void slaveofEmptyHost() {
         assertThatThrownBy(() -> redis.slaveof("", 0)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void role() {
+    void role() {
 
         List<Object> objects = redis.role();
 
@@ -347,13 +347,13 @@ public class ServerCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void slaveofNoOne() {
+    void slaveofNoOne() {
         assertThat(redis.slaveofNoOne()).isEqualTo("OK");
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    public void slowlog() {
+    void slowlog() {
 
         long start = System.currentTimeMillis() / 1000;
 
@@ -379,7 +379,7 @@ public class ServerCommandTest extends AbstractRedisClientTest {
 
     @Test
     @EnabledOnCommand("SWAPDB")
-    public void swapdb() {
+    void swapdb() {
 
         redis.select(1);
         redis.set(key, "value1");

@@ -157,7 +157,7 @@ public class Wait {
     }
 
     @FunctionalInterface
-    public interface WaitCondition {
+    interface WaitCondition {
 
         boolean isSatisfied() throws Exception;
     }

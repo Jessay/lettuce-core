@@ -27,10 +27,10 @@ import io.lettuce.core.codec.StringCodec;
 /**
  * @author Mark Paluch
  */
-public class ReplayOutputUnitTests {
+class ReplayOutputUnitTests {
 
     @Test
-    public void shouldReplaySimpleCompletion() {
+    void shouldReplaySimpleCompletion() {
 
         ReplayOutput<String, String> replay = new ReplayOutput<>();
         ValueOutput<String, String> target = new ValueOutput<>(StringCodec.ASCII);
@@ -45,7 +45,7 @@ public class ReplayOutputUnitTests {
     }
 
     @Test
-    public void shouldReplayNestedCompletion() {
+    void shouldReplayNestedCompletion() {
 
         ReplayOutput<String, String> replay = new ReplayOutput<>();
         ArrayOutput<String, String> target = new ArrayOutput<>(StringCodec.ASCII);
@@ -67,7 +67,7 @@ public class ReplayOutputUnitTests {
     }
 
     @Test
-    public void shouldDecodeErrorResponse() {
+    void shouldDecodeErrorResponse() {
 
         ReplayOutput<String, String> replay = new ReplayOutput<>();
         ValueOutput<String, String> target = new ValueOutput<>(StringCodec.ASCII);

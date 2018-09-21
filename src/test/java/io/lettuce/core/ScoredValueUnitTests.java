@@ -28,10 +28,10 @@ import org.junit.jupiter.api.Test;
  * @author Will Glozer
  * @author Mark Paluch
  */
-public class ScoredValueUnitTests {
+class ScoredValueUnitTests {
 
     @Test
-    public void shouldCreateEmptyScoredValueFromOptional() {
+    void shouldCreateEmptyScoredValueFromOptional() {
 
         ScoredValue<String> value = ScoredValue.from(42, Optional.<String> empty());
 
@@ -39,7 +39,7 @@ public class ScoredValueUnitTests {
     }
 
     @Test
-    public void shouldCreateEmptyValue() {
+    void shouldCreateEmptyValue() {
 
         ScoredValue<String> value = ScoredValue.empty();
 
@@ -47,7 +47,7 @@ public class ScoredValueUnitTests {
     }
 
     @Test
-    public void shouldCreateNonEmptyValueFromOptional() {
+    void shouldCreateNonEmptyValueFromOptional() {
 
         ScoredValue<String> value = ScoredValue.from(4.2, Optional.of("hello"));
 
@@ -57,7 +57,7 @@ public class ScoredValueUnitTests {
     }
 
     @Test
-    public void shouldCreateEmptyValueFromValue() {
+    void shouldCreateEmptyValueFromValue() {
 
         ScoredValue<String> value = ScoredValue.fromNullable(42, null);
 
@@ -65,7 +65,7 @@ public class ScoredValueUnitTests {
     }
 
     @Test
-    public void shouldCreateNonEmptyValueFromValue() {
+    void shouldCreateNonEmptyValueFromValue() {
 
         ScoredValue<String> value = ScoredValue.fromNullable(42, "hello");
 
@@ -74,7 +74,7 @@ public class ScoredValueUnitTests {
     }
 
     @Test
-    public void justShouldCreateValueFromValue() {
+    void justShouldCreateValueFromValue() {
 
         ScoredValue<String> value = ScoredValue.just(42, "hello");
 
@@ -83,12 +83,12 @@ public class ScoredValueUnitTests {
     }
 
     @Test
-    public void justShouldRejectEmptyValueFromValue() {
+    void justShouldRejectEmptyValueFromValue() {
         assertThatThrownBy(() -> ScoredValue.just(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void shouldCreateNonEmptyValue() {
+    void shouldCreateNonEmptyValue() {
 
         ScoredValue<String> value = ScoredValue.from(12, Optional.of("hello"));
 
@@ -97,7 +97,7 @@ public class ScoredValueUnitTests {
     }
 
     @Test
-    public void equals() {
+    void equals() {
         ScoredValue<String> sv1 = ScoredValue.fromNullable(1.0, "a");
         assertThat(sv1.equals(ScoredValue.fromNullable(1.0, "a"))).isTrue();
         assertThat(sv1.equals(null)).isFalse();
@@ -106,14 +106,14 @@ public class ScoredValueUnitTests {
     }
 
     @Test
-    public void testHashCode() {
+    void testHashCode() {
         assertThat(ScoredValue.fromNullable(1.0, "a").hashCode() != 0).isTrue();
         assertThat(ScoredValue.fromNullable(0.0, "a").hashCode() != 0).isTrue();
         assertThat(ScoredValue.fromNullable(0.0, null).hashCode() == 0).isTrue();
     }
 
     @Test
-    public void toStringShouldRenderCorrectly() {
+    void toStringShouldRenderCorrectly() {
 
         ScoredValue<String> value = ScoredValue.from(12.34, Optional.of("hello"));
         ScoredValue<String> empty = ScoredValue.fromNullable(34, null);

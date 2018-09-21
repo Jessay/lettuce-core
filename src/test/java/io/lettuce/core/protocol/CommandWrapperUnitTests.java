@@ -30,20 +30,20 @@ import io.lettuce.core.output.StatusOutput;
 /**
  * @author Mark Paluch
  */
-public class CommandWrapperUnitTests {
+class CommandWrapperUnitTests {
 
-    protected RedisCodec<String, String> codec = StringCodec.UTF8;
-    protected Command<String, String, String> sut;
+    private RedisCodec<String, String> codec = StringCodec.UTF8;
+    private Command<String, String, String> sut;
 
     @BeforeEach
-    public final void createCommand() throws Exception {
+    final void createCommand() throws Exception {
 
         CommandOutput<String, String, String> output = new StatusOutput<>(codec);
         sut = new Command<>(CommandType.INFO, output, null);
     }
 
     @Test
-    public void shouldAppendOnComplete() {
+    void shouldAppendOnComplete() {
 
         AtomicReference<Boolean> v1 = new AtomicReference<>();
         AtomicReference<Boolean> v2 = new AtomicReference<>();

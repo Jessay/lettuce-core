@@ -29,7 +29,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import io.lettuce.test.LettuceExtension;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.TestSupport;
 import io.lettuce.core.api.sync.RedisCommands;
@@ -44,12 +43,13 @@ import io.lettuce.core.cluster.pubsub.api.sync.NodeSelectionPubSubCommands;
 import io.lettuce.core.cluster.pubsub.api.sync.PubSubNodeSelection;
 import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 import io.lettuce.core.support.PubSubTestListener;
+import io.lettuce.test.LettuceExtension;
 
 /**
  * @author Mark Paluch
  */
 @ExtendWith(LettuceExtension.class)
-public class RedisClusterPubSubConnectionIntegrationTests extends TestSupport {
+class RedisClusterPubSubConnectionIntegrationTests extends TestSupport {
 
     private final RedisClusterClient clusterClient;
 
@@ -61,12 +61,12 @@ public class RedisClusterPubSubConnectionIntegrationTests extends TestSupport {
     private StatefulRedisClusterPubSubConnection<String, String> pubSubConnection2;
 
     @Inject
-    public RedisClusterPubSubConnectionIntegrationTests(RedisClusterClient clusterClient) {
+    RedisClusterPubSubConnectionIntegrationTests(RedisClusterClient clusterClient) {
         this.clusterClient = clusterClient;
     }
 
     @BeforeEach
-    public void openPubSubConnection() {
+    void openPubSubConnection() {
         connection = clusterClient.connect();
         pubSubConnection = clusterClient.connectPubSub();
         pubSubConnection2 = clusterClient.connectPubSub();
@@ -74,14 +74,14 @@ public class RedisClusterPubSubConnectionIntegrationTests extends TestSupport {
     }
 
     @AfterEach
-    public void closePubSubConnection() {
+    void closePubSubConnection() {
         connection.close();
         pubSubConnection.close();
         pubSubConnection2.close();
     }
 
     @Test
-    public void testRegularClientPubSubChannels() {
+    void testRegularClientPubSubChannels() {
 
         String nodeId = pubSubConnection.sync().clusterMyId();
         RedisClusterNode otherNode = getOtherThan(nodeId);
@@ -95,7 +95,7 @@ public class RedisClusterPubSubConnectionIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testRegularClientPublish() throws Exception {
+    void testRegularClientPublish() throws Exception {
 
         String nodeId = pubSubConnection.sync().clusterMyId();
         RedisClusterNode otherNode = getOtherThan(nodeId);
@@ -110,7 +110,7 @@ public class RedisClusterPubSubConnectionIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testPubSubClientPublish() throws Exception {
+    void testPubSubClientPublish() throws Exception {
 
         String nodeId = pubSubConnection.sync().clusterMyId();
         pubSubConnection.sync().subscribe(key);
@@ -123,7 +123,7 @@ public class RedisClusterPubSubConnectionIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testConnectToLeastClientsNode() {
+    void testConnectToLeastClientsNode() {
 
         clusterClient.reloadPartitions();
         String nodeId = pubSubConnection.sync().clusterMyId();
@@ -136,7 +136,7 @@ public class RedisClusterPubSubConnectionIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testRegularClientPubSubPublish() throws Exception {
+    void testRegularClientPubSubPublish() throws Exception {
 
         String nodeId = pubSubConnection.sync().clusterMyId();
         RedisClusterNode otherNode = getOtherThan(nodeId);
@@ -152,7 +152,7 @@ public class RedisClusterPubSubConnectionIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testGetConnectionAsyncByNodeId() {
+    void testGetConnectionAsyncByNodeId() {
 
         RedisClusterNode partition = pubSubConnection.getPartitions().getPartition(0);
 
@@ -162,7 +162,7 @@ public class RedisClusterPubSubConnectionIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testGetConnectionAsyncByHostAndPort() {
+    void testGetConnectionAsyncByHostAndPort() {
 
         RedisClusterNode partition = pubSubConnection.getPartitions().getPartition(0);
 
@@ -174,7 +174,7 @@ public class RedisClusterPubSubConnectionIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testNodeIdSubscription() throws Exception {
+    void testNodeIdSubscription() throws Exception {
 
         RedisClusterNode partition = pubSubConnection.getPartitions().getPartition(0);
 
@@ -190,7 +190,7 @@ public class RedisClusterPubSubConnectionIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testNodeMessagePropagationSubscription() throws Exception {
+    void testNodeMessagePropagationSubscription() throws Exception {
 
         RedisClusterNode partition = pubSubConnection.getPartitions().getPartition(0);
         pubSubConnection.setNodeMessagePropagation(true);
@@ -205,7 +205,7 @@ public class RedisClusterPubSubConnectionIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testNodeHostAndPortMessagePropagationSubscription() throws Exception {
+    void testNodeHostAndPortMessagePropagationSubscription() throws Exception {
 
         RedisClusterNode partition = pubSubConnection.getPartitions().getPartition(0);
         pubSubConnection.setNodeMessagePropagation(true);
@@ -221,7 +221,7 @@ public class RedisClusterPubSubConnectionIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testAsyncSubscription() throws Exception {
+    void testAsyncSubscription() throws Exception {
 
         pubSubConnection.setNodeMessagePropagation(true);
         pubSubConnection.addListener(connectionListener);
@@ -239,7 +239,7 @@ public class RedisClusterPubSubConnectionIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testSyncSubscription() throws Exception {
+    void testSyncSubscription() throws Exception {
 
         pubSubConnection.setNodeMessagePropagation(true);
         pubSubConnection.addListener(connectionListener);
@@ -257,7 +257,7 @@ public class RedisClusterPubSubConnectionIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testReactiveSubscription() throws Exception {
+    void testReactiveSubscription() throws Exception {
 
         pubSubConnection.setNodeMessagePropagation(true);
         pubSubConnection.addListener(connectionListener);
@@ -276,7 +276,7 @@ public class RedisClusterPubSubConnectionIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testClusterListener() throws Exception {
+    void testClusterListener() throws Exception {
 
         BlockingQueue<RedisClusterNode> nodes = new LinkedBlockingQueue<>();
         pubSubConnection.setNodeMessagePropagation(true);

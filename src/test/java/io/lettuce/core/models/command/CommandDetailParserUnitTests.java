@@ -28,29 +28,29 @@ import io.lettuce.core.internal.LettuceLists;
 /**
  * @author Mark Paluch
  */
-public class CommandDetailParserUnitTests {
+class CommandDetailParserUnitTests {
 
     @Test
-    public void testMappings() {
+    void testMappings() {
         assertThat(CommandDetailParser.FLAG_MAPPING).hasSameSizeAs(CommandDetail.Flag.values());
     }
 
     @Test
-    public void testEmptyList() {
+    void testEmptyList() {
 
         List<CommandDetail> result = CommandDetailParser.parse(new ArrayList<>());
         assertThat(result).isEmpty();
     }
 
     @Test
-    public void testMalformedList() {
+    void testMalformedList() {
         Object o = LettuceLists.newList("", "", "");
         List<CommandDetail> result = CommandDetailParser.parse(LettuceLists.newList(o));
         assertThat(result).isEmpty();
     }
 
     @Test
-    public void testParse() {
+    void testParse() {
         Object o = LettuceLists.newList("get", "1", LettuceLists.newList("fast", "loading"), 1L, 2L, 3L);
         List<CommandDetail> result = CommandDetailParser.parse(LettuceLists.newList(o));
         assertThat(result).hasSize(1);
@@ -65,7 +65,7 @@ public class CommandDetailParserUnitTests {
     }
 
     @Test
-    public void testModel() {
+    void testModel() {
         CommandDetail commandDetail = new CommandDetail();
         commandDetail.setArity(1);
         commandDetail.setFirstKeyPosition(2);

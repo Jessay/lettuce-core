@@ -30,12 +30,12 @@ import io.lettuce.core.cluster.SlotHash;
  * @author Mark Paluch
  */
 @State(Scope.Benchmark)
-public class RedisClusterNodeBenchmark {
+class RedisClusterNodeBenchmark {
 
-    final static List<Integer> ALL_SLOTS = IntStream.range(0, SlotHash.SLOT_COUNT).boxed().collect(Collectors.toList());
-    final static List<Integer> LOWER_SLOTS = IntStream.range(0, 8192).boxed().collect(Collectors.toList());
+    private final static List<Integer> ALL_SLOTS = IntStream.range(0, SlotHash.SLOT_COUNT).boxed().collect(Collectors.toList());
+    private final static List<Integer> LOWER_SLOTS = IntStream.range(0, 8192).boxed().collect(Collectors.toList());
 
-    final static RedisClusterNode NODE = new RedisClusterNode(null, null, true, null, 0, 0, 0, ALL_SLOTS,
+    private final static RedisClusterNode NODE = new RedisClusterNode(null, null, true, null, 0, 0, 0, ALL_SLOTS,
             Collections.emptySet());
 
     @Benchmark

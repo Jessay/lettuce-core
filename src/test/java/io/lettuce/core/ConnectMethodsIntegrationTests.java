@@ -29,124 +29,124 @@ import io.lettuce.test.LettuceExtension;
  * @author Mark Paluch
  */
 @ExtendWith(LettuceExtension.class)
-public class ConnectMethodsIntegrationTests {
+class ConnectMethodsIntegrationTests {
 
     private final RedisClient redisClient;
     private final RedisClusterClient clusterClient;
 
     @Inject
-    public ConnectMethodsIntegrationTests(RedisClient redisClient, RedisClusterClient clusterClient) {
+    ConnectMethodsIntegrationTests(RedisClient redisClient, RedisClusterClient clusterClient) {
         this.redisClient = redisClient;
         this.clusterClient = clusterClient;
     }
 
     // Standalone
     @Test
-    public void standaloneSync() {
+    void standaloneSync() {
         redisClient.connect().close();
     }
 
     @Test
-    public void standaloneAsync() {
+    void standaloneAsync() {
         redisClient.connect().async().getStatefulConnection().close();
     }
 
     @Test
-    public void standaloneReactive() {
+    void standaloneReactive() {
         redisClient.connect().reactive().getStatefulConnection().close();
     }
 
     @Test
-    public void standaloneStateful() {
+    void standaloneStateful() {
         redisClient.connect().close();
     }
 
     // PubSub
     @Test
-    public void pubsubSync() {
+    void pubsubSync() {
         redisClient.connectPubSub().close();
     }
 
     @Test
-    public void pubsubAsync() {
+    void pubsubAsync() {
         redisClient.connectPubSub().close();
     }
 
     @Test
-    public void pubsubReactive() {
+    void pubsubReactive() {
         redisClient.connectPubSub().close();
     }
 
     @Test
-    public void pubsubStateful() {
+    void pubsubStateful() {
         redisClient.connectPubSub().close();
     }
 
     // Sentinel
     @Test
-    public void sentinelSync() {
+    void sentinelSync() {
         redisClient.connectSentinel().sync().getStatefulConnection().close();
     }
 
     @Test
-    public void sentinelAsync() {
+    void sentinelAsync() {
         redisClient.connectSentinel().async().getStatefulConnection().close();
     }
 
     @Test
-    public void sentinelReactive() {
+    void sentinelReactive() {
         redisClient.connectSentinel().reactive().getStatefulConnection().close();
     }
 
     @Test
-    public void sentinelStateful() {
+    void sentinelStateful() {
         redisClient.connectSentinel().close();
     }
 
     // Cluster
     @Test
-    public void clusterSync() {
+    void clusterSync() {
         clusterClient.connect().sync().getStatefulConnection().close();
     }
 
     @Test
-    public void clusterAsync() {
+    void clusterAsync() {
         clusterClient.connect().async().getStatefulConnection().close();
     }
 
     @Test
-    public void clusterReactive() {
+    void clusterReactive() {
         clusterClient.connect().reactive().getStatefulConnection().close();
     }
 
     @Test
-    public void clusterStateful() {
+    void clusterStateful() {
         clusterClient.connect().close();
     }
 
     @Test
-    public void clusterPubSubSync() {
+    void clusterPubSubSync() {
         clusterClient.connectPubSub().sync().getStatefulConnection().close();
     }
 
     @Test
-    public void clusterPubSubAsync() {
+    void clusterPubSubAsync() {
         clusterClient.connectPubSub().async().getStatefulConnection().close();
     }
 
     @Test
-    public void clusterPubSubReactive() {
+    void clusterPubSubReactive() {
         clusterClient.connectPubSub().reactive().getStatefulConnection().close();
     }
 
     @Test
-    public void clusterPubSubStateful() {
+    void clusterPubSubStateful() {
         clusterClient.connectPubSub().close();
     }
 
     // Advanced Cluster
     @Test
-    public void advancedClusterSync() {
+    void advancedClusterSync() {
         StatefulRedisClusterConnection<String, String> statefulConnection = clusterClient.connect();
         RedisURI uri = clusterClient.getPartitions().getPartition(0).getUri();
         statefulConnection.getConnection(uri.getHost(), uri.getPort()).sync();
@@ -154,7 +154,7 @@ public class ConnectMethodsIntegrationTests {
     }
 
     @Test
-    public void advancedClusterAsync() {
+    void advancedClusterAsync() {
         StatefulRedisClusterConnection<String, String> statefulConnection = clusterClient.connect();
         RedisURI uri = clusterClient.getPartitions().getPartition(0).getUri();
         statefulConnection.getConnection(uri.getHost(), uri.getPort()).sync();
@@ -162,7 +162,7 @@ public class ConnectMethodsIntegrationTests {
     }
 
     @Test
-    public void advancedClusterReactive() {
+    void advancedClusterReactive() {
         StatefulRedisClusterConnection<String, String> statefulConnection = clusterClient.connect();
         RedisURI uri = clusterClient.getPartitions().getPartition(0).getUri();
         statefulConnection.getConnection(uri.getHost(), uri.getPort()).reactive();
@@ -170,13 +170,13 @@ public class ConnectMethodsIntegrationTests {
     }
 
     @Test
-    public void advancedClusterStateful() {
+    void advancedClusterStateful() {
         clusterClient.connect().close();
     }
 
     // Cluster node selection
     @Test
-    public void nodeSelectionClusterAsync() {
+    void nodeSelectionClusterAsync() {
         StatefulRedisClusterConnection<String, String> statefulConnection = clusterClient.connect();
         AsyncNodeSelection<String, String> masters = statefulConnection.async().masters();
         statefulConnection.close();

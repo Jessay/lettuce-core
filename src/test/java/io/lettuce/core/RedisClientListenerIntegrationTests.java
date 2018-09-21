@@ -15,8 +15,6 @@
  */
 package io.lettuce.core;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import io.lettuce.test.LettuceExtension;
@@ -27,7 +25,7 @@ import io.lettuce.test.LettuceExtension;
  * @author Mark Paluch
  */
 @ExtendWith(LettuceExtension.class)
-public class RedisClientListenerIntegrationTests extends TestSupport {
+class RedisClientListenerIntegrationTests extends TestSupport {
 
 
 }

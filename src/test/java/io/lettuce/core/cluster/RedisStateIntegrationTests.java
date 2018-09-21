@@ -25,13 +25,13 @@ import javax.inject.Inject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import io.lettuce.test.LettuceExtension;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.models.command.CommandDetail;
 import io.lettuce.core.models.command.CommandDetailParser;
 import io.lettuce.core.protocol.CommandType;
 import io.lettuce.core.protocol.ProtocolKeyword;
+import io.lettuce.test.LettuceExtension;
 
 /**
  * @author Mark Paluch
@@ -42,12 +42,12 @@ public class RedisStateIntegrationTests {
     private final RedisCommands<String, String> redis;
 
     @Inject
-    public RedisStateIntegrationTests(StatefulRedisConnection<String, String> connection) {
+    RedisStateIntegrationTests(StatefulRedisConnection<String, String> connection) {
         this.redis = connection.sync();
     }
 
     @Test
-    public void shouldDiscoverCommands() {
+    void shouldDiscoverCommands() {
 
         List<CommandDetail> commandDetails = CommandDetailParser.parse(redis.command());
         RedisState state = new RedisState(commandDetails);

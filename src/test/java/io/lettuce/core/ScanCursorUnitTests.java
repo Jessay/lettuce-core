@@ -23,22 +23,22 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Mark Paluch
  */
-public class ScanCursorUnitTests {
+class ScanCursorUnitTests {
 
     @Test
-    public void testFactory() {
+    void testFactory() {
         ScanCursor scanCursor = ScanCursor.of("dummy");
         assertThat(scanCursor.getCursor()).isEqualTo("dummy");
         assertThat(scanCursor.isFinished()).isFalse();
     }
 
     @Test
-    public void setCursorOnImmutableInstance() {
+    void setCursorOnImmutableInstance() {
         assertThatThrownBy(() -> ScanCursor.INITIAL.setCursor("")).isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
-    public void setFinishedOnImmutableInstance() {
+    void setFinishedOnImmutableInstance() {
         assertThatThrownBy(() -> ScanCursor.INITIAL.setFinished(false)).isInstanceOf(UnsupportedOperationException.class);
     }
 }

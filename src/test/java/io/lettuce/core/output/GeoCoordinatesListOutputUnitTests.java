@@ -28,17 +28,17 @@ import io.lettuce.core.codec.Utf8StringCodec;
 /**
  * @author Mark Paluch
  */
-public class GeoCoordinatesListOutputUnitTests {
+class GeoCoordinatesListOutputUnitTests {
 
     private GeoCoordinatesListOutput<?, ?> sut = new GeoCoordinatesListOutput<>(new Utf8StringCodec());
 
     @Test
-    public void setIntegerShouldFail() {
+    void setIntegerShouldFail() {
         assertThatThrownBy(() -> sut.set(123L)).isInstanceOf(IllegalStateException. class);
     }
 
     @Test
-    public void commandOutputCorrectlyDecoded() {
+    void commandOutputCorrectlyDecoded() {
 
         sut.multi(2);
         sut.set(ByteBuffer.wrap("1.234".getBytes()));

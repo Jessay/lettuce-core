@@ -26,28 +26,28 @@ import javax.inject.Inject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import io.lettuce.test.LettuceExtension;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
+import io.lettuce.test.LettuceExtension;
 
 /**
  * @author Mark Paluch
  */
 @SuppressWarnings("rawtypes")
 @ExtendWith(LettuceExtension.class)
-public class PipeliningIntegrationTests extends TestSupport {
+class PipeliningIntegrationTests extends TestSupport {
 
     private final RedisClient client;
     private final StatefulRedisConnection<String, String> connection;
 
     @Inject
-    public PipeliningIntegrationTests(RedisClient client, StatefulRedisConnection<String, String> connection) {
+    PipeliningIntegrationTests(RedisClient client, StatefulRedisConnection<String, String> connection) {
         this.client = client;
         this.connection = connection;
     }
 
     @Test
-    public void basic() {
+    void basic() {
 
         StatefulRedisConnection<String, String> connection = client.connect();
         connection.setAutoFlushCommands(false);
@@ -66,14 +66,14 @@ public class PipeliningIntegrationTests extends TestSupport {
         connection.close();
     }
 
-    protected void verifyExecuted(int iterations) {
+    void verifyExecuted(int iterations) {
         for (int i = 0; i < iterations; i++) {
             assertThat(connection.sync().get(key(i))).as("Key " + key(i) + " must be " + value(i)).isEqualTo(value(i));
         }
     }
 
     @Test
-    public void setAutoFlushTrueDoesNotFlush() {
+    void setAutoFlushTrueDoesNotFlush() {
 
         StatefulRedisConnection<String, String> connection = client.connect();
         connection.setAutoFlushCommands(false);
@@ -94,13 +94,13 @@ public class PipeliningIntegrationTests extends TestSupport {
         connection.close();
     }
 
-    protected void verifyNotExecuted(int iterations) {
+    void verifyNotExecuted(int iterations) {
         for (int i = 0; i < iterations; i++) {
             assertThat(connection.sync().get(key(i))).as("Key " + key(i) + " must be null").isNull();
         }
     }
 
-    protected List<RedisFuture<?>> triggerSet(RedisAsyncCommands<String, String> connection, int iterations) {
+    List<RedisFuture<?>> triggerSet(RedisAsyncCommands<String, String> connection, int iterations) {
         List<RedisFuture<?>> futures = new ArrayList<>();
         for (int i = 0; i < iterations; i++) {
             futures.add(connection.set(key(i), value(i)));
@@ -108,11 +108,11 @@ public class PipeliningIntegrationTests extends TestSupport {
         return futures;
     }
 
-    protected String value(int i) {
+    String value(int i) {
         return value + "-" + i;
     }
 
-    protected String key(int i) {
+    String key(int i) {
         return key + "-" + i;
     }
 }

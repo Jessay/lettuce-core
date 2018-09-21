@@ -33,7 +33,7 @@ import io.lettuce.core.cluster.models.partitions.RedisClusterNode;
 /**
  * @author Mark Paluch
  */
-public class HealthyMajorityPartitionsConsensusUnitTests {
+class HealthyMajorityPartitionsConsensusUnitTests {
 
     private RedisClusterNode node1 = createNode(1);
     private RedisClusterNode node2 = createNode(2);
@@ -42,7 +42,7 @@ public class HealthyMajorityPartitionsConsensusUnitTests {
     private RedisClusterNode node5 = createNode(5);
 
     @Test
-    public void sameSharedViewShouldDecideForHealthyNodes() {
+    void sameSharedViewShouldDecideForHealthyNodes() {
 
         Partitions partitions1 = createPartitions(node1, node2, node3, node4, node5);
         Partitions partitions2 = createPartitions(node1, node2, node3, node4, node5);
@@ -56,7 +56,7 @@ public class HealthyMajorityPartitionsConsensusUnitTests {
     }
 
     @Test
-    public void unhealthyNodeViewShouldDecideForHealthyNodes() {
+    void unhealthyNodeViewShouldDecideForHealthyNodes() {
 
         Partitions partitions1 = createPartitions(node1, node2);
         Partitions partitions2 = createPartitions(node2, node3, node4, node5);
@@ -75,7 +75,7 @@ public class HealthyMajorityPartitionsConsensusUnitTests {
     }
 
     @Test
-    public void splitNodeViewShouldDecideForHealthyNodes() {
+    void splitNodeViewShouldDecideForHealthyNodes() {
 
         Partitions partitions1 = createPartitions(node1, node2, node3);
         Partitions partitions2 = createPartitions();
@@ -93,7 +93,7 @@ public class HealthyMajorityPartitionsConsensusUnitTests {
     }
 
     @Test
-    public void splitUnhealthyNodeViewShouldDecideForHealthyNodes() {
+    void splitUnhealthyNodeViewShouldDecideForHealthyNodes() {
 
         Partitions partitions1 = createPartitions(node1, node2);
         Partitions partitions2 = createPartitions(node2, node3);

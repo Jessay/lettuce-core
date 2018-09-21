@@ -24,10 +24,10 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Mark Paluch
  */
-public class DefaultDefaultCommandLatencyCollectorOptionsUnitTests {
+class DefaultDefaultCommandLatencyCollectorOptionsUnitTests {
 
     @Test
-    public void testDefault() {
+    void testDefault() {
 
         DefaultCommandLatencyCollectorOptions sut = DefaultCommandLatencyCollectorOptions.create();
 
@@ -36,7 +36,7 @@ public class DefaultDefaultCommandLatencyCollectorOptionsUnitTests {
     }
 
     @Test
-    public void testDisabled() {
+    void testDisabled() {
 
         DefaultCommandLatencyCollectorOptions sut = DefaultCommandLatencyCollectorOptions.disabled();
 
@@ -44,7 +44,7 @@ public class DefaultDefaultCommandLatencyCollectorOptionsUnitTests {
     }
 
     @Test
-    public void testBuilder() {
+    void testBuilder() {
 
         DefaultCommandLatencyCollectorOptions sut = DefaultCommandLatencyCollectorOptions.builder()
                 .targetUnit(TimeUnit.HOURS).targetPercentiles(new double[] { 1, 2, 3 }).build();

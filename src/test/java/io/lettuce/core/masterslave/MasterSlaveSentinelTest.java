@@ -154,7 +154,7 @@ public class MasterSlaveSentinelTest extends AbstractSentinelTest {
         assertThat(channels.size()).isEqualTo(count);
     }
 
-    protected void assertThatServerIs(String server, String expectation) {
+    private void assertThatServerIs(String server, String expectation) {
         Matcher matcher = pattern.matcher(server);
 
         assertThat(matcher.find()).isTrue();

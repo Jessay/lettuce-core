@@ -25,28 +25,28 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Mark Paluch
  */
-public class ExponentialDelayUnitTests {
+class ExponentialDelayUnitTests {
 
     @Test
-    public void shouldNotCreateIfLowerBoundIsNegative() {
+    void shouldNotCreateIfLowerBoundIsNegative() {
         assertThatThrownBy(() -> Delay.exponential(-1, 100, TimeUnit.MILLISECONDS, 10)).isInstanceOf(
                 IllegalArgumentException.class);
     }
 
     @Test
-    public void shouldNotCreateIfLowerBoundIsSameAsUpperBound() {
+    void shouldNotCreateIfLowerBoundIsSameAsUpperBound() {
         assertThatThrownBy(() -> Delay.exponential(100, 100, TimeUnit.MILLISECONDS, 10)).isInstanceOf(
                 IllegalArgumentException.class);
     }
 
     @Test
-    public void shouldNotCreateIfPowerIsOne() {
+    void shouldNotCreateIfPowerIsOne() {
         assertThatThrownBy(() -> Delay.exponential(100, 1000, TimeUnit.MILLISECONDS, 1)).isInstanceOf(
                 IllegalArgumentException.class);
     }
 
     @Test
-    public void negativeAttemptShouldReturnZero() {
+    void negativeAttemptShouldReturnZero() {
 
         Delay delay = Delay.exponential();
 
@@ -54,7 +54,7 @@ public class ExponentialDelayUnitTests {
     }
 
     @Test
-    public void zeroShouldReturnZero() {
+    void zeroShouldReturnZero() {
 
         Delay delay = Delay.exponential();
 
@@ -62,7 +62,7 @@ public class ExponentialDelayUnitTests {
     }
 
     @Test
-    public void testDefaultDelays() {
+    void testDefaultDelays() {
 
         Delay delay = Delay.exponential();
 
@@ -87,7 +87,7 @@ public class ExponentialDelayUnitTests {
     }
 
     @Test
-    public void testPow10Delays() {
+    void testPow10Delays() {
 
         Delay delay = Delay.exponential(100, 10000, TimeUnit.MILLISECONDS, 10);
 

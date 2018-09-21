@@ -35,12 +35,12 @@ import io.lettuce.core.models.command.CommandDetail;
 /**
  * @author Mark Paluch
  */
-public class DefaultCommandMethodVerifierUnitTests {
+class DefaultCommandMethodVerifierUnitTests {
 
     private DefaultCommandMethodVerifier sut;
 
     @BeforeEach
-    public void before() {
+    void before() {
 
         CommandDetail mget = new CommandDetail("mget", -2, null, 0, 0, 0);
         CommandDetail randomkey = new CommandDetail("randomkey", 1, null, 0, 0, 0);
@@ -52,7 +52,7 @@ public class DefaultCommandMethodVerifierUnitTests {
     }
 
     @Test
-    public void misspelledName() {
+    void misspelledName() {
 
         try {
             validateMethod("megt");
@@ -63,7 +63,7 @@ public class DefaultCommandMethodVerifierUnitTests {
     }
 
     @Test
-    public void tooFewAtLeastParameters() {
+    void tooFewAtLeastParameters() {
 
         try {
             validateMethod("mget");
@@ -75,7 +75,7 @@ public class DefaultCommandMethodVerifierUnitTests {
     }
 
     @Test
-    public void shouldPassWithCorrectParameterCount() {
+    void shouldPassWithCorrectParameterCount() {
 
         validateMethod("mget", String.class);
         validateMethod("randomkey");
@@ -85,7 +85,7 @@ public class DefaultCommandMethodVerifierUnitTests {
     }
 
     @Test
-    public void tooManyParameters() {
+    void tooManyParameters() {
 
         try {
             validateMethod("rpop", String.class, String.class);
@@ -96,7 +96,7 @@ public class DefaultCommandMethodVerifierUnitTests {
     }
 
     @Test
-    public void methodDoesNotAcceptParameters() {
+    void methodDoesNotAcceptParameters() {
 
         try {
             validateMethod("randomkey", String.class);
@@ -114,7 +114,7 @@ public class DefaultCommandMethodVerifierUnitTests {
         sut.validate(new CommandSegments(Collections.singletonList(CommandSegment.constant(methodName))), commandMethod);
     }
 
-    static interface MyInterface {
+    private static interface MyInterface {
 
         void megt();
 

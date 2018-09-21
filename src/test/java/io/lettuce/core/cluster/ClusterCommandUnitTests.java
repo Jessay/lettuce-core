@@ -25,9 +25,7 @@ import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import io.lettuce.core.RedisChannelWriter;
@@ -41,29 +39,29 @@ import io.lettuce.core.protocol.CommandType;
  * @author Mark Paluch
  */
 @ExtendWith(MockitoExtension.class)
-public class ClusterCommandUnitTests {
+class ClusterCommandUnitTests {
 
     @Mock
     private RedisChannelWriter writerMock;
 
     private ClusterCommand<String, String, String> sut;
-    private Command<String, String, String> command = new Command<String, String, String>(CommandType.TYPE,
-            new StatusOutput<String, String>(new Utf8StringCodec()), null);
+    private Command<String, String, String> command = new Command<>(CommandType.TYPE,
+            new StatusOutput<>(new Utf8StringCodec()), null);
 
     @BeforeEach
-    public void before() throws Exception {
-        sut = new ClusterCommand<String, String, String>(command, writerMock, 1);
+    void before() throws Exception {
+        sut = new ClusterCommand<>(command, writerMock, 1);
     }
 
     @Test
-    public void testException() throws Exception {
+    void testException() throws Exception {
 
         sut.completeExceptionally(new Exception());
         assertThat(sut.isCompleted());
     }
 
     @Test
-    public void testCancel() throws Exception {
+    void testCancel() throws Exception {
 
         assertThat(command.isCancelled()).isFalse();
         sut.cancel();
@@ -71,7 +69,7 @@ public class ClusterCommandUnitTests {
     }
 
     @Test
-    public void testComplete() throws Exception {
+    void testComplete() throws Exception {
 
         sut.complete();
         assertThat(sut.isCompleted()).isTrue();
@@ -79,7 +77,7 @@ public class ClusterCommandUnitTests {
     }
 
     @Test
-    public void testRedirect() throws Exception {
+    void testRedirect() throws Exception {
 
         sut.getOutput().setError("MOVED 1234 127.0.0.1:1000");
         sut.complete();
@@ -90,7 +88,7 @@ public class ClusterCommandUnitTests {
     }
 
     @Test
-    public void testRedirectLimit() throws Exception {
+    void testRedirectLimit() throws Exception {
 
         sut.getOutput().setError("MOVED 1234 127.0.0.1:1000");
         sut.complete();
@@ -104,7 +102,7 @@ public class ClusterCommandUnitTests {
     }
 
     @Test
-    public void testCompleteListener() throws Exception {
+    void testCompleteListener() throws Exception {
 
         final List<String> someList = new ArrayList<>();
 

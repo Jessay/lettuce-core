@@ -38,22 +38,22 @@ import org.springframework.util.SocketUtils;
 import org.springframework.util.StopWatch;
 
 import reactor.core.publisher.Mono;
-import io.lettuce.test.LettuceExtension;
 import io.lettuce.core.ConnectionFuture;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.SocketOptions;
-import io.lettuce.test.settings.TestSettings;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.cluster.ClusterNodeConnectionFactory.ConnectionKey;
 import io.lettuce.core.codec.StringCodec;
 import io.lettuce.core.internal.AsyncConnectionProvider;
+import io.lettuce.test.LettuceExtension;
+import io.lettuce.test.settings.TestSettings;
 import io.netty.channel.ConnectTimeoutException;
 
 /**
  * @author Mark Paluch
  */
 @ExtendWith(LettuceExtension.class)
-public class AsyncConnectionProviderIntegrationTests {
+class AsyncConnectionProviderIntegrationTests {
 
     private final RedisClusterClient redisClient;
     private ServerSocket serverSocket;
@@ -62,12 +62,12 @@ public class AsyncConnectionProviderIntegrationTests {
     private AsyncConnectionProvider<ConnectionKey, StatefulRedisConnection<String, String>, ConnectionFuture<StatefulRedisConnection<String, String>>> sut;
 
     @Inject
-    public AsyncConnectionProviderIntegrationTests(RedisClusterClient redisClient) {
+    AsyncConnectionProviderIntegrationTests(RedisClusterClient redisClient) {
         this.redisClient = redisClient;
     }
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
 
         serverSocket = new ServerSocket(SocketUtils.findAvailableTcpPort(), 1);
 
@@ -91,12 +91,12 @@ public class AsyncConnectionProviderIntegrationTests {
     }
 
     @AfterEach
-    public void after() throws Exception {
+    void after() throws Exception {
         serverSocket.close();
     }
 
     @Test
-    public void shouldCreateConnection() throws IOException {
+    void shouldCreateConnection() throws IOException {
 
         ConnectionKey connectionKey = new ConnectionKey(ClusterConnectionProvider.Intent.READ, TestSettings.host(),
                 TestSettings.port());
@@ -108,7 +108,7 @@ public class AsyncConnectionProviderIntegrationTests {
     }
 
     @Test
-    public void shouldMaintainConnectionCount() throws IOException {
+    void shouldMaintainConnectionCount() throws IOException {
 
         ConnectionKey connectionKey = new ConnectionKey(ClusterConnectionProvider.Intent.READ, TestSettings.host(),
                 TestSettings.port());
@@ -124,7 +124,7 @@ public class AsyncConnectionProviderIntegrationTests {
     }
 
     @Test
-    public void shouldCloseConnectionByKey() throws IOException {
+    void shouldCloseConnectionByKey() throws IOException {
 
         ConnectionKey connectionKey = new ConnectionKey(ClusterConnectionProvider.Intent.READ, TestSettings.host(),
                 TestSettings.port());
@@ -139,7 +139,7 @@ public class AsyncConnectionProviderIntegrationTests {
     }
 
     @Test
-    public void shouldCloseConnections() throws IOException {
+    void shouldCloseConnections() throws IOException {
 
         ConnectionKey connectionKey = new ConnectionKey(ClusterConnectionProvider.Intent.READ, TestSettings.host(),
                 TestSettings.port());
@@ -154,7 +154,7 @@ public class AsyncConnectionProviderIntegrationTests {
     }
 
     @Test
-    public void connectShouldFail() throws Exception {
+    void connectShouldFail() throws Exception {
 
         Socket socket = new Socket(TestSettings.host(), serverSocket.getLocalPort());
 
@@ -192,7 +192,7 @@ public class AsyncConnectionProviderIntegrationTests {
     }
 
     @Test
-    public void connectShouldFailConcurrently() throws Exception {
+    void connectShouldFailConcurrently() throws Exception {
 
         Socket socket = new Socket(TestSettings.host(), serverSocket.getLocalPort());
 
@@ -237,7 +237,7 @@ public class AsyncConnectionProviderIntegrationTests {
     }
 
     @Test
-    public void shouldCloseAsync() throws Exception {
+    void shouldCloseAsync() throws Exception {
 
         assumeTrue(System.getProperty("os.name").toLowerCase().contains("mac"));
 

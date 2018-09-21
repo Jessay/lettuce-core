@@ -22,20 +22,20 @@ import javax.inject.Inject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import io.lettuce.test.LettuceExtension;
 import io.lettuce.core.TestSupport;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.codec.ByteArrayCodec;
+import io.lettuce.test.LettuceExtension;
 
 /**
  * @author Mark Paluch
  */
 @ExtendWith(LettuceExtension.class)
-public class ByteCodecClusterTest extends TestSupport {
+class ByteCodecClusterTest extends TestSupport {
 
     @Test
     @Inject
-    public void testByteCodec(RedisClusterClient clusterClient)  {
+    void testByteCodec(RedisClusterClient clusterClient) {
 
         StatefulRedisClusterConnection<byte[], byte[]> connection = clusterClient.connect(new ByteArrayCodec());
 

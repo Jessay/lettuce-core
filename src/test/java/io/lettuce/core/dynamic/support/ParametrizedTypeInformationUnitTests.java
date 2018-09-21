@@ -26,10 +26,10 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Mark Paluch
  */
-public class ParametrizedTypeInformationUnitTests {
+class ParametrizedTypeInformationUnitTests {
 
     @Test
-    public void isAssignableShouldConsiderExactType() {
+    void isAssignableShouldConsiderExactType() {
 
         TypeInformation<Object> target = ClassTypeInformation
                 .fromReturnTypeOf(ReflectionUtils.findMethod(TestType.class, "exactNumber"));
@@ -40,7 +40,7 @@ public class ParametrizedTypeInformationUnitTests {
     }
 
     @Test
-    public void isAssignableShouldConsiderCompatibleType() {
+    void isAssignableShouldConsiderCompatibleType() {
 
         TypeInformation<Object> target = ClassTypeInformation
                 .fromReturnTypeOf(ReflectionUtils.findMethod(TestType.class, "collectionOfNumber"));
@@ -51,7 +51,7 @@ public class ParametrizedTypeInformationUnitTests {
     }
 
     @Test
-    public void isAssignableShouldConsiderWildcardOfNumberType() {
+    void isAssignableShouldConsiderWildcardOfNumberType() {
 
         TypeInformation<Object> target = ClassTypeInformation
                 .fromReturnTypeOf(ReflectionUtils.findMethod(TestType.class, "numberOrSubtype"));
@@ -62,7 +62,7 @@ public class ParametrizedTypeInformationUnitTests {
     }
 
     @Test
-    public void isAssignableShouldConsiderWildcard() {
+    void isAssignableShouldConsiderWildcard() {
 
         TypeInformation<Object> target = ClassTypeInformation
                 .fromReturnTypeOf(ReflectionUtils.findMethod(TestType.class, "anything"));
@@ -73,7 +73,7 @@ public class ParametrizedTypeInformationUnitTests {
     }
 
     @Test
-    public void returnsNullMapValueTypeForNonMapProperties() {
+    void returnsNullMapValueTypeForNonMapProperties() {
 
         TypeInformation<?> valueType = ClassTypeInformation.from(Bar.class).getSuperTypeInformation(List.class);
         TypeInformation<?> mapValueType = valueType.getMapValueType();
@@ -83,7 +83,7 @@ public class ParametrizedTypeInformationUnitTests {
     }
 
     @Test
-    public void isAssignableShouldConsiderNestedParameterTypes() {
+    void isAssignableShouldConsiderNestedParameterTypes() {
 
         TypeInformation<Object> target = ClassTypeInformation
                 .fromReturnTypeOf(ReflectionUtils.findMethod(TestType.class, "collectionOfIterableOfNumber"));
@@ -93,11 +93,11 @@ public class ParametrizedTypeInformationUnitTests {
         assertThat(target.isAssignableFrom(ClassTypeInformation.from(ListOfSetOfNumber.class))).isFalse();
     }
 
-    interface Bar extends List<String> {
+    private interface Bar extends List<String> {
 
     }
 
-    static interface TestType {
+    private static interface TestType {
 
         Collection<Number> collectionOfNumber();
 
@@ -110,7 +110,7 @@ public class ParametrizedTypeInformationUnitTests {
         List<? extends Number> numberOrSubtype();
     }
 
-    static interface ListOfNumber extends List<Number> {
+    private static interface ListOfNumber extends List<Number> {
 
     }
 
@@ -118,23 +118,23 @@ public class ParametrizedTypeInformationUnitTests {
 
     }
 
-    static interface ListOfSetOfNumber extends List<Set<Number>> {
+    private static interface ListOfSetOfNumber extends List<Set<Number>> {
 
     }
 
-    static interface ListOfIterableOfInteger extends List<Iterable<Integer>> {
+    private static interface ListOfIterableOfInteger extends List<Iterable<Integer>> {
 
     }
 
-    static interface ListOfListOfNumber extends List<List<Number>> {
+    private static interface ListOfListOfNumber extends List<List<Number>> {
 
     }
 
-    static interface ListOfString extends List<String> {
+    private static interface ListOfString extends List<String> {
 
     }
 
-    static interface ListOfInteger extends List<Integer> {
+    private static interface ListOfInteger extends List<Integer> {
 
     }
 }

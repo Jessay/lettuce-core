@@ -28,24 +28,24 @@ import io.lettuce.core.codec.Utf8StringCodec;
 /**
  * @author Mark Paluch
  */
-public class ScoredValueListOutputUnitTests {
+class ScoredValueListOutputUnitTests {
 
     private ScoredValueListOutput<String, String> sut = new ScoredValueListOutput<>(new Utf8StringCodec());
 
     @Test
-    public void defaultSubscriberIsSet() {
+    void defaultSubscriberIsSet() {
 
         sut.multi(1);
         assertThat(sut.getSubscriber()).isNotNull().isInstanceOf(ListSubscriber.class);
     }
 
     @Test
-    public void setIntegerShouldFail() {
+    void setIntegerShouldFail() {
         assertThatThrownBy(() -> sut.set(123L)).isInstanceOf(IllegalStateException. class);
     }
 
     @Test
-    public void commandOutputCorrectlyDecoded() {
+    void commandOutputCorrectlyDecoded() {
 
         sut.multi(1);
         sut.set(ByteBuffer.wrap("key".getBytes()));

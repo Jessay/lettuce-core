@@ -16,23 +16,22 @@
 package io.lettuce.core.cluster.commands;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import io.lettuce.test.condition.EnabledOnCommand;
-import io.lettuce.test.resource.TestClientResources;
 import io.lettuce.core.AbstractRedisClientTest;
-import io.lettuce.test.resource.FastShutdown;
 import io.lettuce.core.RedisURI;
-import io.lettuce.test.settings.TestSettings;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.cluster.ClusterTestUtil;
 import io.lettuce.core.cluster.RedisClusterClient;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
+import io.lettuce.test.condition.EnabledOnCommand;
+import io.lettuce.test.resource.FastShutdown;
+import io.lettuce.test.resource.TestClientResources;
+import io.lettuce.test.settings.TestSettings;
 
 /**
  * @author Mark Paluch
@@ -43,18 +42,18 @@ public class KeyClusterCommandTest extends AbstractRedisClientTest {
     private StatefulRedisClusterConnection<String, String> clusterConnection;
 
     @BeforeAll
-    public static void setupClient() {
+    static void setupClient() {
         redisClusterClient = RedisClusterClient.create(TestClientResources.get(),
                 RedisURI.Builder.redis(TestSettings.host(), TestSettings.port(900)).build());
     }
 
     @AfterAll
-    public static void closeClient() {
+    static void closeClient() {
         FastShutdown.shutdown(redisClusterClient);
     }
 
     @BeforeEach
-    public void openConnection() {
+    void openConnection() {
         redis = connect();
         ClusterTestUtil.flushDatabaseOfAllNodes(clusterConnection);
     }
@@ -67,7 +66,7 @@ public class KeyClusterCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void del() {
+    void del() {
 
         redis.set(key, "value");
         redis.set("a", "value");
@@ -80,7 +79,7 @@ public class KeyClusterCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void exists() {
+    void exists() {
 
         assertThat(redis.exists(key, "a", "b")).isEqualTo(0);
 
@@ -93,7 +92,7 @@ public class KeyClusterCommandTest extends AbstractRedisClientTest {
 
     @Test
     @EnabledOnCommand("TOUCH")
-    public void touch() {
+    void touch() {
 
         redis.set(key, "value");
         redis.set("a", "value");
@@ -105,7 +104,7 @@ public class KeyClusterCommandTest extends AbstractRedisClientTest {
 
     @Test
     @EnabledOnCommand("UNLINK")
-    public void unlink() {
+    void unlink() {
 
         redis.set(key, "value");
         redis.set("a", "value");

@@ -34,27 +34,27 @@ import io.lettuce.core.output.*;
 /**
  * @author Mark Paluch
  */
-public class OutputRegistryCommandOutputFactoryResolverUnitTests {
+class OutputRegistryCommandOutputFactoryResolverUnitTests {
 
     private OutputRegistryCommandOutputFactoryResolver resolver = new OutputRegistryCommandOutputFactoryResolver(
             new OutputRegistry());
 
     @Test
-    public void shouldResolveStringListOutput() {
+    void shouldResolveStringListOutput() {
 
         assertThat(getCommandOutput("stringList")).isInstanceOf(KeyListOutput.class);
         assertThat(getCommandOutput("stringIterable")).isInstanceOf(KeyListOutput.class);
     }
 
     @Test
-    public void shouldResolveVoidOutput() {
+    void shouldResolveVoidOutput() {
 
         assertThat(getCommandOutput("voidMethod")).isInstanceOf(VoidOutput.class);
         assertThat(getCommandOutput("voidWrapper")).isInstanceOf(VoidOutput.class);
     }
 
     @Test
-    public void shouldResolveStringValueListOutput() {
+    void shouldResolveStringValueListOutput() {
 
         CommandOutput<?, ?, ?> commandOutput = getCommandOutput("stringValueCollection");
 
@@ -62,7 +62,7 @@ public class OutputRegistryCommandOutputFactoryResolverUnitTests {
     }
 
     @Test
-    public void shouldResolveStringScoredValueListOutput() {
+    void shouldResolveStringScoredValueListOutput() {
 
         CommandOutput<?, ?, ?> commandOutput = getCommandOutput("stringScoredValueList");
 
@@ -70,7 +70,7 @@ public class OutputRegistryCommandOutputFactoryResolverUnitTests {
     }
 
     @Test
-    public void shouldResolveGeoCoordinatesValueOutput() {
+    void shouldResolveGeoCoordinatesValueOutput() {
 
         CommandOutput<?, ?, ?> commandOutput = getCommandOutput("geoCoordinatesValueList");
 
@@ -78,7 +78,7 @@ public class OutputRegistryCommandOutputFactoryResolverUnitTests {
     }
 
     @Test
-    public void shouldResolveByteArrayOutput() {
+    void shouldResolveByteArrayOutput() {
 
         CommandOutput<?, ?, ?> commandOutput = getCommandOutput("bytes");
 
@@ -86,7 +86,7 @@ public class OutputRegistryCommandOutputFactoryResolverUnitTests {
     }
 
     @Test
-    public void shouldResolveBooleanOutput() {
+    void shouldResolveBooleanOutput() {
 
         CommandOutput<?, ?, ?> commandOutput = getCommandOutput("bool");
 
@@ -94,7 +94,7 @@ public class OutputRegistryCommandOutputFactoryResolverUnitTests {
     }
 
     @Test
-    public void shouldResolveBooleanWrappedOutput() {
+    void shouldResolveBooleanWrappedOutput() {
 
         CommandOutput<?, ?, ?> commandOutput = getCommandOutput("boolWrapper");
 
@@ -102,7 +102,7 @@ public class OutputRegistryCommandOutputFactoryResolverUnitTests {
     }
 
     @Test
-    public void shouldResolveBooleanListOutput() {
+    void shouldResolveBooleanListOutput() {
 
         CommandOutput<?, ?, ?> commandOutput = getCommandOutput("boolList");
 
@@ -110,7 +110,7 @@ public class OutputRegistryCommandOutputFactoryResolverUnitTests {
     }
 
     @Test
-    public void shouldResolveListOfMapsOutput() {
+    void shouldResolveListOfMapsOutput() {
 
         CommandOutput<?, ?, ?> commandOutput = getCommandOutput("listOfMapsOutput");
 
@@ -118,7 +118,7 @@ public class OutputRegistryCommandOutputFactoryResolverUnitTests {
     }
 
     @Test
-    public void stringValueCollectionIsAssignableFromStringValueListOutput() {
+    void stringValueCollectionIsAssignableFromStringValueListOutput() {
 
         OutputSelector selector = getOutputSelector("stringValueCollection");
 
@@ -128,7 +128,7 @@ public class OutputRegistryCommandOutputFactoryResolverUnitTests {
     }
 
     @Test
-    public void stringWildcardValueCollectionIsAssignableFromOutputs() {
+    void stringWildcardValueCollectionIsAssignableFromOutputs() {
 
         OutputSelector selector = getOutputSelector("stringValueCollection");
 
@@ -140,7 +140,7 @@ public class OutputRegistryCommandOutputFactoryResolverUnitTests {
 
     }
 
-    protected CommandOutput<?, ?, ?> getCommandOutput(String methodName) {
+    CommandOutput<?, ?, ?> getCommandOutput(String methodName) {
 
         OutputSelector outputSelector = getOutputSelector(methodName);
         CommandOutputFactory factory = resolver.resolveCommandOutput(outputSelector);

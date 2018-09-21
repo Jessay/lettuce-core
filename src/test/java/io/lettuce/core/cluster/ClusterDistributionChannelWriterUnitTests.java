@@ -31,10 +31,10 @@ import io.lettuce.core.protocol.RedisCommand;
 /**
  * @author Mark Paluch
  */
-public class ClusterDistributionChannelWriterUnitTests {
+class ClusterDistributionChannelWriterUnitTests {
 
     @Test
-    public void shouldParseAskTargetCorrectly() {
+    void shouldParseAskTargetCorrectly() {
 
         HostAndPort askTarget = ClusterDistributionChannelWriter.getAskTarget("ASK 1234 127.0.0.1:6381");
 
@@ -43,7 +43,7 @@ public class ClusterDistributionChannelWriterUnitTests {
     }
 
     @Test
-    public void shouldParseIPv6AskTargetCorrectly() {
+    void shouldParseIPv6AskTargetCorrectly() {
 
         HostAndPort askTarget = ClusterDistributionChannelWriter.getAskTarget("ASK 1234 1:2:3:4::6:6381");
 
@@ -52,7 +52,7 @@ public class ClusterDistributionChannelWriterUnitTests {
     }
 
     @Test
-    public void shouldParseMovedTargetCorrectly() {
+    void shouldParseMovedTargetCorrectly() {
 
         HostAndPort moveTarget = ClusterDistributionChannelWriter.getMoveTarget("MOVED 1234 127.0.0.1:6381");
 
@@ -61,7 +61,7 @@ public class ClusterDistributionChannelWriterUnitTests {
     }
 
     @Test
-    public void shouldParseIPv6MovedTargetCorrectly() {
+    void shouldParseIPv6MovedTargetCorrectly() {
 
         HostAndPort moveTarget = ClusterDistributionChannelWriter.getMoveTarget("MOVED 1234 1:2:3:4::6:6381");
 
@@ -70,7 +70,7 @@ public class ClusterDistributionChannelWriterUnitTests {
     }
 
     @Test
-    public void shouldReturnIntentForWriteCommand() {
+    void shouldReturnIntentForWriteCommand() {
 
         RedisCommand<String, String, String> set = new Command<>(CommandType.SET, null);
         RedisCommand<String, String, String> mset = new Command<>(CommandType.MSET, null);
@@ -81,13 +81,13 @@ public class ClusterDistributionChannelWriterUnitTests {
     }
 
     @Test
-    public void shouldReturnDefaultIntentForNoCommands() {
+    void shouldReturnDefaultIntentForNoCommands() {
 
         assertThat(ClusterDistributionChannelWriter.getIntent(Collections.emptyList())).isEqualTo(Intent.WRITE);
     }
 
     @Test
-    public void shouldReturnIntentForReadCommand() {
+    void shouldReturnIntentForReadCommand() {
 
         RedisCommand<String, String, String> get = new Command<>(CommandType.GET, null);
         RedisCommand<String, String, String> mget = new Command<>(CommandType.MGET, null);
@@ -98,7 +98,7 @@ public class ClusterDistributionChannelWriterUnitTests {
     }
 
     @Test
-    public void shouldReturnIntentForMixedCommands() {
+    void shouldReturnIntentForMixedCommands() {
 
         RedisCommand<String, String, String> set = new Command<>(CommandType.SET, null);
         RedisCommand<String, String, String> mget = new Command<>(CommandType.MGET, null);

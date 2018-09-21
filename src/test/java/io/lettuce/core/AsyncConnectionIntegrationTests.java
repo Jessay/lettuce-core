@@ -27,24 +27,24 @@ import javax.inject.Inject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import io.lettuce.test.Futures;
-import io.lettuce.test.LettuceExtension;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
+import io.lettuce.test.Futures;
+import io.lettuce.test.LettuceExtension;
 
 /**
  * @author Will Glozer
  * @author Mark Paluch
  */
 @ExtendWith(LettuceExtension.class)
-public class AsyncConnectionIntegrationTests extends TestSupport {
+class AsyncConnectionIntegrationTests extends TestSupport {
 
     private final RedisClient client;
     private final StatefulRedisConnection<String, String> connection;
     private final RedisAsyncCommands<String, String> async;
 
     @Inject
-    public AsyncConnectionIntegrationTests(RedisClient client, StatefulRedisConnection<String, String> connection) {
+    AsyncConnectionIntegrationTests(RedisClient client, StatefulRedisConnection<String, String> connection) {
         this.client = client;
         this.connection = connection;
         this.async = connection.async();
@@ -52,7 +52,7 @@ public class AsyncConnectionIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void multi() throws Exception {
+    void multi() throws Exception {
         assertThat(async.multi().get()).isEqualTo("OK");
         Future<String> set = async.set(key, value);
         Future<Long> rpush = async.rpush("list", "1", "2");
@@ -67,7 +67,7 @@ public class AsyncConnectionIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void watch() throws Exception {
+    void watch() throws Exception {
         assertThat(async.watch(key).get()).isEqualTo("OK");
 
         async.set(key, value + "X");
@@ -81,7 +81,7 @@ public class AsyncConnectionIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void futureListener() throws Exception {
+    void futureListener() throws Exception {
 
         final List<Object> run = new ArrayList<>();
 
@@ -114,7 +114,7 @@ public class AsyncConnectionIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void futureListenerCompleted() {
+    void futureListenerCompleted() {
 
         final List<Object> run = new ArrayList<>();
 
@@ -138,7 +138,7 @@ public class AsyncConnectionIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void discardCompletesFutures() throws Exception {
+    void discardCompletesFutures() throws Exception {
         async.multi();
         Future<String> set = async.set(key, value);
         async.discard();
@@ -146,7 +146,7 @@ public class AsyncConnectionIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void awaitAll() {
+    void awaitAll() {
 
         Future<String> get1 = async.get(key);
         Future<String> set = async.set(key, value);
@@ -162,7 +162,7 @@ public class AsyncConnectionIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void awaitAllTimeout() {
+    void awaitAllTimeout() {
         Future<KeyValue<String, String>> blpop = async.blpop(1, key);
         assertThat(LettuceFutures.awaitAll(1, TimeUnit.NANOSECONDS, blpop)).isFalse();
     }

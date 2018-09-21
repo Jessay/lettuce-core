@@ -28,9 +28,7 @@ import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -49,9 +47,9 @@ import io.lettuce.core.models.role.RedisInstance;
  */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class MasterSlaveConnectionProviderUnitTests {
+class MasterSlaveConnectionProviderUnitTests {
 
-    public static final Utf8StringCodec CODEC = new Utf8StringCodec();
+    private static final Utf8StringCodec CODEC = new Utf8StringCodec();
 
     private MasterSlaveConnectionProvider<String, String> sut;
 
@@ -61,13 +59,13 @@ public class MasterSlaveConnectionProviderUnitTests {
     @Mock(extraInterfaces = StatefulRedisConnection.class)
     RedisChannelHandler<String, String> channelHandlerMock;
 
-    StatefulRedisConnection<String, String> nodeConnectionMock;
+    private StatefulRedisConnection<String, String> nodeConnectionMock;
 
     @Mock
     RedisCommands<String, String> commandsMock;
 
     @BeforeEach
-    public void before() {
+    void before() {
 
         nodeConnectionMock = (StatefulRedisConnection) channelHandlerMock;
         sut = new MasterSlaveConnectionProvider<>(clientMock, CODEC, RedisURI.create("localhost", 1), Collections.emptyMap());
@@ -76,7 +74,7 @@ public class MasterSlaveConnectionProviderUnitTests {
     }
 
     @Test
-    public void shouldCloseConnections() {
+    void shouldCloseConnections() {
 
         when(channelHandlerMock.closeAsync()).thenReturn(CompletableFuture.completedFuture(null));
 

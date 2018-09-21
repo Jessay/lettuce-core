@@ -16,18 +16,18 @@
 package io.lettuce.core.cluster.commands;
 
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 
-import io.lettuce.test.resource.TestClientResources;
-import io.lettuce.test.resource.FastShutdown;
 import io.lettuce.core.RedisURI;
-import io.lettuce.test.settings.TestSettings;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.cluster.ClusterTestUtil;
 import io.lettuce.core.cluster.RedisClusterClient;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.commands.HashCommandTest;
+import io.lettuce.test.resource.FastShutdown;
+import io.lettuce.test.resource.TestClientResources;
+import io.lettuce.test.settings.TestSettings;
 
 /**
  * @author Mark Paluch
@@ -38,18 +38,18 @@ public class HashClusterCommandTest extends HashCommandTest {
     private StatefulRedisClusterConnection<String, String> clusterConnection;
 
     @BeforeAll
-    public static void setupClient() {
+    static void setupClient() {
         redisClusterClient = RedisClusterClient.create(
                 TestClientResources.get(), RedisURI.Builder.redis(TestSettings.host(), TestSettings.port(900)).build());
     }
 
     @AfterAll
-    public static void closeClient() {
+    static void closeClient() {
         FastShutdown.shutdown(redisClusterClient);
     }
 
     @BeforeEach
-    public void openConnection() {
+    void openConnection() {
         redis = connect();
         ClusterTestUtil.flushDatabaseOfAllNodes(clusterConnection);
     }

@@ -29,7 +29,7 @@ import io.lettuce.test.resource.FastShutdown;
  */
 public abstract class AbstractSentinelTest extends TestSupport {
 
-    public static final String MASTER_ID = "mymaster";
+    protected static final String MASTER_ID = "mymaster";
 
     protected static RedisClient sentinelClient;
     protected RedisSentinelCommands<String, String> sentinel;

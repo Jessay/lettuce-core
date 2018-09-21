@@ -25,10 +25,8 @@ import java.lang.reflect.Method;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.reactivestreams.Publisher;
 
 import io.lettuce.core.codec.StringCodec;
@@ -44,7 +42,7 @@ import io.lettuce.core.protocol.RedisCommand;
  * @author Mark Paluch
  */
 @ExtendWith(MockitoExtension.class)
-public class ReactiveCommandSegmentCommandFactoryUnitTests {
+class ReactiveCommandSegmentCommandFactoryUnitTests {
 
     @Mock
     private CommandOutputFactoryResolver outputFactoryResolver;
@@ -53,12 +51,12 @@ public class ReactiveCommandSegmentCommandFactoryUnitTests {
     private CommandOutputFactory commandOutputFactory;
 
     @BeforeEach
-    public void before() {
+    void before() {
         when(outputFactoryResolver.resolveCommandOutput(any())).thenReturn(commandOutputFactory);
     }
 
     @Test
-    public void commandCreationWithTimeoutShouldFail() {
+    void commandCreationWithTimeoutShouldFail() {
 
         try {
             createCommand("get", ReactiveWithTimeout.class, String.class, Timeout.class);
@@ -68,7 +66,7 @@ public class ReactiveCommandSegmentCommandFactoryUnitTests {
         }
     }
 
-    protected RedisCommand<?, ?, ?> createCommand(String methodName, Class<?> interfaceClass, Class<?>... parameterTypes) {
+    RedisCommand<?, ?, ?> createCommand(String methodName, Class<?> interfaceClass, Class<?>... parameterTypes) {
 
         Method method = ReflectionUtils.findMethod(interfaceClass, methodName, parameterTypes);
 
@@ -83,7 +81,7 @@ public class ReactiveCommandSegmentCommandFactoryUnitTests {
         return factory.createCommand(null);
     }
 
-    static interface ReactiveWithTimeout {
+    private static interface ReactiveWithTimeout {
 
         Publisher<String> get(String key, Timeout timeout);
     }

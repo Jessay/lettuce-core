@@ -30,9 +30,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import io.lettuce.test.Futures;
-import io.lettuce.test.KeysAndValues;
-import io.lettuce.test.LettuceExtension;
 import io.lettuce.core.*;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
@@ -44,19 +41,22 @@ import io.lettuce.core.cluster.api.sync.RedisAdvancedClusterCommands;
 import io.lettuce.core.cluster.api.sync.RedisClusterCommands;
 import io.lettuce.core.cluster.models.partitions.Partitions;
 import io.lettuce.core.cluster.models.partitions.RedisClusterNode;
+import io.lettuce.test.Futures;
+import io.lettuce.test.KeysAndValues;
+import io.lettuce.test.LettuceExtension;
 import io.lettuce.test.ListStreamingAdapter;
-import io.lettuce.test.settings.TestSettings;
 import io.lettuce.test.condition.EnabledOnCommand;
+import io.lettuce.test.settings.TestSettings;
 
 /**
  * @author Mark Paluch
  */
 @SuppressWarnings("rawtypes")
 @ExtendWith(LettuceExtension.class)
-public class AdvancedClusterClientIntegrationTests extends TestSupport {
+class AdvancedClusterClientIntegrationTests extends TestSupport {
 
-    public static final String KEY_ON_NODE_1 = "a";
-    public static final String KEY_ON_NODE_2 = "b";
+    private static final String KEY_ON_NODE_1 = "a";
+    private static final String KEY_ON_NODE_2 = "b";
 
     private final RedisClusterClient clusterClient;
     private final StatefulRedisClusterConnection<String, String> clusterConnection;
@@ -64,7 +64,7 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
     private final RedisAdvancedClusterCommands<String, String> sync;
 
     @Inject
-    public AdvancedClusterClientIntegrationTests(RedisClusterClient clusterClient,
+    AdvancedClusterClientIntegrationTests(RedisClusterClient clusterClient,
             StatefulRedisClusterConnection<String, String> clusterConnection) {
         this.clusterClient = clusterClient;
 
@@ -79,7 +79,7 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void nodeConnections() {
+    void nodeConnections() {
 
         assertThat(clusterClient.getPartitions()).hasSize(4);
 
@@ -92,24 +92,24 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void unknownNodeId() {
+    void unknownNodeId() {
         assertThatThrownBy(() -> async.getConnection("unknown")).isInstanceOf(RedisException.class);
     }
 
     @Test
-    public void invalidHost() {
+    void invalidHost() {
         assertThatThrownBy(() -> async.getConnection("invalid-host", -1)).isInstanceOf(RedisException.class);
     }
 
     @Test
-    public void partitions() {
+    void partitions() {
 
         Partitions partitions = async.getStatefulConnection().getPartitions();
         assertThat(partitions).hasSize(4);
     }
 
     @Test
-    public void differentConnections() {
+    void differentConnections() {
 
         for (RedisClusterNode redisClusterNode : clusterClient.getPartitions()) {
             RedisClusterAsyncCommands<String, String> nodeId = async.getConnection(redisClusterNode.getNodeId());
@@ -151,7 +151,7 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void msetRegular() {
+    void msetRegular() {
 
         Map<String, String> mset = Collections.singletonMap(key, value);
 
@@ -162,7 +162,7 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void msetCrossSlot() {
+    void msetCrossSlot() {
 
         Map<String, String> mset = prepareMset();
 
@@ -177,7 +177,7 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void msetnxCrossSlot() throws Exception {
+    void msetnxCrossSlot() throws Exception {
 
         Map<String, String> mset = prepareMset();
 
@@ -194,7 +194,7 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void mgetRegular() {
+    void mgetRegular() {
 
         msetRegular();
         List<KeyValue<String, String>> result = sync.mget(key);
@@ -203,7 +203,7 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void mgetCrossSlot() {
+    void mgetCrossSlot() {
 
         msetCrossSlot();
         List<String> keys = new ArrayList<>();
@@ -222,7 +222,7 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
 
     @Test
     @EnabledOnCommand("UNLINK")
-    public void delRegular() throws Exception {
+    void delRegular() throws Exception {
 
         msetRegular();
         Long result = sync.unlink(key);
@@ -232,7 +232,7 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void delCrossSlot() {
+    void delCrossSlot() {
 
         List<String> keys = prepareKeys();
 
@@ -248,7 +248,7 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
 
     @Test
     @EnabledOnCommand("UNLINK")
-    public void unlinkRegular() {
+    void unlinkRegular() {
 
         msetRegular();
         Long result = sync.unlink(key);
@@ -259,7 +259,7 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
 
     @Test
     @EnabledOnCommand("UNLINK")
-    public void unlinkCrossSlot() {
+    void unlinkCrossSlot() {
 
         List<String> keys = prepareKeys();
 
@@ -285,7 +285,7 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void clientSetname() {
+    void clientSetname() {
 
         String name = "test-cluster-client";
 
@@ -303,12 +303,12 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void clientSetnameRunOnError() {
+    void clientSetnameRunOnError() {
         assertThatThrownBy(() -> sync.clientSetname("not allowed")).isInstanceOf(RedisCommandExecutionException.class);
     }
 
     @Test
-    public void dbSize() {
+    void dbSize() {
 
         writeKeysToTwoNodes();
 
@@ -325,7 +325,7 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void flushall() {
+    void flushall() {
 
         writeKeysToTwoNodes();
 
@@ -336,7 +336,7 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void flushdb() {
+    void flushdb() {
 
         writeKeysToTwoNodes();
 
@@ -347,7 +347,7 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void keys() {
+    void keys() {
 
         writeKeysToTwoNodes();
 
@@ -355,7 +355,7 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void keysStreaming() {
+    void keysStreaming() {
 
         writeKeysToTwoNodes();
         ListStreamingAdapter<String> result = new ListStreamingAdapter<>();
@@ -365,7 +365,7 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void randomKey() {
+    void randomKey() {
 
         writeKeysToTwoNodes();
 
@@ -373,17 +373,17 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void scriptFlush() {
+    void scriptFlush() {
         assertThat(sync.scriptFlush()).isEqualTo("OK");
     }
 
     @Test
-    public void scriptKill() {
+    void scriptKill() {
         assertThat(sync.scriptKill()).isEqualTo("OK");
     }
 
     @Test
-    public void scriptLoad() {
+    void scriptLoad() {
 
         assertThat(sync.scriptFlush()).isEqualTo("OK");
 
@@ -400,12 +400,12 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
 
     @Test
     @Disabled("Run me manually, I will shutdown all your cluster nodes so you need to restart the Redis Cluster after this test")
-    public void shutdown() {
+    void shutdown() {
         sync.shutdown(true);
     }
 
     @Test
-    public void testSync() {
+    void testSync() {
 
         RedisAdvancedClusterCommands<String, String> sync = async.getStatefulConnection().sync();
         sync.set(key, value);
@@ -420,7 +420,7 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
 
     @Test
     @Inject
-    public void routeCommandToNoAddrPartition(@New StatefulRedisClusterConnection<String, String> connectionUnderTest) {
+    void routeCommandToNoAddrPartition(@New StatefulRedisClusterConnection<String, String> connectionUnderTest) {
 
         RedisAdvancedClusterCommands<String, String> sync = connectionUnderTest.sync();
         try {
@@ -441,7 +441,7 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
 
     @Test
     @Inject
-    public void routeCommandToForbiddenHostOnRedirect(
+    void routeCommandToForbiddenHostOnRedirect(
             @Connection(requiresNew = true) StatefulRedisClusterConnection<String, String> connectionUnderTest) {
 
         RedisAdvancedClusterCommands<String, String> sync = connectionUnderTest.sync();
@@ -469,7 +469,7 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void getConnectionToNotAClusterMemberForbidden() {
+    void getConnectionToNotAClusterMemberForbidden() {
 
         StatefulRedisClusterConnection<String, String> sync = clusterClient.connect();
         try {
@@ -481,7 +481,7 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void getConnectionToNotAClusterMemberAllowed() {
+    void getConnectionToNotAClusterMemberAllowed() {
 
         clusterClient.setOptions(ClusterClientOptions.builder().validateClusterNodeMembership(false).build());
         StatefulRedisClusterConnection<String, String> connection = clusterClient.connect();
@@ -491,7 +491,7 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
 
     @Test
     @Inject
-    public void pipelining(@New StatefulRedisClusterConnection<String, String> connectionUnderTest) {
+    void pipelining(@New StatefulRedisClusterConnection<String, String> connectionUnderTest) {
 
         RedisAdvancedClusterAsyncCommands<String, String> async = connectionUnderTest.async();
         // preheat the first connection
@@ -519,7 +519,7 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void clusterScan() {
+    void clusterScan() {
 
         RedisAdvancedClusterCommands<String, String> sync = async.getStatefulConnection().sync();
         sync.mset(KeysAndValues.MAP);
@@ -541,7 +541,7 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void clusterScanWithArgs() {
+    void clusterScanWithArgs() {
 
         RedisAdvancedClusterCommands<String, String> sync = async.getStatefulConnection().sync();
         sync.mset(KeysAndValues.MAP);
@@ -564,7 +564,7 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void clusterScanStreaming() {
+    void clusterScanStreaming() {
 
         RedisAdvancedClusterCommands<String, String> sync = async.getStatefulConnection().sync();
         sync.mset(KeysAndValues.MAP);
@@ -586,7 +586,7 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void clusterScanStreamingWithArgs() {
+    void clusterScanStreamingWithArgs() {
 
         RedisAdvancedClusterCommands<String, String> sync = async.getStatefulConnection().sync();
         sync.mset(KeysAndValues.MAP);
@@ -608,20 +608,20 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void clusterScanCursorFinished() {
+    void clusterScanCursorFinished() {
         assertThatThrownBy(() -> sync.scan(ScanCursor.FINISHED)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void clusterScanCursorNotReused() {
+    void clusterScanCursorNotReused() {
         assertThatThrownBy(() -> sync.scan(ScanCursor.of("dummy"))).isInstanceOf(IllegalArgumentException.class);
     }
 
-    protected String value(int i) {
+    String value(int i) {
         return value + "-" + i;
     }
 
-    protected String key(int i) {
+    String key(int i) {
         return key + "-" + i;
     }
 
@@ -630,7 +630,7 @@ public class AdvancedClusterClientIntegrationTests extends TestSupport {
         sync.set(KEY_ON_NODE_2, value);
     }
 
-    protected Map<String, String> prepareMset() {
+    Map<String, String> prepareMset() {
         Map<String, String> mset = new HashMap<>();
         for (char c = 'a'; c < 'z'; c++) {
             String key = new String(new char[] { c, c, c });

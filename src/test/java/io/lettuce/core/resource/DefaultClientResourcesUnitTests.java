@@ -27,11 +27,11 @@ import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 
 import reactor.test.StepVerifier;
-import io.lettuce.test.resource.FastShutdown;
 import io.lettuce.core.event.Event;
 import io.lettuce.core.event.EventBus;
 import io.lettuce.core.metrics.CommandLatencyCollector;
 import io.lettuce.core.metrics.DefaultCommandLatencyCollectorOptions;
+import io.lettuce.test.resource.FastShutdown;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.util.Timer;
 import io.netty.util.concurrent.EventExecutorGroup;
@@ -40,10 +40,10 @@ import io.netty.util.concurrent.Future;
 /**
  * @author Mark Paluch
  */
-public class DefaultClientResourcesUnitTests {
+class DefaultClientResourcesUnitTests {
 
     @Test
-    public void testDefaults() throws Exception {
+    void testDefaults() throws Exception {
 
         DefaultClientResources sut = DefaultClientResources.create();
 
@@ -68,7 +68,7 @@ public class DefaultClientResourcesUnitTests {
     }
 
     @Test
-    public void testBuilder() throws Exception {
+    void testBuilder() throws Exception {
 
         DefaultClientResources sut = DefaultClientResources.builder().ioThreadPoolSize(4).computationThreadPoolSize(4)
                 .commandLatencyCollectorOptions(DefaultCommandLatencyCollectorOptions.disabled()).build();
@@ -86,7 +86,7 @@ public class DefaultClientResourcesUnitTests {
     }
 
     @Test
-    public void testDnsResolver() {
+    void testDnsResolver() {
 
         DirContextDnsResolver dirContextDnsResolver = new DirContextDnsResolver("8.8.8.8");
 
@@ -96,7 +96,7 @@ public class DefaultClientResourcesUnitTests {
     }
 
     @Test
-    public void testProvidedResources() throws Exception {
+    void testProvidedResources() throws Exception {
 
         EventExecutorGroup executorMock = mock(EventExecutorGroup.class);
         EventLoopGroupProvider groupProviderMock = mock(EventLoopGroupProvider.class);
@@ -125,7 +125,7 @@ public class DefaultClientResourcesUnitTests {
     }
 
     @Test
-    public void mutateResources() throws Exception {
+    void mutateResources() throws Exception {
 
         EventExecutorGroup executorMock = mock(EventExecutorGroup.class);
         EventLoopGroupProvider groupProviderMock = mock(EventLoopGroupProvider.class);
@@ -154,7 +154,7 @@ public class DefaultClientResourcesUnitTests {
     }
 
     @Test
-    public void testSmallPoolSize() throws Exception {
+    void testSmallPoolSize() throws Exception {
 
         DefaultClientResources sut = DefaultClientResources.builder().ioThreadPoolSize(1).computationThreadPoolSize(1).build();
 
@@ -169,7 +169,7 @@ public class DefaultClientResourcesUnitTests {
     }
 
     @Test
-    public void testEventBus() throws Exception {
+    void testEventBus() throws Exception {
 
         DefaultClientResources sut = DefaultClientResources.create();
 
@@ -182,14 +182,14 @@ public class DefaultClientResourcesUnitTests {
     }
 
     @Test
-    public void delayInstanceShouldRejectStatefulDelay() {
+    void delayInstanceShouldRejectStatefulDelay() {
 
         assertThatThrownBy(() -> DefaultClientResources.builder().reconnectDelay(Delay.decorrelatedJitter().get()))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void reconnectDelayCreatesNewForStatefulDelays() {
+    void reconnectDelayCreatesNewForStatefulDelays() {
 
         DefaultClientResources resources = DefaultClientResources.builder().reconnectDelay(Delay.decorrelatedJitter()).build();
 
@@ -202,7 +202,7 @@ public class DefaultClientResourcesUnitTests {
     }
 
     @Test
-    public void reconnectDelayReturnsSameInstanceForStatelessDelays() {
+    void reconnectDelayReturnsSameInstanceForStatelessDelays() {
 
         DefaultClientResources resources = DefaultClientResources.builder().reconnectDelay(Delay.exponential()).build();
 

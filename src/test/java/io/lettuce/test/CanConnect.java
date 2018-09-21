@@ -44,7 +44,7 @@ public class CanConnect {
      * @param socketAddress
      * @return
      */
-    public static boolean to(SocketAddress socketAddress) {
+    private static boolean to(SocketAddress socketAddress) {
 
         try {
             Socket socket = new Socket();

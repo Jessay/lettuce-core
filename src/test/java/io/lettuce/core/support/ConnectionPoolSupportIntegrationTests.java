@@ -55,26 +55,26 @@ import io.netty.channel.group.ChannelGroup;
 /**
  * @author Mark Paluch
  */
-public class ConnectionPoolSupportIntegrationTests extends TestSupport {
+class ConnectionPoolSupportIntegrationTests extends TestSupport {
 
     private static RedisClient client;
     private static Set<?> channels;
 
     @BeforeAll
-    public static void setupClient() {
+    static void setupClient() {
         client = RedisClient.create(TestClientResources.create(), RedisURI.Builder.redis(host, port).build());
         client.setOptions(ClientOptions.create());
         channels = (ChannelGroup) ReflectionTestUtils.getField(client, "channels");
     }
 
     @AfterAll
-    public static void afterClass() {
+    static void afterClass() {
         FastShutdown.shutdown(client);
         FastShutdown.shutdown(client.getResources());
     }
 
     @Test
-    public void genericPoolShouldWorkWithWrappedConnections() throws Exception {
+    void genericPoolShouldWorkWithWrappedConnections() throws Exception {
 
         GenericObjectPool<StatefulRedisConnection<String, String>> pool = ConnectionPoolSupport.createGenericObjectPool(
                 () -> client.connect(), new GenericObjectPoolConfig());
@@ -96,7 +96,7 @@ public class ConnectionPoolSupportIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void genericPoolShouldCloseConnectionsAboveMaxIdleSize() throws Exception {
+    void genericPoolShouldCloseConnectionsAboveMaxIdleSize() throws Exception {
 
         GenericObjectPoolConfig poolConfig = new GenericObjectPoolConfig();
         poolConfig.setMaxIdle(2);
@@ -128,7 +128,7 @@ public class ConnectionPoolSupportIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void genericPoolShouldWorkWithPlainConnections() throws Exception {
+    void genericPoolShouldWorkWithPlainConnections() throws Exception {
 
         GenericObjectPool<StatefulRedisConnection<String, String>> pool = ConnectionPoolSupport.createGenericObjectPool(
                 () -> client.connect(), new GenericObjectPoolConfig(), false);
@@ -143,7 +143,7 @@ public class ConnectionPoolSupportIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void softReferencePoolShouldWorkWithPlainConnections() throws Exception {
+    void softReferencePoolShouldWorkWithPlainConnections() throws Exception {
 
         SoftReferenceObjectPool<StatefulRedisConnection<String, String>> pool = ConnectionPoolSupport
                 .createSoftReferenceObjectPool(() -> client.connect(), false);
@@ -159,7 +159,7 @@ public class ConnectionPoolSupportIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void genericPoolUsingWrappingShouldPropagateExceptionsCorrectly() throws Exception {
+    void genericPoolUsingWrappingShouldPropagateExceptionsCorrectly() throws Exception {
 
         GenericObjectPool<StatefulRedisConnection<String, String>> pool = ConnectionPoolSupport.createGenericObjectPool(
                 () -> client.connect(), new GenericObjectPoolConfig());
@@ -180,7 +180,7 @@ public class ConnectionPoolSupportIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void wrappedConnectionShouldUseWrappers() throws Exception {
+    void wrappedConnectionShouldUseWrappers() throws Exception {
 
         GenericObjectPool<StatefulRedisConnection<String, String>> pool = ConnectionPoolSupport.createGenericObjectPool(
                 () -> client.connect(), new GenericObjectPoolConfig());
@@ -204,7 +204,7 @@ public class ConnectionPoolSupportIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void wrappedMasterSlaveConnectionShouldUseWrappers() throws Exception {
+    void wrappedMasterSlaveConnectionShouldUseWrappers() throws Exception {
 
         GenericObjectPool<StatefulRedisMasterSlaveConnection<String, String>> pool = ConnectionPoolSupport
                 .createGenericObjectPool(() -> MasterSlave.connect(client, new StringCodec(), RedisURI.create(host, port)),
@@ -228,7 +228,7 @@ public class ConnectionPoolSupportIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void wrappedClusterConnectionShouldUseWrappers() throws Exception {
+    void wrappedClusterConnectionShouldUseWrappers() throws Exception {
 
         RedisClusterClient redisClusterClient = RedisClusterClient.create(TestClientResources.get(),
                 RedisURI.create(TestSettings.host(), 7379));
@@ -258,7 +258,7 @@ public class ConnectionPoolSupportIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void plainConnectionShouldNotUseWrappers() throws Exception {
+    void plainConnectionShouldNotUseWrappers() throws Exception {
 
         GenericObjectPool<StatefulRedisConnection<String, String>> pool = ConnectionPoolSupport.createGenericObjectPool(
                 () -> client.connect(), new GenericObjectPoolConfig(), false);
@@ -282,7 +282,7 @@ public class ConnectionPoolSupportIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void softRefPoolShouldWorkWithWrappedConnections() throws Exception {
+    void softRefPoolShouldWorkWithWrappedConnections() throws Exception {
 
         SoftReferenceObjectPool<StatefulRedisConnection<String, String>> pool = ConnectionPoolSupport
                 .createSoftReferenceObjectPool(() -> client.connect());
@@ -303,7 +303,7 @@ public class ConnectionPoolSupportIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void wrappedObjectClosedAfterReturn() throws Exception {
+    void wrappedObjectClosedAfterReturn() throws Exception {
 
         GenericObjectPool<StatefulRedisConnection<String, String>> pool = ConnectionPoolSupport.createGenericObjectPool(
                 () -> client.connect(), new GenericObjectPoolConfig(), true);
@@ -325,7 +325,7 @@ public class ConnectionPoolSupportIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void tryWithResourcesReturnsConnectionToPool() throws Exception {
+    void tryWithResourcesReturnsConnectionToPool() throws Exception {
 
         GenericObjectPool<StatefulRedisConnection<String, String>> pool = ConnectionPoolSupport.createGenericObjectPool(
                 () -> client.connect(), new GenericObjectPoolConfig());
@@ -350,7 +350,7 @@ public class ConnectionPoolSupportIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void tryWithResourcesReturnsSoftRefConnectionToPool() throws Exception {
+    void tryWithResourcesReturnsSoftRefConnectionToPool() throws Exception {
 
         SoftReferenceObjectPool<StatefulRedisConnection<String, String>> pool = ConnectionPoolSupport
                 .createSoftReferenceObjectPool(() -> client.connect());

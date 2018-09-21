@@ -26,15 +26,15 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Mark Paluch
  */
-public class ConstantDelayUnitTests {
+class ConstantDelayUnitTests {
 
     @Test
-    public void shouldNotCreateIfDelayIsNegative() {
+    void shouldNotCreateIfDelayIsNegative() {
         assertThatThrownBy(() -> Delay.constant(-1, TimeUnit.MILLISECONDS)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void shouldCreateZeroDelay() {
+    void shouldCreateZeroDelay() {
 
         Delay delay = Delay.constant(0, TimeUnit.MILLISECONDS);
 
@@ -43,7 +43,7 @@ public class ConstantDelayUnitTests {
     }
 
     @Test
-    public void shouldCreateConstantDelay() {
+    void shouldCreateConstantDelay() {
 
         Delay delay = Delay.constant(100, TimeUnit.MILLISECONDS);
 

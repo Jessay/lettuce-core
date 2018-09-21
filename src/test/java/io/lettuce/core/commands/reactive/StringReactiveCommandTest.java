@@ -31,12 +31,12 @@ import io.lettuce.test.ReactiveSyncInvocationHandler;
 public class StringReactiveCommandTest extends StringCommandTest {
 
     @Override
-    protected RedisCommands<String, String> connect() {
+    RedisCommands<String, String> connect() {
         return ReactiveSyncInvocationHandler.sync(client.connect());
     }
 
     @Test
-    public void mget() {
+    void mget() {
 
         StatefulRedisConnection<String, String> connection = client.connect();
 
@@ -51,7 +51,7 @@ public class StringReactiveCommandTest extends StringCommandTest {
     }
 
     @Test
-    public void mgetEmpty() {
+    void mgetEmpty() {
 
         StatefulRedisConnection<String, String> connection = client.connect();
 

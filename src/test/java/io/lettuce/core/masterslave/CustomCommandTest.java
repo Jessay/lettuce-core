@@ -49,12 +49,12 @@ public class CustomCommandTest extends TestSupport {
     private RedisCommands<String, String> redis;
 
     @Inject
-    public CustomCommandTest(RedisClient redisClient) {
+    CustomCommandTest(RedisClient redisClient) {
         this.redisClient = redisClient;
     }
 
     @BeforeEach
-    public void before() {
+    void before() {
 
         RedisURI uri = RedisURI.create("redis-sentinel://127.0.0.1:26379?sentinelMasterId=mymaster&timeout=5s");
         connection = MasterSlave.connect(redisClient, StringCodec.UTF8, uri);
@@ -63,12 +63,12 @@ public class CustomCommandTest extends TestSupport {
     }
 
     @AfterEach
-    public void after() {
+    void after() {
         connection.close();
     }
 
     @Test
-    public void dispatchSet() {
+    void dispatchSet() {
 
         String response = redis.dispatch(MyCommands.SET, new StatusOutput<>(StringCodec.UTF8), new CommandArgs<>(
                 StringCodec.UTF8).addKey(key).addValue(value));
@@ -77,7 +77,7 @@ public class CustomCommandTest extends TestSupport {
     }
 
     @Test
-    public void dispatchWithoutArgs() {
+    void dispatchWithoutArgs() {
 
         String response = redis.dispatch(MyCommands.INFO, new StatusOutput<>(StringCodec.UTF8));
 
@@ -85,7 +85,7 @@ public class CustomCommandTest extends TestSupport {
     }
 
     @Test
-    public void dispatchShouldFailForWrongDataType() {
+    void dispatchShouldFailForWrongDataType() {
 
         redis.hset(key, key, value);
         assertThatThrownBy(
@@ -94,7 +94,7 @@ public class CustomCommandTest extends TestSupport {
     }
 
     @Test
-    public void dispatchTransactions() {
+    void dispatchTransactions() {
 
         redis.multi();
         String response = redis.dispatch(CommandType.SET, new StatusOutput<>(StringCodec.UTF8), new CommandArgs<>(
@@ -107,7 +107,7 @@ public class CustomCommandTest extends TestSupport {
     }
 
     @Test
-    public void masterSlaveAsyncPing() throws Exception {
+    void masterSlaveAsyncPing() throws Exception {
 
         RedisCommand<String, String, String> command = new Command<>(MyCommands.PING,
                 new StatusOutput<>(new Utf8StringCodec()), null);
@@ -119,7 +119,7 @@ public class CustomCommandTest extends TestSupport {
     }
 
     @Test
-    public void masterSlaveAsyncBatchPing() throws Exception {
+    void masterSlaveAsyncBatchPing() throws Exception {
 
         RedisCommand<String, String, String> command1 = new Command<>(CommandType.SET, new StatusOutput<>(StringCodec.UTF8),
                 new CommandArgs<>(StringCodec.UTF8).addKey("key1").addValue("value"));
@@ -141,7 +141,7 @@ public class CustomCommandTest extends TestSupport {
     }
 
     @Test
-    public void masterSlaveFireAndForget() {
+    void masterSlaveFireAndForget() {
 
         RedisCommand<String, String, String> command = new Command<>(MyCommands.PING,
                 new StatusOutput<>(new Utf8StringCodec()), null);

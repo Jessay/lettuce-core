@@ -36,19 +36,19 @@ import io.lettuce.test.LettuceExtension;
  */
 @SuppressWarnings("unchecked")
 @ExtendWith(LettuceExtension.class)
-public class RedisReactiveClusterClientTest extends TestSupport {
+class RedisReactiveClusterClientTest extends TestSupport {
 
     private final RedisAdvancedClusterCommands<String, String> sync;
     private final RedisAdvancedClusterReactiveCommands<String, String> reactive;
 
     @Inject
-    public RedisReactiveClusterClientTest(StatefulRedisClusterConnection<String, String> connection) {
+    RedisReactiveClusterClientTest(StatefulRedisClusterConnection<String, String> connection) {
         this.sync = connection.sync();
         this.reactive = connection.reactive();
     }
 
     @Test
-    public void testClusterCommandRedirection() {
+    void testClusterCommandRedirection() {
 
         // Command on node within the default connection
         StepVerifier.create(reactive.set(ClusterTestSettings.KEY_B, "myValue1")).expectNext("OK").verifyComplete();
@@ -58,7 +58,7 @@ public class RedisReactiveClusterClientTest extends TestSupport {
     }
 
     @Test
-    public void getKeysInSlot() {
+    void getKeysInSlot() {
 
         sync.set(ClusterTestSettings.KEY_A, value);
         sync.set(ClusterTestSettings.KEY_B, value);
@@ -70,7 +70,7 @@ public class RedisReactiveClusterClientTest extends TestSupport {
     }
 
     @Test
-    public void countKeysInSlot() {
+    void countKeysInSlot() {
 
         sync.set(ClusterTestSettings.KEY_A, value);
         sync.set(ClusterTestSettings.KEY_B, value);
@@ -83,7 +83,7 @@ public class RedisReactiveClusterClientTest extends TestSupport {
     }
 
     @Test
-    public void testClusterCountFailureReports() {
+    void testClusterCountFailureReports() {
         RedisClusterNode ownPartition = getOwnPartition(sync);
         StepVerifier.create(reactive.clusterCountFailureReports(ownPartition.getNodeId())).consumeNextWith(actual -> {
             assertThat(actual).isGreaterThanOrEqualTo(0);
@@ -91,19 +91,19 @@ public class RedisReactiveClusterClientTest extends TestSupport {
     }
 
     @Test
-    public void testClusterKeyslot() {
+    void testClusterKeyslot() {
         StepVerifier.create(reactive.clusterKeyslot(ClusterTestSettings.KEY_A)).expectNext((long) ClusterTestSettings.SLOT_A)
                 .verifyComplete();
         assertThat(SlotHash.getSlot(ClusterTestSettings.KEY_A)).isEqualTo(ClusterTestSettings.SLOT_A);
     }
 
     @Test
-    public void testClusterSaveconfig() {
+    void testClusterSaveconfig() {
         StepVerifier.create(reactive.clusterSaveconfig()).expectNext("OK").verifyComplete();
     }
 
     @Test
-    public void testClusterSetConfigEpoch() {
+    void testClusterSetConfigEpoch() {
         StepVerifier.create(reactive.clusterSetConfigEpoch(1L)).consumeErrorWith(e -> {
             assertThat(e).hasMessageContaining("ERR The user can assign a config epoch only");
         }).verify();

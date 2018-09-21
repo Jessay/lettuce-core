@@ -32,7 +32,7 @@ import io.lettuce.core.cluster.models.partitions.RedisClusterNode;
 /**
  * @author Mark Paluch
  */
-public class KnownMajorityPartitionsConsensusUnitTests {
+class KnownMajorityPartitionsConsensusUnitTests {
 
     private RedisClusterNode node1 = createNode(1);
     private RedisClusterNode node2 = createNode(2);
@@ -41,7 +41,7 @@ public class KnownMajorityPartitionsConsensusUnitTests {
     private RedisClusterNode node5 = createNode(5);
 
     @Test
-    public void sameSharedViewShouldDecideForKnownMajority() throws Exception {
+    void sameSharedViewShouldDecideForKnownMajority() throws Exception {
 
         Partitions current = createPartitions(node1, node2, node3, node4, node5);
 
@@ -57,7 +57,7 @@ public class KnownMajorityPartitionsConsensusUnitTests {
     }
 
     @Test
-    public void addedNodeViewShouldDecideForKnownMajority() throws Exception {
+    void addedNodeViewShouldDecideForKnownMajority() throws Exception {
 
         Partitions current = createPartitions(node1, node2, node3, node4);
 
@@ -73,7 +73,7 @@ public class KnownMajorityPartitionsConsensusUnitTests {
     }
 
     @Test
-    public void removedNodeViewShouldDecideForKnownMajority() throws Exception {
+    void removedNodeViewShouldDecideForKnownMajority() throws Exception {
 
         Partitions current = createPartitions(node1, node2, node3, node4, node5);
 
@@ -89,7 +89,7 @@ public class KnownMajorityPartitionsConsensusUnitTests {
     }
 
     @Test
-    public void mixedViewShouldDecideForKnownMajority() throws Exception {
+    void mixedViewShouldDecideForKnownMajority() throws Exception {
 
         Partitions current = createPartitions(node1, node2, node3, node4, node5);
 
@@ -105,7 +105,7 @@ public class KnownMajorityPartitionsConsensusUnitTests {
     }
 
     @Test
-    public void clusterSplitViewShouldDecideForKnownMajority() throws Exception {
+    void clusterSplitViewShouldDecideForKnownMajority() throws Exception {
 
         Partitions current = createPartitions(node1, node2, node3, node4, node5);
 
@@ -121,7 +121,7 @@ public class KnownMajorityPartitionsConsensusUnitTests {
     }
 
     @Test
-    public void strangeClusterSplitViewShouldDecideForKnownMajority() throws Exception {
+    void strangeClusterSplitViewShouldDecideForKnownMajority() throws Exception {
 
         Partitions current = createPartitions(node1, node2, node3, node4, node5);
 

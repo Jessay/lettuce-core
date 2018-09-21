@@ -43,7 +43,7 @@ import io.lettuce.test.settings.TestSettings;
 /**
  * @author Mark Paluch
  */
-public class StaticMasterSlaveTest extends AbstractRedisClientTest {
+class StaticMasterSlaveTest extends AbstractRedisClientTest {
 
     private StatefulRedisMasterSlaveConnectionImpl<String, String> connection;
 
@@ -54,7 +54,7 @@ public class StaticMasterSlaveTest extends AbstractRedisClientTest {
     private RedisAsyncCommands<String, String> connectionToNode2;
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
 
         RedisURI node1 = RedisURI.Builder.redis(host, TestSettings.port(3)).withClientName("my-client").withDatabase(2).build();
         RedisURI node2 = RedisURI.Builder.redis(host, TestSettings.port(4)).withClientName("my-client").withDatabase(2).build();
@@ -95,7 +95,7 @@ public class StaticMasterSlaveTest extends AbstractRedisClientTest {
     }
 
     @AfterEach
-    public void after() throws Exception {
+    void after() throws Exception {
 
         if (connectionToNode1 != null) {
             connectionToNode1.configSet("requirepass", "");
@@ -115,7 +115,7 @@ public class StaticMasterSlaveTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void testMasterSlaveStandaloneBasic() {
+    void testMasterSlaveStandaloneBasic() {
 
         String server = connection.sync().info("server");
 
@@ -128,7 +128,7 @@ public class StaticMasterSlaveTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void testMasterSlaveReadWrite() {
+    void testMasterSlaveReadWrite() {
 
         RedisCommands<String, String> redisCommands = connection.sync();
         redisCommands.set(key, value);
@@ -138,7 +138,7 @@ public class StaticMasterSlaveTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void noSlaveForRead() {
+    void noSlaveForRead() {
 
         connection.close();
 
@@ -150,7 +150,7 @@ public class StaticMasterSlaveTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void shouldWorkWithMasterOnly() {
+    void shouldWorkWithMasterOnly() {
 
         connection.close();
 
@@ -162,7 +162,7 @@ public class StaticMasterSlaveTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void shouldWorkWithSlaveOnly() {
+    void shouldWorkWithSlaveOnly() {
 
         connection.close();
 
@@ -174,7 +174,7 @@ public class StaticMasterSlaveTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void noMasterForWrite() {
+    void noMasterForWrite() {
 
         connection.close();
 
@@ -185,7 +185,7 @@ public class StaticMasterSlaveTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void masterSlaveConnectionShouldSetClientName() {
+    void masterSlaveConnectionShouldSetClientName() {
 
         assertThat(connection.sync().clientGetname()).isEqualTo("my-client");
         connection.sync().quit();
@@ -195,7 +195,7 @@ public class StaticMasterSlaveTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void testConnectionCount() {
+    void testConnectionCount() {
 
         MasterSlaveConnectionProvider connectionProvider = getConnectionProvider();
 
@@ -209,7 +209,7 @@ public class StaticMasterSlaveTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void testReconfigureTopology() {
+    void testReconfigureTopology() {
         MasterSlaveConnectionProvider connectionProvider = getConnectionProvider();
 
         slaveCall(connection);
@@ -219,11 +219,11 @@ public class StaticMasterSlaveTest extends AbstractRedisClientTest {
         assertThat(connectionProvider.getConnectionCount()).isEqualTo(0);
     }
 
-    protected static String slaveCall(StatefulRedisMasterSlaveConnection<String, String> connection) {
+    static String slaveCall(StatefulRedisMasterSlaveConnection<String, String> connection) {
         return connection.sync().info("replication");
     }
 
-    protected MasterSlaveConnectionProvider getConnectionProvider() {
+    MasterSlaveConnectionProvider getConnectionProvider() {
         MasterSlaveChannelWriter writer = connection.getChannelWriter();
         return writer.getMasterSlaveConnectionProvider();
     }

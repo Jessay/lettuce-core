@@ -33,10 +33,10 @@ import io.lettuce.core.output.*;
 /**
  * @author Mark Paluch
  */
-public class OutputRegistryUnitTests {
+class OutputRegistryUnitTests {
 
     @Test
-    public void getKeyOutputType() {
+    void getKeyOutputType() {
 
         OutputType outputComponentType = OutputRegistry.getOutputComponentType(KeyListOutput.class);
 
@@ -44,7 +44,7 @@ public class OutputRegistryUnitTests {
     }
 
     @Test
-    public void getStringListOutputType() {
+    void getStringListOutputType() {
 
         OutputType outputComponentType = OutputRegistry.getOutputComponentType(StringListOutput.class);
 
@@ -53,7 +53,7 @@ public class OutputRegistryUnitTests {
     }
 
     @Test
-    public void componentTypeOfKeyOuputWithCodecIsAssignableFromString() {
+    void componentTypeOfKeyOuputWithCodecIsAssignableFromString() {
 
         OutputType outputComponentType = OutputRegistry.getOutputComponentType(KeyOutput.class);
 
@@ -63,7 +63,7 @@ public class OutputRegistryUnitTests {
     }
 
     @Test
-    public void componentTypeOfKeyListOuputWithCodecIsAssignableFromListOfString() {
+    void componentTypeOfKeyListOuputWithCodecIsAssignableFromListOfString() {
 
         OutputType outputComponentType = OutputRegistry.getOutputComponentType(KeyListOutput.class);
 
@@ -73,7 +73,7 @@ public class OutputRegistryUnitTests {
     }
 
     @Test
-    public void streamingTypeOfKeyOuputWithCodecIsAssignableFromString() {
+    void streamingTypeOfKeyOuputWithCodecIsAssignableFromString() {
 
         OutputType outputComponentType = OutputRegistry.getStreamingType(KeyListOutput.class);
 
@@ -83,7 +83,7 @@ public class OutputRegistryUnitTests {
     }
 
     @Test
-    public void streamingTypeOfKeyListOuputWithCodecIsAssignableFromListOfString() {
+    void streamingTypeOfKeyListOuputWithCodecIsAssignableFromListOfString() {
 
         OutputType outputComponentType = OutputRegistry.getStreamingType(ScoredValueListOutput.class);
 
@@ -94,7 +94,7 @@ public class OutputRegistryUnitTests {
     }
 
     @Test
-    public void customizedValueOutput() {
+    void customizedValueOutput() {
 
         OutputType outputComponentType = OutputRegistry.getOutputComponentType(KeyTypedOutput.class);
 
@@ -105,14 +105,14 @@ public class OutputRegistryUnitTests {
 
     private static abstract class IntermediateOutput<K1, V1> extends CommandOutput<K1, V1, V1> {
 
-        public IntermediateOutput(RedisCodec<K1, V1> codec, V1 output) {
+        IntermediateOutput(RedisCodec<K1, V1> codec, V1 output) {
             super(codec, null);
         }
     }
 
     private static class KeyTypedOutput extends IntermediateOutput<ByteBuffer, byte[]> {
 
-        public KeyTypedOutput(RedisCodec<ByteBuffer, byte[]> codec) {
+        KeyTypedOutput(RedisCodec<ByteBuffer, byte[]> codec) {
             super(codec, null);
         }
     }

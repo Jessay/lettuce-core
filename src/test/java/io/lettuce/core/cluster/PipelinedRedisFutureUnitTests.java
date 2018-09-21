@@ -24,12 +24,12 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Mark Paluch
  */
-public class PipelinedRedisFutureUnitTests {
+class PipelinedRedisFutureUnitTests {
 
     private PipelinedRedisFuture<String> sut;
 
     @Test
-    public void testComplete() throws Exception {
+    void testComplete() throws Exception {
 
         String other = "other";
 
@@ -41,7 +41,7 @@ public class PipelinedRedisFutureUnitTests {
     }
 
     @Test
-    public void testCompleteExceptionally() throws Exception {
+    void testCompleteExceptionally() throws Exception {
 
         String other = "other";
 

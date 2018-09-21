@@ -22,9 +22,7 @@ import java.util.Collections;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.util.Base64Utils;
 import org.springframework.util.ReflectionUtils;
 
@@ -39,13 +37,13 @@ import io.lettuce.core.protocol.CommandType;
  * @author Mark Paluch
  */
 @ExtendWith(MockitoExtension.class)
-public class ParameterBinderUnitTests {
+class ParameterBinderUnitTests {
 
     private ParameterBinder binder = new ParameterBinder();
     private CommandSegments segments = new CommandSegments(Collections.singletonList(CommandSegment.constant("set")));
 
     @Test
-    public void bindsNullValueAsEmptyByteArray() {
+    void bindsNullValueAsEmptyByteArray() {
 
         CommandArgs<String, String> args = bind(null);
 
@@ -53,7 +51,7 @@ public class ParameterBinderUnitTests {
     }
 
     @Test
-    public void bindsStringCorrectly() {
+    void bindsStringCorrectly() {
 
         CommandArgs<String, String> args = bind("string");
 
@@ -61,7 +59,7 @@ public class ParameterBinderUnitTests {
     }
 
     @Test
-    public void bindsStringArrayCorrectly() {
+    void bindsStringArrayCorrectly() {
 
         CommandArgs<String, String> args = bind(new String[] { "arg1", "arg2" });
 
@@ -69,7 +67,7 @@ public class ParameterBinderUnitTests {
     }
 
     @Test
-    public void bindsIntArrayCorrectly() {
+    void bindsIntArrayCorrectly() {
 
         CommandArgs<String, String> args = bind(new int[] { 1, 2, 3 });
 
@@ -77,7 +75,7 @@ public class ParameterBinderUnitTests {
     }
 
     @Test
-    public void bindsValueCorrectly() {
+    void bindsValueCorrectly() {
 
         CommandArgs<String, String> args = bind(Value.just("string"));
 
@@ -85,12 +83,12 @@ public class ParameterBinderUnitTests {
     }
 
     @Test
-    public void rejectsEmptyValue() {
+    void rejectsEmptyValue() {
         assertThatThrownBy(() -> bind(Value.empty())).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void bindsKeyValueCorrectly() {
+    void bindsKeyValueCorrectly() {
 
         CommandArgs<String, String> args = bind(KeyValue.just("mykey", "string"));
 
@@ -98,12 +96,12 @@ public class ParameterBinderUnitTests {
     }
 
     @Test
-    public void rejectsEmptyKeyValue() {
+    void rejectsEmptyKeyValue() {
         assertThatThrownBy(() -> bind(KeyValue.empty())).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void bindsScoredValueCorrectly() {
+    void bindsScoredValueCorrectly() {
 
         CommandArgs<String, String> args = bind(ScoredValue.just(20, "string"));
 
@@ -111,12 +109,12 @@ public class ParameterBinderUnitTests {
     }
 
     @Test
-    public void rejectsEmptyScoredValue() {
+    void rejectsEmptyScoredValue() {
         assertThatThrownBy(() -> bind(ScoredValue.empty())).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void bindsLimitCorrectly() {
+    void bindsLimitCorrectly() {
 
         CommandArgs<String, String> args = bind(Limit.create(10, 100));
 
@@ -124,7 +122,7 @@ public class ParameterBinderUnitTests {
     }
 
     @Test
-    public void bindsRangeCorrectly() {
+    void bindsRangeCorrectly() {
 
         CommandArgs<String, String> args = bind(Range.from(Range.Boundary.including(10), Range.Boundary.excluding(15)));
 
@@ -132,7 +130,7 @@ public class ParameterBinderUnitTests {
     }
 
     @Test
-    public void bindsUnboundedRangeCorrectly() {
+    void bindsUnboundedRangeCorrectly() {
 
         CommandArgs<String, String> args = bind(Range.unbounded());
 
@@ -140,19 +138,19 @@ public class ParameterBinderUnitTests {
     }
 
     @Test
-    public void rejectsStringLowerValue() {
+    void rejectsStringLowerValue() {
         assertThatThrownBy(() -> bind(Range.from(Range.Boundary.including("hello"), Range.Boundary.excluding(15))))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void rejectsStringUpperValue() {
+    void rejectsStringUpperValue() {
         assertThatThrownBy(() -> bind(Range.from(Range.Boundary.including(11), Range.Boundary.excluding("hello"))))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void bindsValueRangeCorrectly() {
+    void bindsValueRangeCorrectly() {
 
         CommandMethod commandMethod = DeclaredCommandMethod.create(ReflectionUtils.findMethod(MyCommands.class, "valueRange",
                 Range.class));
@@ -166,7 +164,7 @@ public class ParameterBinderUnitTests {
     }
 
     @Test
-    public void bindsUnboundedValueRangeCorrectly() {
+    void bindsUnboundedValueRangeCorrectly() {
 
         CommandMethod commandMethod = DeclaredCommandMethod.create(ReflectionUtils.findMethod(MyCommands.class, "valueRange",
                 Range.class));
@@ -178,7 +176,7 @@ public class ParameterBinderUnitTests {
     }
 
     @Test
-    public void bindsGeoCoordinatesCorrectly() {
+    void bindsGeoCoordinatesCorrectly() {
 
         CommandArgs<String, String> args = bind(new GeoCoordinates(100, 200));
 
@@ -186,7 +184,7 @@ public class ParameterBinderUnitTests {
     }
 
     @Test
-    public void bindsProtocolKeywordCorrectly() {
+    void bindsProtocolKeywordCorrectly() {
 
         CommandArgs<String, String> args = bind(CommandType.LINDEX);
 

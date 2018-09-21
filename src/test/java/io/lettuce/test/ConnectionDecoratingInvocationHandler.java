@@ -27,11 +27,11 @@ import io.lettuce.core.sentinel.api.StatefulRedisSentinelConnection;
 /**
  * @author Mark Paluch
  */
-public class ConnectionDecoratingInvocationHandler extends AbstractInvocationHandler {
+class ConnectionDecoratingInvocationHandler extends AbstractInvocationHandler {
 
     private final Object target;
 
-    public ConnectionDecoratingInvocationHandler(Object target) {
+    ConnectionDecoratingInvocationHandler(Object target) {
         this.target = target;
     }
 

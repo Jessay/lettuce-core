@@ -21,32 +21,32 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import reactor.test.StepVerifier;
-import io.lettuce.test.LettuceExtension;
 import io.lettuce.core.ScanArgs;
 import io.lettuce.core.ScanStream;
 import io.lettuce.core.TestSupport;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.cluster.api.reactive.RedisAdvancedClusterReactiveCommands;
 import io.lettuce.core.cluster.api.sync.RedisClusterCommands;
+import io.lettuce.test.LettuceExtension;
 
 /**
  * @author Mark Paluch
  */
 @ExtendWith(LettuceExtension.class)
-public class ScanStreamIntegrationTests extends TestSupport {
+class ScanStreamIntegrationTests extends TestSupport {
 
     private final StatefulRedisClusterConnection<String, String> connection;
     private final RedisClusterCommands<String, String> redis;
 
     @Inject
-    public ScanStreamIntegrationTests(StatefulRedisClusterConnection<String, String> connection) {
+    ScanStreamIntegrationTests(StatefulRedisClusterConnection<String, String> connection) {
         this.connection = connection;
         this.redis = connection.sync();
         this.redis.flushall();
     }
 
     @Test
-    public void shouldScanIteratively() {
+    void shouldScanIteratively() {
 
         for (int i = 0; i < 1000; i++) {
             redis.set("key-" + i, value);

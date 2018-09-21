@@ -27,17 +27,17 @@ import io.lettuce.core.codec.Utf8StringCodec;
 /**
  * @author Mark Paluch
  */
-public class BooleanListOutputUnitTests {
+class BooleanListOutputUnitTests {
 
     private BooleanListOutput<?, ?> sut = new BooleanListOutput<>(new Utf8StringCodec());
 
     @Test
-    public void defaultSubscriberIsSet() {
+    void defaultSubscriberIsSet() {
         assertThat(sut.getSubscriber()).isNotNull().isInstanceOf(ListSubscriber.class);
     }
 
     @Test
-    public void commandOutputCorrectlyDecoded() {
+    void commandOutputCorrectlyDecoded() {
 
         sut.multi(3);
         sut.set(1L);
@@ -48,7 +48,7 @@ public class BooleanListOutputUnitTests {
     }
 
     @Test
-    public void setByteNotImplemented() {
+    void setByteNotImplemented() {
         assertThatThrownBy(() -> sut.set(ByteBuffer.wrap("4.567".getBytes()))).isInstanceOf(IllegalStateException.class);
     }
 }

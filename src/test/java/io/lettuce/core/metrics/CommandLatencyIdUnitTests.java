@@ -25,17 +25,17 @@ import io.netty.channel.local.LocalAddress;
 /**
  * @author Mark Paluch
  */
-public class CommandLatencyIdUnitTests {
+class CommandLatencyIdUnitTests {
 
     private CommandLatencyId sut = CommandLatencyId.create(LocalAddress.ANY, new LocalAddress("me"), CommandKeyword.ADDR);
 
     @Test
-    public void testToString() {
+    void testToString() {
         assertThat(sut.toString()).contains("local:any -> local:me");
     }
 
     @Test
-    public void testValues() {
+    void testValues() {
         assertThat(sut.localAddress()).isEqualTo(LocalAddress.ANY);
         assertThat(sut.remoteAddress()).isEqualTo(new LocalAddress("me"));
     }

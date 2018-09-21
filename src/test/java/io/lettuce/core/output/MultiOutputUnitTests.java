@@ -28,10 +28,10 @@ import io.lettuce.core.protocol.CommandType;
 /**
  * @author Mark Paluch
  */
-public class MultiOutputUnitTests {
+class MultiOutputUnitTests {
 
     @Test
-    public void shouldCompleteCommand() {
+    void shouldCompleteCommand() {
 
         MultiOutput<String, String> output = new MultiOutput<>(StringCodec.UTF8);
         Command<String, String, String> command = new Command<>(CommandType.APPEND, new StatusOutput<>(StringCodec.UTF8));
@@ -46,7 +46,7 @@ public class MultiOutputUnitTests {
     }
 
     @Test
-    public void shouldReportErrorForCommand() {
+    void shouldReportErrorForCommand() {
 
         MultiOutput<String, String> output = new MultiOutput<>(StringCodec.UTF8);
         Command<String, String, String> command = new Command<>(CommandType.APPEND, new StatusOutput<>(StringCodec.UTF8));
@@ -62,7 +62,7 @@ public class MultiOutputUnitTests {
     }
 
     @Test
-    public void shouldFailMulti() {
+    void shouldFailMulti() {
 
         MultiOutput<String, String> output = new MultiOutput<>(StringCodec.UTF8);
         Command<String, String, String> command = new Command<>(CommandType.APPEND, new StatusOutput<>(StringCodec.UTF8));

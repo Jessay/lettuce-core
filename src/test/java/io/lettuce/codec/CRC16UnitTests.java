@@ -28,9 +28,9 @@ import io.lettuce.core.codec.CRC16;
 /**
  * @author Mark Paluch
  */
-public class CRC16UnitTests {
+class CRC16UnitTests {
 
-    public static List<Fixture> parameters() {
+    static List<Fixture> parameters() {
 
         List<Fixture> parameters = new ArrayList<>();
 
@@ -46,7 +46,7 @@ public class CRC16UnitTests {
 
     @ParameterizedTest
     @MethodSource("parameters")
-    public void testCRC16(Fixture fixture) {
+    void testCRC16(Fixture fixture) {
 
         int result = CRC16.crc16(fixture.bytes);
         assertThat(result).describedAs("Expects " + Integer.toHexString(fixture.expected)).isEqualTo(fixture.expected);

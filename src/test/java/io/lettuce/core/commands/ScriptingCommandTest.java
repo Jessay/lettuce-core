@@ -26,11 +26,11 @@ import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import io.lettuce.test.Wait;
 import io.lettuce.core.AbstractRedisClientTest;
 import io.lettuce.core.RedisException;
 import io.lettuce.core.RedisNoScriptException;
 import io.lettuce.core.api.StatefulRedisConnection;
+import io.lettuce.test.Wait;
 
 /**
  * @author Will Glozer
@@ -39,7 +39,7 @@ import io.lettuce.core.api.StatefulRedisConnection;
 public class ScriptingCommandTest extends AbstractRedisClientTest {
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
 
         Wait.untilNoException(() -> {
             try {
@@ -53,7 +53,7 @@ public class ScriptingCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void eval() {
+    void eval() {
         assertThat((Boolean) redis.eval("return 1 + 1 == 4", BOOLEAN)).isEqualTo(false);
         assertThat((Number) redis.eval("return 1 + 1", INTEGER)).isEqualTo(2L);
         assertThat((String) redis.eval("return {ok='status'}", STATUS)).isEqualTo("status");
@@ -64,33 +64,33 @@ public class ScriptingCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void evalWithSingleKey() {
+    void evalWithSingleKey() {
         assertThat((List<?>) redis.eval("return KEYS[1]", MULTI, "one")).isEqualTo(list("one"));
     }
 
     @Test
-    public void evalWithNonAsciiChar() {
+    void evalWithNonAsciiChar() {
         assertThat((Object) redis.eval("return 'füö'", VALUE, "one")).isEqualTo("füö");
     }
 
     @Test
-    public void evalReturningNullInMulti() {
+    void evalReturningNullInMulti() {
         assertThat((List<?>) redis.eval("return nil", MULTI, "one")).isEqualTo(Collections.singletonList(null));
     }
 
     @Test
-    public void evalWithKeys() {
+    void evalWithKeys() {
         assertThat((List<?>) redis.eval("return {KEYS[1], KEYS[2]}", MULTI, "one", "two")).isEqualTo(list("one", "two"));
     }
 
     @Test
-    public void evalWithArgs() {
+    void evalWithArgs() {
         String[] keys = new String[0];
         assertThat((List<?>) redis.eval("return {ARGV[1], ARGV[2]}", MULTI, keys, "a", "b")).isEqualTo(list("a", "b"));
     }
 
     @Test
-    public void evalsha() {
+    void evalsha() {
         redis.scriptFlush();
         String script = "return 1 + 1";
         String digest = redis.digest(script);
@@ -102,7 +102,7 @@ public class ScriptingCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void evalshaWithMulti() {
+    void evalshaWithMulti() {
         redis.scriptFlush();
         String digest = redis.digest("return {1234, 5678}");
 
@@ -111,14 +111,14 @@ public class ScriptingCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void evalshaWithKeys() {
+    void evalshaWithKeys() {
         redis.scriptFlush();
         String digest = redis.scriptLoad("return {KEYS[1], KEYS[2]}");
         assertThat((Object) redis.evalsha(digest, MULTI, "one", "two")).isEqualTo(list("one", "two"));
     }
 
     @Test
-    public void evalshaWithArgs() {
+    void evalshaWithArgs() {
         redis.scriptFlush();
         String digest = redis.scriptLoad("return {ARGV[1], ARGV[2]}");
         String[] keys = new String[0];
@@ -126,7 +126,7 @@ public class ScriptingCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void script() throws InterruptedException {
+    void script() throws InterruptedException {
         assertThat(redis.scriptFlush()).isEqualTo("OK");
 
         String script1 = "return 1 + 1";

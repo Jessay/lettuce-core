@@ -44,7 +44,7 @@ public class TransactionReactiveCommandTest extends TransactionCommandTest {
     }
 
     @BeforeEach
-    public void openConnection() {
+    void openConnection() {
         client.setOptions(ClientOptions.builder().build());
         redis = connect();
         redis.flushall();
@@ -54,12 +54,12 @@ public class TransactionReactiveCommandTest extends TransactionCommandTest {
     }
 
     @AfterEach
-    public void closeConnection() {
+    void closeConnection() {
         redis.getStatefulConnection().close();
     }
 
     @Test
-    public void discard() {
+    void discard() {
 
         StepVerifier.create(commands.multi()).expectNext("OK").verifyComplete();
 
@@ -70,7 +70,7 @@ public class TransactionReactiveCommandTest extends TransactionCommandTest {
     }
 
     @Test
-    public void watchRollback() {
+    void watchRollback() {
 
         StatefulRedisConnection<String, String> otherConnection = client.connect();
 
@@ -90,7 +90,7 @@ public class TransactionReactiveCommandTest extends TransactionCommandTest {
     }
 
     @Test
-    public void execSingular() {
+    void execSingular() {
 
         StepVerifier.create(commands.multi()).expectNext("OK").verifyComplete();
 
@@ -101,7 +101,7 @@ public class TransactionReactiveCommandTest extends TransactionCommandTest {
     }
 
     @Test
-    public void errorInMulti() {
+    void errorInMulti() {
 
         commands.multi().toProcessor();
         commands.set(key, value).toProcessor();
@@ -117,7 +117,7 @@ public class TransactionReactiveCommandTest extends TransactionCommandTest {
     }
 
     @Test
-    public void resultOfMultiIsContainedInCommandFlux() {
+    void resultOfMultiIsContainedInCommandFlux() {
 
         commands.multi().toProcessor();
 
@@ -138,7 +138,7 @@ public class TransactionReactiveCommandTest extends TransactionCommandTest {
     }
 
     @Test
-    public void resultOfMultiIsContainedInExecObservable() {
+    void resultOfMultiIsContainedInExecObservable() {
 
         commands.multi().toProcessor();
         commands.set("key1", "value1").toProcessor();

@@ -39,12 +39,12 @@ import io.lettuce.core.dynamic.support.ReflectionUtils;
 /**
  * @author Mark Paluch
  */
-public class AnnotationRedisCodecResolverUnitTests {
+class AnnotationRedisCodecResolverUnitTests {
 
     private List<RedisCodec<?, ?>> codecs = Arrays.asList(new StringCodec(), new ByteArrayCodec());
 
     @Test
-    public void shouldResolveFullyHinted() {
+    void shouldResolveFullyHinted() {
 
         Method method = ReflectionUtils.findMethod(CommandMethods.class, "stringOnly", String.class, String.class);
         RedisCodec<?, ?> codec = resolve(method);
@@ -53,7 +53,7 @@ public class AnnotationRedisCodecResolverUnitTests {
     }
 
     @Test
-    public void shouldResolveHintedKey() {
+    void shouldResolveHintedKey() {
 
         Method method = ReflectionUtils.findMethod(CommandMethods.class, "annotatedKey", String.class, String.class);
         RedisCodec<?, ?> codec = resolve(method);
@@ -62,7 +62,7 @@ public class AnnotationRedisCodecResolverUnitTests {
     }
 
     @Test
-    public void shouldResolveHintedValue() {
+    void shouldResolveHintedValue() {
 
         Method method = ReflectionUtils.findMethod(CommandMethods.class, "annotatedValue", String.class, String.class);
         RedisCodec<?, ?> codec = resolve(method);
@@ -71,7 +71,7 @@ public class AnnotationRedisCodecResolverUnitTests {
     }
 
     @Test
-    public void shouldResolveWithoutHints() {
+    void shouldResolveWithoutHints() {
 
         Method method = ReflectionUtils.findMethod(CommandMethods.class, "nothingAnnotated", String.class, String.class);
         RedisCodec<?, ?> codec = resolve(method);
@@ -80,7 +80,7 @@ public class AnnotationRedisCodecResolverUnitTests {
     }
 
     @Test
-    public void shouldResolveHintedByteArrayValue() {
+    void shouldResolveHintedByteArrayValue() {
 
         Method method = ReflectionUtils.findMethod(CommandMethods.class, "annotatedByteArrayValue", String.class, byte[].class);
         RedisCodec<?, ?> codec = resolve(method);
@@ -89,14 +89,14 @@ public class AnnotationRedisCodecResolverUnitTests {
     }
 
     @Test
-    public void resolutionShouldFail() {
+    void resolutionShouldFail() {
 
         Method method = ReflectionUtils.findMethod(CommandMethods.class, "mixedTypes", String.class, byte[].class);
         assertThatThrownBy(() -> resolve(method)).isInstanceOf(IllegalStateException. class);
     }
 
     @Test
-    public void shouldDiscoverCodecTypesFromWrappers() {
+    void shouldDiscoverCodecTypesFromWrappers() {
 
         Method method = ReflectionUtils.findMethod(CommandMethods.class, "withWrappers", Range.class,
                 io.lettuce.core.Value.class);
@@ -107,7 +107,7 @@ public class AnnotationRedisCodecResolverUnitTests {
         assertThat(types).contains(String.class, Number.class);
     }
 
-    protected RedisCodec<?, ?> resolve(Method method) {
+    RedisCodec<?, ?> resolve(Method method) {
 
         CommandMethod commandMethod = DeclaredCommandMethod.create(method);
         AnnotationRedisCodecResolver resolver = new AnnotationRedisCodecResolver(codecs);

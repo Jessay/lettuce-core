@@ -34,17 +34,17 @@ import io.lettuce.test.LettuceExtension;
  * @author Mark Paluch
  */
 @ExtendWith(LettuceExtension.class)
-public class RedisCommandsAsyncIntegrationTests extends TestSupport {
+class RedisCommandsAsyncIntegrationTests extends TestSupport {
 
     private final RedisCommands<String, String> redis;
 
     @Inject
-    public RedisCommandsAsyncIntegrationTests(StatefulRedisConnection<String, String> connection) {
+    RedisCommandsAsyncIntegrationTests(StatefulRedisConnection<String, String> connection) {
         this.redis = connection.sync();
     }
 
     @Test
-    public void async() throws Exception {
+    void async() throws Exception {
 
         RedisCommandFactory factory = new RedisCommandFactory(redis.getStatefulConnection());
 

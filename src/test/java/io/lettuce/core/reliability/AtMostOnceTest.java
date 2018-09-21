@@ -51,13 +51,13 @@ import io.netty.util.Version;
  * @author Mark Paluch
  */
 @SuppressWarnings("rawtypes")
-public class AtMostOnceTest extends AbstractRedisClientTest {
+class AtMostOnceTest extends AbstractRedisClientTest {
 
-    protected final Utf8StringCodec CODEC = new Utf8StringCodec();
-    protected String key = "key";
+    private final Utf8StringCodec CODEC = new Utf8StringCodec();
+    private String key = "key";
 
     @BeforeEach
-    public void before() {
+    void before() {
         client.setOptions(ClientOptions.builder().autoReconnect(false).build());
 
         // needs to be increased on slow systems...perhaps...
@@ -70,7 +70,7 @@ public class AtMostOnceTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void connectionIsConnectedAfterConnect() {
+    void connectionIsConnectedAfterConnect() {
 
         StatefulRedisConnection<String, String> connection = client.connect();
 
@@ -80,7 +80,7 @@ public class AtMostOnceTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void noReconnectHandler() {
+    void noReconnectHandler() {
 
         StatefulRedisConnection<String, String> connection = client.connect();
 
@@ -90,7 +90,7 @@ public class AtMostOnceTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void basicOperations() {
+    void basicOperations() {
 
         RedisCommands<String, String> connection = client.connect().sync();
 
@@ -101,7 +101,7 @@ public class AtMostOnceTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void noBufferedCommandsAfterExecute() {
+    void noBufferedCommandsAfterExecute() {
 
         StatefulRedisConnection<String, String> connection = client.connect();
         RedisCommands<String, String> sync = connection.sync();
@@ -115,7 +115,7 @@ public class AtMostOnceTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void commandIsExecutedOnce() {
+    void commandIsExecutedOnce() {
 
         StatefulRedisConnection<String, String> connection = client.connect();
         RedisCommands<String, String> sync = connection.sync();
@@ -134,7 +134,7 @@ public class AtMostOnceTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void commandNotExecutedFailsOnEncode() {
+    void commandNotExecutedFailsOnEncode() {
 
         StatefulRedisConnection<String, String> connection = client.connect();
         RedisCommands<String, String> sync = client.connect().sync();
@@ -142,14 +142,14 @@ public class AtMostOnceTest extends AbstractRedisClientTest {
 
         sync.set(key, "1");
         AsyncCommand<String, String, String> working = new AsyncCommand<>(new Command<String, String, String>(CommandType.INCR,
-                new IntegerOutput(CODEC), new CommandArgs<String, String>(CODEC).addKey(key)));
+                new IntegerOutput(CODEC), new CommandArgs<>(CODEC).addKey(key)));
         channelWriter.write(working);
         assertThat(working.await(2, TimeUnit.SECONDS)).isTrue();
         assertThat(sync.get(key)).isEqualTo("2");
 
         AsyncCommand<String, String, Object> command = new AsyncCommand<String, String, Object>(
                 new Command<String, String, Object>(CommandType.INCR, new IntegerOutput(CODEC),
-                        new CommandArgs<String, String>(CODEC).addKey(key))) {
+                        new CommandArgs<>(CODEC).addKey(key))) {
 
             @Override
             public void encode(ByteBuf buf) {
@@ -177,7 +177,7 @@ public class AtMostOnceTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void commandNotExecutedChannelClosesWhileFlush() {
+    void commandNotExecutedChannelClosesWhileFlush() {
 
         assumeTrue(Version.identify().get("netty-transport").artifactVersion().startsWith("4.0.2"));
 
@@ -226,7 +226,7 @@ public class AtMostOnceTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void commandFailsDuringDecode() {
+    void commandFailsDuringDecode() {
 
         StatefulRedisConnection<String, String> connection = client.connect();
         RedisCommands<String, String> sync = connection.sync();
@@ -251,7 +251,7 @@ public class AtMostOnceTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void noCommandsExecutedAfterConnectionIsDisconnected() {
+    void noCommandsExecutedAfterConnectionIsDisconnected() {
 
         StatefulRedisConnection<String, String> connection = client.connect();
         connection.sync().quit();
@@ -283,7 +283,7 @@ public class AtMostOnceTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void commandsCancelledOnDisconnect() {
+    void commandsCancelledOnDisconnect() {
 
         StatefulRedisConnection<String, String> connection = client.connect();
 

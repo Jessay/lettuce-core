@@ -25,15 +25,15 @@ import io.lettuce.core.protocol.ProtocolKeyword;
 /**
  * @author Mark Paluch
  */
-public class ReadOnlyCommandsUnitTests {
+class ReadOnlyCommandsUnitTests {
 
     @Test
-    public void testCount() {
+    void testCount() {
         assertThat(ReadOnlyCommands.getReadOnlyCommands()).hasSize(70);
     }
 
     @Test
-    public void testResolvableCommandNames() {
+    void testResolvableCommandNames() {
 
         for (ProtocolKeyword readOnlyCommand : ReadOnlyCommands.getReadOnlyCommands()) {
             assertThat(readOnlyCommand.name()).isEqualTo(CommandType.valueOf(readOnlyCommand.name()).name());

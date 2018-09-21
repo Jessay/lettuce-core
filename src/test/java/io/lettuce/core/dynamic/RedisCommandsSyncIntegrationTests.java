@@ -40,19 +40,19 @@ import io.lettuce.test.LettuceExtension;
  * @author Mark Paluch
  */
 @ExtendWith(LettuceExtension.class)
-public class RedisCommandsSyncIntegrationTests extends TestSupport {
+class RedisCommandsSyncIntegrationTests extends TestSupport {
 
     private final RedisClient client;
     private final RedisCommands<String, String> redis;
 
     @Inject
-    public RedisCommandsSyncIntegrationTests(RedisClient client, StatefulRedisConnection<String, String> connection) {
+    RedisCommandsSyncIntegrationTests(RedisClient client, StatefulRedisConnection<String, String> connection) {
         this.client = client;
         this.redis = connection.sync();
     }
 
     @Test
-    public void sync() {
+    void sync() {
 
         StatefulRedisConnection<byte[], byte[]> connection = client.connect(ByteArrayCodec.INSTANCE);
         RedisCommandFactory factory = new RedisCommandFactory(connection);
@@ -67,7 +67,7 @@ public class RedisCommandsSyncIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void defaultMethod() {
+    void defaultMethod() {
 
         StatefulRedisConnection<byte[], byte[]> connection = client.connect(ByteArrayCodec.INSTANCE);
         RedisCommandFactory factory = new RedisCommandFactory(connection);
@@ -82,7 +82,7 @@ public class RedisCommandsSyncIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void mgetAsValues() {
+    void mgetAsValues() {
 
         redis.set(key, value);
 
@@ -97,7 +97,7 @@ public class RedisCommandsSyncIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void mgetByteArray() {
+    void mgetByteArray() {
 
         redis.set(key, value);
 

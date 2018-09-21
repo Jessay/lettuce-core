@@ -37,12 +37,12 @@ import io.lettuce.test.resource.TestClientResources;
  * @author Mark Paluch
  * @since 3.0
  */
-public class CdiIntegrationTests {
+class CdiIntegrationTests {
 
-    static SeContainer container;
+    private static SeContainer container;
 
     @BeforeAll
-    public static void setUp() {
+    static void setUp() {
 
         container = SeContainerInitializer.newInstance() //
                 .disableDiscovery() //
@@ -51,34 +51,34 @@ public class CdiIntegrationTests {
     }
 
     @AfterAll
-    public static void afterClass() {
+    static void afterClass() {
         container.close();
     }
 
     @Produces
-    public RedisURI redisURI() {
+    RedisURI redisURI() {
         return RedisURI.Builder.redis(AbstractRedisClientTest.host, AbstractRedisClientTest.port).build();
     }
 
     @Produces
-    public ClientResources clientResources() {
+    ClientResources clientResources() {
         return TestClientResources.get();
     }
 
     @Produces
     @PersonDB
-    public ClientResources personClientResources() {
+    ClientResources personClientResources() {
         return DefaultClientResources.create();
     }
 
     @PersonDB
     @Produces
-    public RedisURI redisURIQualified() {
+    RedisURI redisURIQualified() {
         return RedisURI.Builder.redis(AbstractRedisClientTest.host, AbstractRedisClientTest.port + 1).build();
     }
 
     @Test
-    public void testInjection() {
+    void testInjection() {
 
         InjectedClient injectedClient = container.select(InjectedClient.class).get();
         assertThat(injectedClient.redisClient).isNotNull();

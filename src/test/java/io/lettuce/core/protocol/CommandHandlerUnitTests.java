@@ -26,21 +26,18 @@ import java.net.Inet4Address;
 import java.net.InetSocketAddress;
 import java.util.*;
 
-import io.lettuce.core.tracing.Tracing;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -53,6 +50,7 @@ import io.lettuce.core.codec.StringCodec;
 import io.lettuce.core.metrics.CommandLatencyCollector;
 import io.lettuce.core.output.StatusOutput;
 import io.lettuce.core.resource.ClientResources;
+import io.lettuce.core.tracing.Tracing;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.Unpooled;
@@ -61,7 +59,7 @@ import io.netty.util.concurrent.ImmediateEventExecutor;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class CommandHandlerUnitTests {
+class CommandHandlerUnitTests {
 
     private Queue<RedisCommand<String, String, ?>> stack;
 
@@ -98,7 +96,7 @@ public class CommandHandlerUnitTests {
     private CommandLatencyCollector latencyCollector;
 
     @BeforeAll
-    public static void beforeClass() {
+    static void beforeClass() {
         LoggerContext ctx = (LoggerContext) LogManager.getContext();
         Configuration config = ctx.getConfiguration();
         LoggerConfig loggerConfig = config.getLoggerConfig(CommandHandler.class.getName());
@@ -106,7 +104,7 @@ public class CommandHandlerUnitTests {
     }
 
     @AfterAll
-    public static void afterClass() {
+    static void afterClass() {
         LoggerContext ctx = (LoggerContext) LogManager.getContext();
         Configuration config = ctx.getConfiguration();
         LoggerConfig loggerConfig = config.getLoggerConfig(CommandHandler.class.getName());
@@ -114,7 +112,7 @@ public class CommandHandlerUnitTests {
     }
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
 
         when(context.channel()).thenReturn(channel);
         when(context.alloc()).thenReturn(ByteBufAllocator.DEFAULT);
@@ -138,7 +136,7 @@ public class CommandHandlerUnitTests {
     }
 
     @Test
-    public void testChannelActive() throws Exception {
+    void testChannelActive() throws Exception {
         sut.channelRegistered(context);
 
         sut.channelActive(context);
@@ -147,7 +145,7 @@ public class CommandHandlerUnitTests {
     }
 
     @Test
-    public void testExceptionChannelActive() throws Exception {
+    void testExceptionChannelActive() throws Exception {
         sut.setState(CommandHandler.LifecycleState.ACTIVE);
 
         sut.channelActive(context);
@@ -155,7 +153,7 @@ public class CommandHandlerUnitTests {
     }
 
     @Test
-    public void testIOExceptionChannelActive() throws Exception {
+    void testIOExceptionChannelActive() throws Exception {
         sut.setState(CommandHandler.LifecycleState.ACTIVE);
 
         sut.channelActive(context);
@@ -163,14 +161,14 @@ public class CommandHandlerUnitTests {
     }
 
     @Test
-    public void testExceptionChannelInactive() throws Exception {
+    void testExceptionChannelInactive() throws Exception {
         sut.setState(CommandHandler.LifecycleState.DISCONNECTED);
         sut.exceptionCaught(context, new Exception());
         verify(context, never()).fireExceptionCaught(any(Exception.class));
     }
 
     @Test
-    public void testExceptionWithQueue() throws Exception {
+    void testExceptionWithQueue() throws Exception {
         sut.setState(CommandHandler.LifecycleState.ACTIVE);
         stack.clear();
 
@@ -186,7 +184,7 @@ public class CommandHandlerUnitTests {
     }
 
     @Test
-    public void testExceptionWhenClosed() throws Exception {
+    void testExceptionWhenClosed() throws Exception {
 
         sut.setState(CommandHandler.LifecycleState.CLOSED);
 
@@ -195,70 +193,70 @@ public class CommandHandlerUnitTests {
     }
 
     @Test
-    public void isConnectedShouldReportFalseForNOT_CONNECTED() throws Exception {
+    void isConnectedShouldReportFalseForNOT_CONNECTED() throws Exception {
 
         sut.setState(CommandHandler.LifecycleState.NOT_CONNECTED);
         assertThat(sut.isConnected()).isFalse();
     }
 
     @Test
-    public void isConnectedShouldReportFalseForREGISTERED() throws Exception {
+    void isConnectedShouldReportFalseForREGISTERED() throws Exception {
 
         sut.setState(CommandHandler.LifecycleState.REGISTERED);
         assertThat(sut.isConnected()).isFalse();
     }
 
     @Test
-    public void isConnectedShouldReportTrueForCONNECTED() throws Exception {
+    void isConnectedShouldReportTrueForCONNECTED() throws Exception {
 
         sut.setState(CommandHandler.LifecycleState.CONNECTED);
         assertThat(sut.isConnected()).isTrue();
     }
 
     @Test
-    public void isConnectedShouldReportTrueForACTIVATING() throws Exception {
+    void isConnectedShouldReportTrueForACTIVATING() throws Exception {
 
         sut.setState(CommandHandler.LifecycleState.ACTIVATING);
         assertThat(sut.isConnected()).isTrue();
     }
 
     @Test
-    public void isConnectedShouldReportTrueForACTIVE() throws Exception {
+    void isConnectedShouldReportTrueForACTIVE() throws Exception {
 
         sut.setState(CommandHandler.LifecycleState.ACTIVE);
         assertThat(sut.isConnected()).isTrue();
     }
 
     @Test
-    public void isConnectedShouldReportFalseForDISCONNECTED() throws Exception {
+    void isConnectedShouldReportFalseForDISCONNECTED() throws Exception {
 
         sut.setState(CommandHandler.LifecycleState.DISCONNECTED);
         assertThat(sut.isConnected()).isFalse();
     }
 
     @Test
-    public void isConnectedShouldReportFalseForDEACTIVATING() throws Exception {
+    void isConnectedShouldReportFalseForDEACTIVATING() throws Exception {
 
         sut.setState(CommandHandler.LifecycleState.DEACTIVATING);
         assertThat(sut.isConnected()).isFalse();
     }
 
     @Test
-    public void isConnectedShouldReportFalseForDEACTIVATED() throws Exception {
+    void isConnectedShouldReportFalseForDEACTIVATED() throws Exception {
 
         sut.setState(CommandHandler.LifecycleState.DEACTIVATED);
         assertThat(sut.isConnected()).isFalse();
     }
 
     @Test
-    public void isConnectedShouldReportFalseForCLOSED() throws Exception {
+    void isConnectedShouldReportFalseForCLOSED() throws Exception {
 
         sut.setState(CommandHandler.LifecycleState.CLOSED);
         assertThat(sut.isConnected()).isFalse();
     }
 
     @Test
-    public void shouldNotWriteCancelledCommand() throws Exception {
+    void shouldNotWriteCancelledCommand() throws Exception {
 
         command.cancel();
         sut.write(context, command, promise);
@@ -270,7 +268,7 @@ public class CommandHandlerUnitTests {
     }
 
     @Test
-    public void shouldNotWriteCancelledCommands() throws Exception {
+    void shouldNotWriteCancelledCommands() throws Exception {
 
         command.cancel();
         sut.write(context, Collections.singleton(command), promise);
@@ -282,7 +280,7 @@ public class CommandHandlerUnitTests {
     }
 
     @Test
-    public void shouldCancelCommandOnQueueSingleFailure() throws Exception {
+    void shouldCancelCommandOnQueueSingleFailure() throws Exception {
 
         Command<String, String, String> commandMock = mock(Command.class);
 
@@ -302,7 +300,7 @@ public class CommandHandlerUnitTests {
     }
 
     @Test
-    public void shouldCancelCommandOnQueueBatchFailure() throws Exception {
+    void shouldCancelCommandOnQueueBatchFailure() throws Exception {
 
         Command<String, String, String> commandMock = mock(Command.class);
 
@@ -322,7 +320,7 @@ public class CommandHandlerUnitTests {
     }
 
     @Test
-    public void shouldFailOnDuplicateCommands() throws Exception {
+    void shouldFailOnDuplicateCommands() throws Exception {
 
         Command<String, String, String> commandMock = mock(Command.class);
 
@@ -334,7 +332,7 @@ public class CommandHandlerUnitTests {
     }
 
     @Test
-    public void shouldWriteActiveCommands() throws Exception {
+    void shouldWriteActiveCommands() throws Exception {
 
         when(promise.isVoid()).thenReturn(true);
 
@@ -345,7 +343,7 @@ public class CommandHandlerUnitTests {
     }
 
     @Test
-    public void shouldNotWriteCancelledCommandBatch() throws Exception {
+    void shouldNotWriteCancelledCommandBatch() throws Exception {
 
         command.cancel();
         sut.write(context, Arrays.asList(command), promise);
@@ -355,7 +353,7 @@ public class CommandHandlerUnitTests {
     }
 
     @Test
-    public void shouldWriteSingleActiveCommandsInBatch() throws Exception {
+    void shouldWriteSingleActiveCommandsInBatch() throws Exception {
 
         List<Command<String, String, String>> commands = Arrays.asList(command);
         when(promise.isVoid()).thenReturn(true);
@@ -366,7 +364,7 @@ public class CommandHandlerUnitTests {
     }
 
     @Test
-    public void shouldWriteActiveCommandsInBatch() throws Exception {
+    void shouldWriteActiveCommandsInBatch() throws Exception {
 
         Command<String, String, String> anotherCommand = new Command<>(CommandType.APPEND,
                 new StatusOutput<>(StringCodec.UTF8), null);
@@ -381,7 +379,7 @@ public class CommandHandlerUnitTests {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void shouldWriteActiveCommandsInMixedBatch() throws Exception {
+    void shouldWriteActiveCommandsInMixedBatch() throws Exception {
 
         Command<String, String, String> command2 = new Command<>(CommandType.APPEND, new StatusOutput<>(StringCodec.UTF8), null);
         command.cancel();
@@ -398,7 +396,7 @@ public class CommandHandlerUnitTests {
     }
 
     @Test
-    public void shouldRecordCorrectFirstResponseLatency() throws Exception {
+    void shouldRecordCorrectFirstResponseLatency() throws Exception {
 
         ChannelPromise channelPromise = new DefaultChannelPromise(channel, ImmediateEventExecutor.INSTANCE);
         channelPromise.setSuccess();
@@ -419,7 +417,7 @@ public class CommandHandlerUnitTests {
     }
 
     @Test
-    public void shouldIgnoreNonReadableBuffers() throws Exception {
+    void shouldIgnoreNonReadableBuffers() throws Exception {
 
         ByteBuf byteBufMock = mock(ByteBuf.class);
         when(byteBufMock.isReadable()).thenReturn(false);

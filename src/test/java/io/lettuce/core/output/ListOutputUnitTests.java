@@ -31,9 +31,9 @@ import io.lettuce.core.codec.Utf8StringCodec;
 /**
  * @author Mark Paluch
  */
-public class ListOutputUnitTests {
+class ListOutputUnitTests {
 
-    public static Collection<Fixture> parameters() {
+    static Collection<Fixture> parameters() {
 
         Utf8StringCodec codec = new Utf8StringCodec();
 
@@ -51,26 +51,26 @@ public class ListOutputUnitTests {
 
     @ParameterizedTest
     @MethodSource("parameters")
-    public void settingEmptySubscriberShouldFail(Fixture fixture) {
+    void settingEmptySubscriberShouldFail(Fixture fixture) {
         assertThatThrownBy(() -> fixture.streamingOutput.setSubscriber(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @ParameterizedTest
     @MethodSource("parameters")
-    public void defaultSubscriberIsSet(Fixture fixture) {
+    void defaultSubscriberIsSet(Fixture fixture) {
         fixture.commandOutput.multi(1);
         assertThat(fixture.streamingOutput.getSubscriber()).isNotNull().isInstanceOf(ListSubscriber.class);
     }
 
     @ParameterizedTest
     @MethodSource("parameters")
-    public void setIntegerShouldFail(Fixture fixture) {
+    void setIntegerShouldFail(Fixture fixture) {
         assertThatThrownBy(() -> fixture.commandOutput.set(123L)).isInstanceOf(IllegalStateException.class);
     }
 
     @ParameterizedTest
     @MethodSource("parameters")
-    public void setValueShouldConvert(Fixture fixture) {
+    void setValueShouldConvert(Fixture fixture) {
 
         fixture.commandOutput.multi(1);
         fixture.commandOutput.set(ByteBuffer.wrap(fixture.valueBytes));
@@ -85,7 +85,7 @@ public class ListOutputUnitTests {
         final byte[] valueBytes;
         final Object value;
 
-        public Fixture(CommandOutput<?, ?, ?> commandOutput, StreamingOutput<?> streamingOutput, byte[] valueBytes, Object value) {
+        Fixture(CommandOutput<?, ?, ?> commandOutput, StreamingOutput<?> streamingOutput, byte[] valueBytes, Object value) {
 
             this.commandOutput = (CommandOutput) commandOutput;
             this.streamingOutput = streamingOutput;

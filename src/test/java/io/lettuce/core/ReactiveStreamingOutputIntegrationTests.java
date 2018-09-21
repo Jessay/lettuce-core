@@ -38,19 +38,19 @@ import io.lettuce.test.condition.EnabledOnCommand;
  * @author Mark Paluch
  */
 @ExtendWith(LettuceExtension.class)
-public class ReactiveStreamingOutputIntegrationTests extends TestSupport {
+class ReactiveStreamingOutputIntegrationTests extends TestSupport {
 
     private final RedisCommands<String, String> redis;
     private final RedisReactiveCommands<String, String> reactive;
 
     @Inject
-    public ReactiveStreamingOutputIntegrationTests(StatefulRedisConnection<String, String> connection) {
+    ReactiveStreamingOutputIntegrationTests(StatefulRedisConnection<String, String> connection) {
         this.redis = connection.sync();
         this.reactive = connection.reactive();
     }
 
     @Test
-    public void keyListCommandShouldReturnAllElements() {
+    void keyListCommandShouldReturnAllElements() {
 
         redis.mset(KeysAndValues.MAP);
 
@@ -59,7 +59,7 @@ public class ReactiveStreamingOutputIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void valueListCommandShouldReturnAllElements() {
+    void valueListCommandShouldReturnAllElements() {
 
         redis.mset(KeysAndValues.MAP);
 
@@ -68,12 +68,12 @@ public class ReactiveStreamingOutputIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void booleanListCommandShouldReturnAllElements() {
+    void booleanListCommandShouldReturnAllElements() {
         StepVerifier.create(reactive.scriptExists("a", "b", "c")).expectNextCount(3).verifyComplete();
     }
 
     @Test
-    public void scoredValueListCommandShouldReturnAllElements() {
+    void scoredValueListCommandShouldReturnAllElements() {
 
         redis.zadd(key, 1d, "v1", 2d, "v2", 3d, "v3");
 
@@ -84,7 +84,7 @@ public class ReactiveStreamingOutputIntegrationTests extends TestSupport {
 
     @Test
     @EnabledOnCommand("GEORADIUS")
-    public void geoWithinListCommandShouldReturnAllElements() {
+    void geoWithinListCommandShouldReturnAllElements() {
 
         redis.geoadd(key, 50, 20, "value1");
         redis.geoadd(key, 50, 21, "value2");
@@ -103,7 +103,7 @@ public class ReactiveStreamingOutputIntegrationTests extends TestSupport {
 
     @Test
     @EnabledOnCommand("GEOPOS")
-    public void geoCoordinatesListCommandShouldReturnAllElements() {
+    void geoCoordinatesListCommandShouldReturnAllElements() {
 
         redis.geoadd(key, 50, 20, "value1");
         redis.geoadd(key, 50, 21, "value2");

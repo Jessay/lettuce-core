@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Mark Paluch
  */
-public class CompressionCodecUnitTests {
+class CompressionCodecUnitTests {
 
     private String key = "key";
     private byte[] keyGzipBytes = new byte[] { 31, -117, 8, 0, 0, 0, 0, 0, 0, 0, -53, 78, -83, 4, 0, -87, -85, -112, -118, 3, 0,
@@ -36,7 +36,7 @@ public class CompressionCodecUnitTests {
     private String value = "value";
 
     @Test
-    public void keyPassthroughTest() throws Exception {
+    void keyPassthroughTest() throws Exception {
         RedisCodec<String, String> sut = CompressionCodec.valueCompressor(new Utf8StringCodec(),
                 CompressionCodec.CompressionType.GZIP);
         ByteBuffer byteBuffer = sut.encodeKey(value);
@@ -47,7 +47,7 @@ public class CompressionCodecUnitTests {
     }
 
     @Test
-    public void gzipValueTest() throws Exception {
+    void gzipValueTest() throws Exception {
         RedisCodec<String, String> sut = CompressionCodec.valueCompressor(new Utf8StringCodec(),
                 CompressionCodec.CompressionType.GZIP);
         ByteBuffer byteBuffer = sut.encodeValue(key);
@@ -58,7 +58,7 @@ public class CompressionCodecUnitTests {
     }
 
     @Test
-    public void deflateValueTest() throws Exception {
+    void deflateValueTest() throws Exception {
         RedisCodec<String, String> sut = CompressionCodec.valueCompressor(new Utf8StringCodec(),
                 CompressionCodec.CompressionType.DEFLATE);
         ByteBuffer byteBuffer = sut.encodeValue(key);
@@ -69,7 +69,7 @@ public class CompressionCodecUnitTests {
     }
 
     @Test
-    public void wrongCompressionTypeOnDecode() throws Exception {
+    void wrongCompressionTypeOnDecode() throws Exception {
         RedisCodec<String, String> sut = CompressionCodec.valueCompressor(new Utf8StringCodec(),
                 CompressionCodec.CompressionType.DEFLATE);
 

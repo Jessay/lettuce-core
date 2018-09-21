@@ -27,10 +27,10 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Mark Paluch
  */
-public class ValueUnitTests {
+class ValueUnitTests {
 
     @Test
-    public void shouldCreateEmptyValueFromOptional() {
+    void shouldCreateEmptyValueFromOptional() {
 
         Value<String> value = Value.from(Optional.<String> empty());
 
@@ -38,7 +38,7 @@ public class ValueUnitTests {
     }
 
     @Test
-    public void shouldCreateEmptyValue() {
+    void shouldCreateEmptyValue() {
 
         Value<String> value = Value.empty();
 
@@ -46,7 +46,7 @@ public class ValueUnitTests {
     }
 
     @Test
-    public void shouldCreateNonEmptyValueFromOptional() {
+    void shouldCreateNonEmptyValueFromOptional() {
 
         Value<String> value = Value.from(Optional.of("hello"));
 
@@ -55,7 +55,7 @@ public class ValueUnitTests {
     }
 
     @Test
-    public void shouldCreateEmptyValueFromValue() {
+    void shouldCreateEmptyValueFromValue() {
 
         Value<String> value = Value.fromNullable(null);
 
@@ -63,7 +63,7 @@ public class ValueUnitTests {
     }
 
     @Test
-    public void shouldCreateNonEmptyValueFromValue() {
+    void shouldCreateNonEmptyValueFromValue() {
 
         Value<String> value = Value.fromNullable("hello");
 
@@ -72,7 +72,7 @@ public class ValueUnitTests {
     }
 
     @Test
-    public void justShouldCreateValueFromValue() {
+    void justShouldCreateValueFromValue() {
 
         Value<String> value = Value.just("hello");
 
@@ -80,12 +80,12 @@ public class ValueUnitTests {
     }
 
     @Test
-    public void justShouldRejectEmptyValueFromValue() {
+    void justShouldRejectEmptyValueFromValue() {
         assertThatThrownBy(() -> Value.just(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void shouldCreateNonEmptyValue() {
+    void shouldCreateNonEmptyValue() {
 
         Value<String> value = Value.from(Optional.of("hello"));
 
@@ -94,7 +94,7 @@ public class ValueUnitTests {
     }
 
     @Test
-    public void optionalShouldReturnOptional() {
+    void optionalShouldReturnOptional() {
 
         Value<String> value = Value.from(Optional.of("hello"));
 
@@ -102,7 +102,7 @@ public class ValueUnitTests {
     }
 
     @Test
-    public void emptyValueOptionalShouldReturnOptional() {
+    void emptyValueOptionalShouldReturnOptional() {
 
         Value<String> value = Value.from(Optional.empty());
 
@@ -110,7 +110,7 @@ public class ValueUnitTests {
     }
 
     @Test
-    public void getValueOrElseShouldReturnValue() {
+    void getValueOrElseShouldReturnValue() {
 
         Value<String> value = Value.from(Optional.of("hello"));
 
@@ -118,7 +118,7 @@ public class ValueUnitTests {
     }
 
     @Test
-    public void getValueOrElseShouldReturnOtherValue() {
+    void getValueOrElseShouldReturnOtherValue() {
 
         Value<String> value = Value.from(Optional.empty());
 
@@ -126,7 +126,7 @@ public class ValueUnitTests {
     }
 
     @Test
-    public void orElseThrowShouldReturnValue() {
+    void orElseThrowShouldReturnValue() {
 
         Value<String> value = Value.from(Optional.of("hello"));
 
@@ -134,7 +134,7 @@ public class ValueUnitTests {
     }
 
     @Test
-    public void emptyValueGetValueOrElseShouldThrowException() {
+    void emptyValueGetValueOrElseShouldThrowException() {
 
         Value<String> value = Value.from(Optional.empty());
 
@@ -143,7 +143,7 @@ public class ValueUnitTests {
     }
 
     @Test
-    public void getValueOrElseGetShouldReturnValue() {
+    void getValueOrElseGetShouldReturnValue() {
 
         Value<String> value = Value.from(Optional.of("hello"));
 
@@ -151,7 +151,7 @@ public class ValueUnitTests {
     }
 
     @Test
-    public void emptyValueGetValueOrElseGetShouldReturnOtherValue() {
+    void emptyValueGetValueOrElseGetShouldReturnOtherValue() {
 
         Value<String> value = Value.from(Optional.empty());
 
@@ -159,7 +159,7 @@ public class ValueUnitTests {
     }
 
     @Test
-    public void mapShouldMapValue() {
+    void mapShouldMapValue() {
 
         Value<String> value = Value.from(Optional.of("hello"));
 
@@ -167,7 +167,7 @@ public class ValueUnitTests {
     }
 
     @Test
-    public void ifHasValueShouldExecuteCallback() {
+    void ifHasValueShouldExecuteCallback() {
 
         Value<String> value = Value.just("hello");
         AtomicBoolean atomicBoolean = new AtomicBoolean();
@@ -177,7 +177,7 @@ public class ValueUnitTests {
     }
 
     @Test
-    public void emptyValueShouldNotExecuteIfHasValueCallback() {
+    void emptyValueShouldNotExecuteIfHasValueCallback() {
 
         Value<String> value = Value.empty();
         AtomicBoolean atomicBoolean = new AtomicBoolean();
@@ -187,7 +187,7 @@ public class ValueUnitTests {
     }
 
     @Test
-    public void ifEmptyShouldExecuteCallback() {
+    void ifEmptyShouldExecuteCallback() {
 
         Value<String> value = Value.empty();
         AtomicBoolean atomicBoolean = new AtomicBoolean();
@@ -197,7 +197,7 @@ public class ValueUnitTests {
     }
 
     @Test
-    public void valueShouldNotExecuteIfEmptyCallback() {
+    void valueShouldNotExecuteIfEmptyCallback() {
 
         Value<String> value = Value.just("hello");
         AtomicBoolean atomicBoolean = new AtomicBoolean();
@@ -207,7 +207,7 @@ public class ValueUnitTests {
     }
 
     @Test
-    public void emptyValueMapShouldNotMapEmptyValue() {
+    void emptyValueMapShouldNotMapEmptyValue() {
 
         Value<String> value = Value.from(Optional.empty());
 
@@ -215,12 +215,12 @@ public class ValueUnitTests {
     }
 
     @Test
-    public void emptyValueGetEmptyValueShouldThrowException() {
+    void emptyValueGetEmptyValueShouldThrowException() {
         assertThatThrownBy(() -> Value.from(Optional.<String> empty()).getValue()).isInstanceOf(NoSuchElementException.class);
     }
 
     @Test
-    public void shouldBeEquals() {
+    void shouldBeEquals() {
 
         Value<String> value = Value.from(Optional.of("hello"));
         Value<String> other = Value.fromNullable("hello");
@@ -234,7 +234,7 @@ public class ValueUnitTests {
     }
 
     @Test
-    public void toStringShouldRenderCorrectly() {
+    void toStringShouldRenderCorrectly() {
 
         Value<String> value = Value.from(Optional.of("hello"));
         Value<String> empty = Value.fromNullable(null);
@@ -244,7 +244,7 @@ public class ValueUnitTests {
     }
 
     @Test
-    public void emptyValueStreamShouldCreateEmptyStream() {
+    void emptyValueStreamShouldCreateEmptyStream() {
 
         Value<String> empty = Value.fromNullable(null);
 
@@ -252,7 +252,7 @@ public class ValueUnitTests {
     }
 
     @Test
-    public void streamShouldCreateAStream() {
+    void streamShouldCreateAStream() {
 
         Value<String> empty = Value.fromNullable("hello");
 

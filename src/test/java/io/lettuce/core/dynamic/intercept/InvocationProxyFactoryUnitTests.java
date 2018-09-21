@@ -22,10 +22,10 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Mark Paluch
  */
-public class InvocationProxyFactoryUnitTests {
+class InvocationProxyFactoryUnitTests {
 
     @Test
-    public void shouldDelegateCallsToInterceptor() {
+    void shouldDelegateCallsToInterceptor() {
 
         InvocationProxyFactory factory = new InvocationProxyFactory();
         factory.addInterface(TargetWithBooleanMethod.class);
@@ -37,7 +37,7 @@ public class InvocationProxyFactoryUnitTests {
     }
 
     @Test
-    public void shouldNotFailWithoutFurtherInterceptors() {
+    void shouldNotFailWithoutFurtherInterceptors() {
 
         InvocationProxyFactory factory = new InvocationProxyFactory();
         factory.addInterface(TargetWithBooleanMethod.class);
@@ -48,7 +48,7 @@ public class InvocationProxyFactoryUnitTests {
     }
 
     @Test
-    public void shouldCallInterceptorsInOrder() throws InterruptedException {
+    void shouldCallInterceptorsInOrder() throws InterruptedException {
 
         InvocationProxyFactory factory = new InvocationProxyFactory();
         factory.addInterface(TargetWithStringMethod.class);
@@ -70,7 +70,7 @@ public class InvocationProxyFactoryUnitTests {
 
         private final Object value;
 
-        public ReturnValue(Object value) {
+        ReturnValue(Object value) {
             this.value = value;
         }
 
@@ -89,7 +89,7 @@ public class InvocationProxyFactoryUnitTests {
 
         private final String toAppend;
 
-        public StringAppendingMethodInterceptor(String toAppend) {
+        StringAppendingMethodInterceptor(String toAppend) {
             this.toAppend = toAppend;
         }
 

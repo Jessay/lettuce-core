@@ -27,10 +27,10 @@ import reactor.core.publisher.Flux;
 /**
  * @author Mark Paluch
  */
-public class DeclaredCommandMethodUnitTests {
+class DeclaredCommandMethodUnitTests {
 
     @Test
-    public void shouldResolveConcreteType() throws Exception {
+    void shouldResolveConcreteType() throws Exception {
 
         CommandMethod commandMethod = DeclaredCommandMethod.create(getMethod("getString"));
 
@@ -39,7 +39,7 @@ public class DeclaredCommandMethodUnitTests {
     }
 
     @Test
-    public void shouldResolveFutureComponentType() throws Exception {
+    void shouldResolveFutureComponentType() throws Exception {
 
         CommandMethod commandMethod = DeclaredCommandMethod.create(getMethod("getFuture"));
 
@@ -48,7 +48,7 @@ public class DeclaredCommandMethodUnitTests {
     }
 
     @Test
-    public void shouldResolveFluxComponentType() throws Exception {
+    void shouldResolveFluxComponentType() throws Exception {
 
         CommandMethod commandMethod = DeclaredCommandMethod.create(getMethod("getFlux"));
 
@@ -60,7 +60,7 @@ public class DeclaredCommandMethodUnitTests {
         return MyInterface.class.getDeclaredMethod(name);
     }
 
-    static interface MyInterface {
+    private static interface MyInterface {
 
         String getString();
 

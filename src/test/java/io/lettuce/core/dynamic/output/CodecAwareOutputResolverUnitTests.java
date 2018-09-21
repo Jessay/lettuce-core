@@ -33,13 +33,13 @@ import io.lettuce.core.output.*;
 /**
  * @author Mark Paluch
  */
-public class CodecAwareOutputResolverUnitTests {
+class CodecAwareOutputResolverUnitTests {
 
     private CodecAwareOutputFactoryResolver resolver = new CodecAwareOutputFactoryResolver(
             new OutputRegistryCommandOutputFactoryResolver(new OutputRegistry()), new ByteBufferAndStringCodec());
 
     @Test
-    public void shouldResolveValueOutput() {
+    void shouldResolveValueOutput() {
 
         CommandOutput<?, ?, ?> commandOutput = getCommandOutput("string");
 
@@ -47,14 +47,14 @@ public class CodecAwareOutputResolverUnitTests {
     }
 
     @Test
-    public void shouldResolveValueListOutput() {
+    void shouldResolveValueListOutput() {
 
         assertThat(getCommandOutput("stringList")).isOfAnyClassIn(ValueListOutput.class, StringListOutput.class);
         assertThat(getCommandOutput("charSequenceList")).isOfAnyClassIn(ValueListOutput.class, StringListOutput.class);
     }
 
     @Test
-    public void shouldResolveKeyOutput() {
+    void shouldResolveKeyOutput() {
 
         CommandOutput<?, ?, ?> commandOutput = getCommandOutput("byteBuffer");
 
@@ -62,7 +62,7 @@ public class CodecAwareOutputResolverUnitTests {
     }
 
     @Test
-    public void shouldResolveKeyListOutput() {
+    void shouldResolveKeyListOutput() {
 
         CommandOutput<?, ?, ?> commandOutput = getCommandOutput("byteBufferList");
 
@@ -70,7 +70,7 @@ public class CodecAwareOutputResolverUnitTests {
     }
 
     @Test
-    public void shouldResolveListOfMapsOutput() {
+    void shouldResolveListOfMapsOutput() {
 
         CommandOutput<?, ?, ?> commandOutput = getCommandOutput("listOfMapsOutput");
 
@@ -78,14 +78,14 @@ public class CodecAwareOutputResolverUnitTests {
     }
 
     @Test
-    public void shouldResolveMapsOutput() {
+    void shouldResolveMapsOutput() {
 
         CommandOutput<?, ?, ?> commandOutput = getCommandOutput("mapOutput");
 
         assertThat(commandOutput).isInstanceOf(MapOutput.class);
     }
 
-    protected CommandOutput<?, ?, ?> getCommandOutput(String methodName) {
+    CommandOutput<?, ?, ?> getCommandOutput(String methodName) {
 
         Method method = ReflectionUtils.findMethod(CommandMethods.class, methodName);
         CommandMethod commandMethod = DeclaredCommandMethod.create(method);

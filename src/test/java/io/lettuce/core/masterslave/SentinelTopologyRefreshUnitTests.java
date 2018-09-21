@@ -30,11 +30,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -61,7 +59,7 @@ import io.netty.util.concurrent.EventExecutorGroup;
 @SuppressWarnings("unchecked")
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class SentinelTopologyRefreshUnitTests {
+class SentinelTopologyRefreshUnitTests {
 
     private static final RedisURI host1 = RedisURI.create("localhost", 1234);
     private static final RedisURI host2 = RedisURI.create("localhost", 3456);
@@ -90,7 +88,7 @@ public class SentinelTopologyRefreshUnitTests {
     private SentinelTopologyRefresh sut;
 
     @BeforeEach
-    public void before() {
+    void before() {
 
         when(redisClient.connectPubSubAsync(any(StringCodec.class), eq(host1))).thenReturn(
                 ConnectionFuture.completed(null, connection));
@@ -107,14 +105,14 @@ public class SentinelTopologyRefreshUnitTests {
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
 
         verify(redisClient, never()).connect(any(), any());
         verify(redisClient, never()).connectPubSub(any(), any());
     }
 
     @Test
-    public void bind() {
+    void bind() {
 
         sut.bind(refreshRunnable);
 
@@ -123,7 +121,7 @@ public class SentinelTopologyRefreshUnitTests {
     }
 
     @Test
-    public void bindWithSecondSentinelFails() {
+    void bindWithSecondSentinelFails() {
 
         sut = new SentinelTopologyRefresh(redisClient, "mymaster", Arrays.asList(host1, host2));
 
@@ -139,7 +137,7 @@ public class SentinelTopologyRefreshUnitTests {
     }
 
     @Test
-    public void bindWithSentinelRecovery() {
+    void bindWithSentinelRecovery() {
 
         StatefulRedisPubSubConnection<String, String> connection2 = mock(StatefulRedisPubSubConnection.class);
         RedisPubSubAsyncCommands<String, String> async2 = mock(RedisPubSubAsyncCommands.class);
@@ -178,7 +176,7 @@ public class SentinelTopologyRefreshUnitTests {
     }
 
     @Test
-    public void bindDuringClose() {
+    void bindDuringClose() {
 
         sut = new SentinelTopologyRefresh(redisClient, "mymaster", Arrays.asList(host1, host2));
 
@@ -205,7 +203,7 @@ public class SentinelTopologyRefreshUnitTests {
     }
 
     @Test
-    public void close() {
+    void close() {
 
         when(connection.closeAsync()).thenReturn(CompletableFuture.completedFuture(null));
 
@@ -217,7 +215,7 @@ public class SentinelTopologyRefreshUnitTests {
     }
 
     @Test
-    public void bindAfterClose() {
+    void bindAfterClose() {
 
         sut.close();
         sut.bind(refreshRunnable);
@@ -227,7 +225,7 @@ public class SentinelTopologyRefreshUnitTests {
     }
 
     @Test
-    public void shouldNotProcessOtherEvents() {
+    void shouldNotProcessOtherEvents() {
 
         RedisPubSubAdapter<String, String> adapter = getAdapter();
         sut.bind(refreshRunnable);
@@ -240,7 +238,7 @@ public class SentinelTopologyRefreshUnitTests {
     }
 
     @Test
-    public void shouldProcessSlaveDown() {
+    void shouldProcessSlaveDown() {
 
         RedisPubSubAdapter<String, String> adapter = getAdapter();
         sut.bind(refreshRunnable);
@@ -253,7 +251,7 @@ public class SentinelTopologyRefreshUnitTests {
     }
 
     @Test
-    public void shouldProcessSlaveAdded() {
+    void shouldProcessSlaveAdded() {
 
         RedisPubSubAdapter<String, String> adapter = getAdapter();
         sut.bind(refreshRunnable);
@@ -266,7 +264,7 @@ public class SentinelTopologyRefreshUnitTests {
     }
 
     @Test
-    public void shouldProcessSlaveBackUp() {
+    void shouldProcessSlaveBackUp() {
 
         RedisPubSubAdapter<String, String> adapter = getAdapter();
         sut.bind(refreshRunnable);
@@ -279,7 +277,7 @@ public class SentinelTopologyRefreshUnitTests {
     }
 
     @Test
-    public void shouldProcessElectedLeader() {
+    void shouldProcessElectedLeader() {
 
         RedisPubSubAdapter<String, String> adapter = getAdapter();
         sut.bind(refreshRunnable);
@@ -292,7 +290,7 @@ public class SentinelTopologyRefreshUnitTests {
     }
 
     @Test
-    public void shouldProcessSwitchMaster() {
+    void shouldProcessSwitchMaster() {
 
         RedisPubSubAdapter<String, String> adapter = getAdapter();
         sut.bind(refreshRunnable);
@@ -305,7 +303,7 @@ public class SentinelTopologyRefreshUnitTests {
     }
 
     @Test
-    public void shouldProcessFixSlaveConfig() {
+    void shouldProcessFixSlaveConfig() {
 
         RedisPubSubAdapter<String, String> adapter = getAdapter();
         sut.bind(refreshRunnable);
@@ -318,7 +316,7 @@ public class SentinelTopologyRefreshUnitTests {
     }
 
     @Test
-    public void shouldProcessConvertToSlave() {
+    void shouldProcessConvertToSlave() {
 
         RedisPubSubAdapter<String, String> adapter = getAdapter();
         sut.bind(refreshRunnable);
@@ -331,7 +329,7 @@ public class SentinelTopologyRefreshUnitTests {
     }
 
     @Test
-    public void shouldProcessRoleChange() {
+    void shouldProcessRoleChange() {
 
         RedisPubSubAdapter<String, String> adapter = getAdapter();
         sut.bind(refreshRunnable);
@@ -344,7 +342,7 @@ public class SentinelTopologyRefreshUnitTests {
     }
 
     @Test
-    public void shouldProcessFailoverEnd() {
+    void shouldProcessFailoverEnd() {
 
         RedisPubSubAdapter<String, String> adapter = getAdapter();
         sut.bind(refreshRunnable);
@@ -357,7 +355,7 @@ public class SentinelTopologyRefreshUnitTests {
     }
 
     @Test
-    public void shouldProcessFailoverTimeout() {
+    void shouldProcessFailoverTimeout() {
 
         RedisPubSubAdapter<String, String> adapter = getAdapter();
         sut.bind(refreshRunnable);
@@ -370,7 +368,7 @@ public class SentinelTopologyRefreshUnitTests {
     }
 
     @Test
-    public void shouldExecuteOnceWithinATimeout() {
+    void shouldExecuteOnceWithinATimeout() {
 
         RedisPubSubAdapter<String, String> adapter = getAdapter();
         sut.bind(refreshRunnable);
@@ -384,7 +382,7 @@ public class SentinelTopologyRefreshUnitTests {
     }
 
     @Test
-    public void shouldNotProcessIfExecutorIsShuttingDown() {
+    void shouldNotProcessIfExecutorIsShuttingDown() {
 
         RedisPubSubAdapter<String, String> adapter = getAdapter();
         sut.bind(refreshRunnable);

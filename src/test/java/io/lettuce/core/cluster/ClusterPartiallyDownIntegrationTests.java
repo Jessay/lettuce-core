@@ -27,19 +27,22 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import io.lettuce.test.resource.TestClientResources;
-import io.lettuce.core.*;
+import io.lettuce.core.RedisConnectionException;
+import io.lettuce.core.RedisException;
+import io.lettuce.core.RedisURI;
+import io.lettuce.core.TestSupport;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.cluster.models.partitions.Partitions;
 import io.lettuce.core.cluster.models.partitions.RedisClusterNode;
 import io.lettuce.core.internal.LettuceLists;
 import io.lettuce.core.resource.ClientResources;
+import io.lettuce.test.resource.TestClientResources;
 import io.lettuce.test.settings.TestSettings;
 
 /**
  * @author Mark Paluch
  */
-public class ClusterPartiallyDownIntegrationTests extends TestSupport {
+class ClusterPartiallyDownIntegrationTests extends TestSupport {
 
     private static ClientResources clientResources;
 
@@ -56,17 +59,17 @@ public class ClusterPartiallyDownIntegrationTests extends TestSupport {
     private RedisClusterClient redisClusterClient;
 
     @BeforeAll
-    public static void beforeClass() {
+    static void beforeClass() {
         clientResources = TestClientResources.get();
     }
 
     @AfterEach
-    public void after() {
+    void after() {
         redisClusterClient.shutdown();
     }
 
     @Test
-    public void connectToPartiallyDownCluster() {
+    void connectToPartiallyDownCluster() {
 
         List<RedisURI> seed = LettuceLists.unmodifiableList(URI_1, URI_2, URI_3, URI_4);
         redisClusterClient = RedisClusterClient.create(clientResources, seed);
@@ -78,7 +81,7 @@ public class ClusterPartiallyDownIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void operateOnPartiallyDownCluster() {
+    void operateOnPartiallyDownCluster() {
 
         List<RedisURI> seed = LettuceLists.unmodifiableList(URI_1, URI_2, URI_3, URI_4);
         redisClusterClient = RedisClusterClient.create(clientResources, seed);
@@ -98,7 +101,7 @@ public class ClusterPartiallyDownIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void seedNodesAreOffline() {
+    void seedNodesAreOffline() {
 
         List<RedisURI> seed = LettuceLists.unmodifiableList(URI_1, URI_2, URI_3);
         redisClusterClient = RedisClusterClient.create(clientResources, seed);
@@ -113,7 +116,7 @@ public class ClusterPartiallyDownIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void partitionNodesAreOffline() {
+    void partitionNodesAreOffline() {
 
         List<RedisURI> seed = LettuceLists.unmodifiableList(URI_1, URI_2, URI_3);
         redisClusterClient = RedisClusterClient.create(clientResources, seed);

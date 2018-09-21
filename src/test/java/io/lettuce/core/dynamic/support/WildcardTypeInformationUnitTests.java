@@ -27,10 +27,10 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Mark Paluch
  */
-public class WildcardTypeInformationUnitTests {
+class WildcardTypeInformationUnitTests {
 
     @Test
-    public void shouldResolveWildcardType() {
+    void shouldResolveWildcardType() {
 
         TypeInformation<Object> information = ClassTypeInformation.fromReturnTypeOf(methodOf("listOfAnything"));
 
@@ -38,7 +38,7 @@ public class WildcardTypeInformationUnitTests {
     }
 
     @Test
-    public void isAssignableFromExactType() {
+    void isAssignableFromExactType() {
 
         TypeInformation<Object> information = ClassTypeInformation.fromReturnTypeOf(methodOf("listOfAnything"));
         TypeInformation<Object> compatible = ClassTypeInformation.fromReturnTypeOf(methodOf("anotherListOfAnything"));
@@ -47,7 +47,7 @@ public class WildcardTypeInformationUnitTests {
     }
 
     @Test
-    public void isAssignableFromCompatibleFirstLevelType() {
+    void isAssignableFromCompatibleFirstLevelType() {
 
         TypeInformation<Object> target = ClassTypeInformation.fromReturnTypeOf(methodOf("collectionOfAnything"));
         TypeInformation<Object> source = ClassTypeInformation.fromReturnTypeOf(methodOf("anotherListOfAnything"));
@@ -56,7 +56,7 @@ public class WildcardTypeInformationUnitTests {
     }
 
     @Test
-    public void isAssignableFromCompatibleComponentType() {
+    void isAssignableFromCompatibleComponentType() {
 
         TypeInformation<Object> target = ClassTypeInformation.fromReturnTypeOf(methodOf("listOfAnything"));
         TypeInformation<Object> source = ClassTypeInformation.fromReturnTypeOf(methodOf("exactNumber"));
@@ -66,7 +66,7 @@ public class WildcardTypeInformationUnitTests {
     }
 
     @Test
-    public void isAssignableFromUpperBoundComponentType() {
+    void isAssignableFromUpperBoundComponentType() {
 
         TypeInformation<?> target = componentTypeOf("atMostInteger");
 
@@ -76,7 +76,7 @@ public class WildcardTypeInformationUnitTests {
     }
 
     @Test
-    public void isAssignableFromLowerBoundComponentType() {
+    void isAssignableFromLowerBoundComponentType() {
 
         TypeInformation<?> target = componentTypeOf("atLeastNumber");
 
@@ -87,15 +87,15 @@ public class WildcardTypeInformationUnitTests {
         assertThat(target.isAssignableFrom(from(Object.class))).isFalse();
     }
 
-    protected TypeInformation<?> componentTypeOf(String name) {
+    TypeInformation<?> componentTypeOf(String name) {
         return ClassTypeInformation.fromReturnTypeOf(methodOf(name)).getComponentType();
     }
 
-    protected Method methodOf(String name) {
+    Method methodOf(String name) {
         return ReflectionUtils.findMethod(GenericReturnTypes.class, name);
     }
 
-    static interface GenericReturnTypes {
+    private static interface GenericReturnTypes {
 
         List<Number> exactNumber();
 

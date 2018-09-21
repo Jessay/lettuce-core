@@ -29,36 +29,36 @@ import io.lettuce.core.internal.LettuceLists;
 /**
  * @author Mark Paluch
  */
-public class RoleParserUnitTests {
+class RoleParserUnitTests {
 
-    public static final long REPLICATION_OFFSET_1 = 3167038L;
-    public static final long REPLICATION_OFFSET_2 = 3167039L;
-    public static final String LOCALHOST = "127.0.0.1";
+    private static final long REPLICATION_OFFSET_1 = 3167038L;
+    private static final long REPLICATION_OFFSET_2 = 3167039L;
+    private static final String LOCALHOST = "127.0.0.1";
 
     @Test
-    public void testMappings() {
+    void testMappings() {
         assertThat(RoleParser.ROLE_MAPPING).hasSameSizeAs(RedisInstance.Role.values());
         assertThat(RoleParser.SLAVE_STATE_MAPPING).hasSameSizeAs(RedisSlaveInstance.State.values());
     }
 
     @Test
-    public void emptyList() {
+    void emptyList() {
         assertThatThrownBy(() -> RoleParser.parse(new ArrayList<>())).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void invalidFirstElement() {
+    void invalidFirstElement() {
         assertThatThrownBy(() -> RoleParser.parse(LettuceLists.newList(new Object()))).isInstanceOf(
                 IllegalArgumentException.class);
     }
 
     @Test
-    public void invalidRole() {
+    void invalidRole() {
         assertThatThrownBy(() -> RoleParser.parse(LettuceLists.newList("blubb"))).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void master() {
+    void master() {
 
         List<List<String>> slaves = LettuceLists.newList(LettuceLists.newList(LOCALHOST, "9001", "" + REPLICATION_OFFSET_2),
                 LettuceLists.newList(LOCALHOST, "9002", "3129543"));
@@ -86,7 +86,7 @@ public class RoleParserUnitTests {
     }
 
     @Test
-    public void slave() {
+    void slave() {
 
         List<?> input = LettuceLists.newList("slave", LOCALHOST, 9000L, "connected", REPLICATION_OFFSET_1);
 
@@ -105,7 +105,7 @@ public class RoleParserUnitTests {
     }
 
     @Test
-    public void sentinel() {
+    void sentinel() {
 
         List<?> input = LettuceLists.newList("sentinel", LettuceLists.newList("resque-master", "html-fragments-master", "stats-master"));
 
@@ -123,7 +123,7 @@ public class RoleParserUnitTests {
     }
 
     @Test
-    public void sentinelWithoutMasters() {
+    void sentinelWithoutMasters() {
 
         List<?> input = LettuceLists.newList("sentinel");
 
@@ -135,7 +135,7 @@ public class RoleParserUnitTests {
     }
 
     @Test
-    public void sentinelMastersIsNotAList() {
+    void sentinelMastersIsNotAList() {
 
         List<?> input = LettuceLists.newList("sentinel", "");
 
@@ -147,7 +147,7 @@ public class RoleParserUnitTests {
     }
 
     @Test
-    public void testModelTest() {
+    void testModelTest() {
 
         RedisMasterInstance master = new RedisMasterInstance();
         master.setReplicationOffset(1);

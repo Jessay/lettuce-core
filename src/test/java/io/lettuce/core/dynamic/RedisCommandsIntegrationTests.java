@@ -36,17 +36,17 @@ import io.lettuce.test.LettuceExtension;
  * @author Mark Paluch
  */
 @ExtendWith(LettuceExtension.class)
-public class RedisCommandsIntegrationTests extends TestSupport {
+class RedisCommandsIntegrationTests extends TestSupport {
 
     private final RedisCommands<String, String> redis;
 
     @Inject
-    public RedisCommandsIntegrationTests(StatefulRedisConnection<String, String> connection) {
+    RedisCommandsIntegrationTests(StatefulRedisConnection<String, String> connection) {
         this.redis = connection.sync();
     }
 
     @Test
-    public void verifierShouldCatchMisspelledDeclarations() {
+    void verifierShouldCatchMisspelledDeclarations() {
 
         RedisCommandFactory factory = new RedisCommandFactory(redis.getStatefulConnection());
 
@@ -60,7 +60,7 @@ public class RedisCommandsIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void disabledVerifierDoesNotReportTypo() {
+    void disabledVerifierDoesNotReportTypo() {
 
         RedisCommandFactory factory = new RedisCommandFactory(redis.getStatefulConnection());
         factory.setVerifyCommandMethods(false);
@@ -69,7 +69,7 @@ public class RedisCommandsIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void doesNotFailIfCommandRetrievalFails() {
+    void doesNotFailIfCommandRetrievalFails() {
 
         StatefulRedisConnection connectionMock = Mockito.mock(StatefulRedisConnection.class);
         RedisCommands commandsMock = Mockito.mock(RedisCommands.class);
@@ -83,7 +83,7 @@ public class RedisCommandsIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void verifierShouldCatchTooFewParametersDeclarations() {
+    void verifierShouldCatchTooFewParametersDeclarations() {
 
         RedisCommandFactory factory = new RedisCommandFactory(redis.getStatefulConnection());
 
@@ -95,13 +95,13 @@ public class RedisCommandsIntegrationTests extends TestSupport {
         }
     }
 
-    interface TooFewParameters extends Commands {
+    private interface TooFewParameters extends Commands {
 
         String get();
 
     }
 
-    interface WithTypo extends Commands {
+    private interface WithTypo extends Commands {
 
         String gat(String key);
 

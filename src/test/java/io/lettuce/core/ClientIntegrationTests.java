@@ -27,13 +27,12 @@ import javax.inject.Inject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import io.lettuce.core.resource.ClientResources;
-import io.lettuce.test.LettuceExtension;
-import io.lettuce.test.resource.TestClientResources;
-import io.lettuce.test.Wait;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.api.sync.RedisCommands;
+import io.lettuce.core.resource.ClientResources;
+import io.lettuce.test.LettuceExtension;
+import io.lettuce.test.Wait;
 import io.lettuce.test.resource.FastShutdown;
 
 /**
@@ -41,13 +40,13 @@ import io.lettuce.test.resource.FastShutdown;
  * @author Mark Paluch
  */
 @ExtendWith(LettuceExtension.class)
-public class ClientIntegrationTests extends TestSupport {
+class ClientIntegrationTests extends TestSupport {
 
     private final RedisClient client;
     private final RedisCommands<String, String> redis;
 
     @Inject
-    public ClientIntegrationTests(RedisClient client, StatefulRedisConnection<String, String> connection) {
+    ClientIntegrationTests(RedisClient client, StatefulRedisConnection<String, String> connection) {
         this.client = client;
         this.redis = connection.sync();
         this.redis.flushall();
@@ -55,33 +54,33 @@ public class ClientIntegrationTests extends TestSupport {
 
     @Test
     @Inject
-    public void close(@New StatefulRedisConnection<String, String> connection) {
+    void close(@New StatefulRedisConnection<String, String> connection) {
 
         connection.close();
         assertThatThrownBy(() -> connection.sync().get(key)).isInstanceOf(RedisException.class);
     }
 
     @Test
-    public void statefulConnectionFromSync() {
+    void statefulConnectionFromSync() {
         assertThat(redis.getStatefulConnection().sync()).isSameAs(redis);
     }
 
     @Test
-    public void statefulConnectionFromAsync() {
+    void statefulConnectionFromAsync() {
         RedisAsyncCommands<String, String> async = client.connect().async();
         assertThat(async.getStatefulConnection().async()).isSameAs(async);
         async.getStatefulConnection().close();
     }
 
     @Test
-    public void statefulConnectionFromReactive() {
+    void statefulConnectionFromReactive() {
         RedisAsyncCommands<String, String> async = client.connect().async();
         assertThat(async.getStatefulConnection().reactive().getStatefulConnection()).isSameAs(async.getStatefulConnection());
         async.getStatefulConnection().close();
     }
 
     @Test
-    public void timeout() {
+    void timeout() {
 
         redis.setTimeout(0, TimeUnit.MICROSECONDS);
         assertThatThrownBy(() -> redis.eval(" os.execute(\"sleep \" .. tonumber(1))", ScriptOutputType.STATUS)).isInstanceOf(
@@ -91,7 +90,7 @@ public class ClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void reconnect() throws InterruptedException {
+    void reconnect() throws InterruptedException {
 
         redis.set(key, value);
 
@@ -107,7 +106,7 @@ public class ClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void interrupt() {
+    void interrupt() {
 
         StatefulRedisConnection<String, String> connection = client.connect();
         Thread.currentThread().interrupt();
@@ -119,7 +118,7 @@ public class ClientIntegrationTests extends TestSupport {
 
     @Test
     @Inject
-    public void connectFailure(ClientResources clientResources) {
+    void connectFailure(ClientResources clientResources) {
 
         RedisClient client = RedisClient.create(clientResources, "redis://invalid");
 
@@ -131,7 +130,7 @@ public class ClientIntegrationTests extends TestSupport {
 
     @Test
     @Inject
-    public void connectPubSubFailure(ClientResources clientResources) {
+    void connectPubSubFailure(ClientResources clientResources) {
 
         RedisClient client = RedisClient.create(clientResources, "redis://invalid");
 
@@ -141,7 +140,7 @@ public class ClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void emptyClient() {
+    void emptyClient() {
 
         try {
             client.connect();
@@ -163,13 +162,13 @@ public class ClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testExceptionWithCause() {
+    void testExceptionWithCause() {
         RedisException e = new RedisException(new RuntimeException());
         assertThat(e).hasCauseExactlyInstanceOf(RuntimeException.class);
     }
 
     @Test
-    public void reset() throws Exception {
+    void reset() throws Exception {
 
         StatefulRedisConnection<String, String> connection = client.connect();
         RedisAsyncCommands<String, String> async = connection.async();
@@ -197,7 +196,7 @@ public class ClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void standaloneConnectionShouldSetClientName() throws Exception {
+    void standaloneConnectionShouldSetClientName() throws Exception {
 
         RedisURI redisURI = RedisURI.create(host, port);
         redisURI.setClientName("my-client");
@@ -216,7 +215,7 @@ public class ClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void pubSubConnectionShouldSetClientName() throws Exception {
+    void pubSubConnectionShouldSetClientName() throws Exception {
 
         RedisURI redisURI = RedisURI.create(host, port);
         redisURI.setClientName("my-client");

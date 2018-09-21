@@ -28,29 +28,29 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import reactor.test.StepVerifier;
-import io.lettuce.test.LettuceExtension;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.codec.ByteArrayCodec;
 import io.lettuce.core.codec.CompressionCodec;
 import io.lettuce.core.codec.RedisCodec;
+import io.lettuce.test.LettuceExtension;
 
 /**
  * @author Will Glozer
  * @author Mark Paluch
  */
 @ExtendWith(LettuceExtension.class)
-public class CustomCodecIntegrationTests extends TestSupport {
+class CustomCodecIntegrationTests extends TestSupport {
 
     private final RedisClient client;
 
     @Inject
-    public CustomCodecIntegrationTests(RedisClient client) {
+    CustomCodecIntegrationTests(RedisClient client) {
         this.client = client;
     }
 
     @Test
-    public void testJavaSerializer() {
+    void testJavaSerializer() {
         StatefulRedisConnection<String, Object> redisConnection = client.connect(new SerializedObjectCodec());
         RedisCommands<String, Object> sync = redisConnection.sync();
         List<String> list = list("one", "two");
@@ -64,7 +64,7 @@ public class CustomCodecIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testJavaSerializerReactive() {
+    void testJavaSerializerReactive() {
 
         StatefulRedisConnection<String, Object> redisConnection = client.connect(new SerializedObjectCodec());
         List<String> list = list("one", "two");
@@ -74,7 +74,7 @@ public class CustomCodecIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testDeflateCompressedJavaSerializer() {
+    void testDeflateCompressedJavaSerializer() {
         RedisCommands<String, Object> connection = client.connect(
                 CompressionCodec.valueCompressor(new SerializedObjectCodec(), CompressionCodec.CompressionType.DEFLATE)).sync();
         List<String> list = list("one", "two");
@@ -85,7 +85,7 @@ public class CustomCodecIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testGzipompressedJavaSerializer() {
+    void testGzipompressedJavaSerializer() {
         RedisCommands<String, Object> connection = client.connect(
                 CompressionCodec.valueCompressor(new SerializedObjectCodec(), CompressionCodec.CompressionType.GZIP)).sync();
         List<String> list = list("one", "two");
@@ -96,7 +96,7 @@ public class CustomCodecIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testByteCodec() {
+    void testByteCodec() {
         RedisCommands<byte[], byte[]> connection = client.connect(new ByteArrayCodec()).sync();
         String value = "üöäü+#";
         connection.set(key.getBytes(), value.getBytes());
@@ -111,7 +111,7 @@ public class CustomCodecIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testByteBufferCodec() {
+    void testByteBufferCodec() {
 
         RedisCommands<ByteBuffer, ByteBuffer> connection = client.connect(new ByteBufferCodec()).sync();
         String value = "üöäü+#";
@@ -131,7 +131,7 @@ public class CustomCodecIntegrationTests extends TestSupport {
         connection.getStatefulConnection().close();
     }
 
-    public class SerializedObjectCodec implements RedisCodec<String, Object> {
+    class SerializedObjectCodec implements RedisCodec<String, Object> {
 
         private Charset charset = Charset.forName("UTF-8");
 
@@ -170,7 +170,7 @@ public class CustomCodecIntegrationTests extends TestSupport {
         }
     }
 
-    public class ByteBufferCodec implements RedisCodec<ByteBuffer, ByteBuffer> {
+    class ByteBufferCodec implements RedisCodec<ByteBuffer, ByteBuffer> {
 
         @Override
         public ByteBuffer decodeKey(ByteBuffer bytes) {

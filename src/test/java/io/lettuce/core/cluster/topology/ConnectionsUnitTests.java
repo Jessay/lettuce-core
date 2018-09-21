@@ -24,9 +24,7 @@ import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -40,7 +38,7 @@ import io.lettuce.core.api.StatefulRedisConnection;
  */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class ConnectionsUnitTests {
+class ConnectionsUnitTests {
 
     @Mock
     private StatefulRedisConnection<String, String> connection1;
@@ -49,14 +47,14 @@ public class ConnectionsUnitTests {
     private StatefulRedisConnection<String, String> connection2;
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
 
         when(connection1.closeAsync()).thenReturn(CompletableFuture.completedFuture(null));
         when(connection2.closeAsync()).thenReturn(CompletableFuture.completedFuture(null));
     }
 
     @Test
-    public void shouldCloseAllConnections() {
+    void shouldCloseAllConnections() {
 
         Connections sut = new Connections();
         sut.addConnection(RedisURI.create("127.0.0.1", 7380), connection1);
@@ -69,7 +67,7 @@ public class ConnectionsUnitTests {
     }
 
     @Test
-    public void shouldCloseAllConnectionsAfterCloseSignal() {
+    void shouldCloseAllConnectionsAfterCloseSignal() {
 
         Connections sut = new Connections();
         sut.close();

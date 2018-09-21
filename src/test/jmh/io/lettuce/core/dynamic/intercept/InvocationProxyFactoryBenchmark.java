@@ -25,7 +25,7 @@ import org.openjdk.jmh.infra.Blackhole;
  * @author Mark Paluch
  */
 @State(Scope.Benchmark)
-public class InvocationProxyFactoryBenchmark {
+class InvocationProxyFactoryBenchmark {
 
     private final InvocationProxyFactory factory = new InvocationProxyFactory();
     private BenchmarkInterface proxy;
@@ -55,7 +55,7 @@ public class InvocationProxyFactoryBenchmark {
 
         private final Object value;
 
-        public ReturnValue(Object value) {
+        ReturnValue(Object value) {
             this.value = value;
         }
 
@@ -70,7 +70,7 @@ public class InvocationProxyFactoryBenchmark {
 
         private final String toAppend;
 
-        public StringAppendingMethodInterceptor(String toAppend) {
+        StringAppendingMethodInterceptor(String toAppend) {
             this.toAppend = toAppend;
         }
 

@@ -27,7 +27,7 @@ import io.lettuce.core.codec.ByteArrayCodec;
  * @author Mark Paluch
  */
 @State(Scope.Benchmark)
-public class ValueListOutputBenchmark {
+class ValueListOutputBenchmark {
 
     private static final ByteArrayCodec CODEC = ByteArrayCodec.INSTANCE;
     private final ByteBuffer BUFFER = ByteBuffer.wrap(new byte[0]);

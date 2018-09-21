@@ -17,7 +17,6 @@ package io.lettuce.core.cluster;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -32,13 +31,8 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import io.lettuce.test.KeyValueStreamingAdapter;
-import io.lettuce.test.ListStreamingAdapter;
-import io.lettuce.test.condition.EnabledOnCommand;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
-import io.lettuce.test.KeysAndValues;
-import io.lettuce.test.LettuceExtension;
 import io.lettuce.core.*;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.cluster.api.async.RedisClusterAsyncCommands;
@@ -48,23 +42,28 @@ import io.lettuce.core.cluster.api.sync.RedisAdvancedClusterCommands;
 import io.lettuce.core.cluster.api.sync.RedisClusterCommands;
 import io.lettuce.core.cluster.models.partitions.RedisClusterNode;
 import io.lettuce.core.codec.Utf8StringCodec;
+import io.lettuce.test.KeyValueStreamingAdapter;
+import io.lettuce.test.KeysAndValues;
+import io.lettuce.test.LettuceExtension;
+import io.lettuce.test.ListStreamingAdapter;
+import io.lettuce.test.condition.EnabledOnCommand;
 import io.netty.util.internal.ConcurrentSet;
 
 /**
  * @author Mark Paluch
  */
 @ExtendWith(LettuceExtension.class)
-public class AdvancedClusterReactiveIntegrationTests extends TestSupport {
+class AdvancedClusterReactiveIntegrationTests extends TestSupport {
 
-    public static final String KEY_ON_NODE_1 = "a";
-    public static final String KEY_ON_NODE_2 = "b";
+    private static final String KEY_ON_NODE_1 = "a";
+    private static final String KEY_ON_NODE_2 = "b";
 
     private final RedisClusterClient clusterClient;
     private final RedisAdvancedClusterReactiveCommands<String, String> commands;
     private final RedisAdvancedClusterCommands<String, String> syncCommands;
 
     @Inject
-    public AdvancedClusterReactiveIntegrationTests(RedisClusterClient clusterClient,
+    AdvancedClusterReactiveIntegrationTests(RedisClusterClient clusterClient,
             StatefulRedisClusterConnection<String, String> connection) {
         this.clusterClient = clusterClient;
         this.commands = connection.reactive();
@@ -77,17 +76,17 @@ public class AdvancedClusterReactiveIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void unknownNodeId() {
+    void unknownNodeId() {
         assertThatThrownBy(() -> commands.getConnection("unknown")).isInstanceOf(RedisException.class);
     }
 
     @Test
-    public void invalidHost() {
+    void invalidHost() {
         assertThatThrownBy(() -> commands.getConnection("invalid-host", -1)).isInstanceOf(RedisException.class);
     }
 
     @Test
-    public void msetCrossSlot() {
+    void msetCrossSlot() {
 
         StepVerifier.create(commands.mset(KeysAndValues.MAP)).expectNext("OK").verifyComplete();
 
@@ -98,7 +97,7 @@ public class AdvancedClusterReactiveIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void msetnxCrossSlot() {
+    void msetnxCrossSlot() {
 
         Map<String, String> mset = prepareMset();
 
@@ -115,7 +114,7 @@ public class AdvancedClusterReactiveIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void mgetCrossSlot() {
+    void mgetCrossSlot() {
 
         msetCrossSlot();
 
@@ -130,7 +129,7 @@ public class AdvancedClusterReactiveIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void mgetCrossSlotStreaming() {
+    void mgetCrossSlotStreaming() {
 
         msetCrossSlot();
 
@@ -141,7 +140,7 @@ public class AdvancedClusterReactiveIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void delCrossSlot() {
+    void delCrossSlot() {
 
         msetCrossSlot();
 
@@ -156,7 +155,7 @@ public class AdvancedClusterReactiveIntegrationTests extends TestSupport {
 
     @Test
     @EnabledOnCommand("UNLINK")
-    public void unlinkCrossSlot() {
+    void unlinkCrossSlot() {
 
         msetCrossSlot();
 
@@ -170,7 +169,7 @@ public class AdvancedClusterReactiveIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void clientSetname() {
+    void clientSetname() {
 
         String name = "test-cluster-client";
 
@@ -188,7 +187,7 @@ public class AdvancedClusterReactiveIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void clientSetnameRunOnError() {
+    void clientSetnameRunOnError() {
 
         try {
             StepVerifier.create(commands.clientSetname("not allowed")).expectError().verify();
@@ -202,7 +201,7 @@ public class AdvancedClusterReactiveIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void dbSize() {
+    void dbSize() {
 
         writeKeysToTwoNodes();
 
@@ -210,7 +209,7 @@ public class AdvancedClusterReactiveIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void flushall() {
+    void flushall() {
 
         writeKeysToTwoNodes();
 
@@ -221,7 +220,7 @@ public class AdvancedClusterReactiveIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void flushdb() {
+    void flushdb() {
 
         writeKeysToTwoNodes();
 
@@ -232,7 +231,7 @@ public class AdvancedClusterReactiveIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void keys() {
+    void keys() {
 
         writeKeysToTwoNodes();
 
@@ -241,7 +240,7 @@ public class AdvancedClusterReactiveIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void keysDoesNotRunIntoRaceConditions() throws Exception {
+    void keysDoesNotRunIntoRaceConditions() throws Exception {
 
         List<RedisFuture> futures = new ArrayList<>();
         RedisClusterAsyncCommands<String, String> async = commands.getStatefulConnection().async();
@@ -260,7 +259,7 @@ public class AdvancedClusterReactiveIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void keysStreaming() {
+    void keysStreaming() {
 
         writeKeysToTwoNodes();
         ListStreamingAdapter<String> result = new ListStreamingAdapter<>();
@@ -270,7 +269,7 @@ public class AdvancedClusterReactiveIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void randomKey() {
+    void randomKey() {
 
         writeKeysToTwoNodes();
 
@@ -279,17 +278,17 @@ public class AdvancedClusterReactiveIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void scriptFlush() {
+    void scriptFlush() {
         StepVerifier.create(commands.scriptFlush()).expectNext("OK").verifyComplete();
     }
 
     @Test
-    public void scriptKill() {
+    void scriptKill() {
         StepVerifier.create(commands.scriptKill()).expectNext("OK").verifyComplete();
     }
 
     @Test
-    public void scriptLoad() throws Exception {
+    void scriptLoad() throws Exception {
 
         scriptFlush();
 
@@ -306,12 +305,12 @@ public class AdvancedClusterReactiveIntegrationTests extends TestSupport {
 
     @Test
     @Disabled("Run me manually, I will shutdown all your cluster nodes so you need to restart the Redis Cluster after this test")
-    public void shutdown() {
+    void shutdown() {
         commands.shutdown(true).subscribe();
     }
 
     @Test
-    public void readFromSlaves() throws Exception {
+    void readFromSlaves() throws Exception {
 
         RedisClusterReactiveCommands<String, String> connection = commands.getConnection(ClusterTestSettings.host,
                 ClusterTestSettings.port4);
@@ -333,7 +332,7 @@ public class AdvancedClusterReactiveIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void clusterScan() {
+    void clusterScan() {
 
         RedisAdvancedClusterCommands<String, String> sync = commands.getStatefulConnection().sync();
         sync.mset(KeysAndValues.MAP);
@@ -356,7 +355,7 @@ public class AdvancedClusterReactiveIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void clusterScanWithArgs() {
+    void clusterScanWithArgs() {
 
         RedisAdvancedClusterCommands<String, String> sync = commands.getStatefulConnection().sync();
         sync.mset(KeysAndValues.MAP);
@@ -380,7 +379,7 @@ public class AdvancedClusterReactiveIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void clusterScanStreaming() {
+    void clusterScanStreaming() {
 
         RedisAdvancedClusterCommands<String, String> sync = commands.getStatefulConnection().sync();
         sync.mset(KeysAndValues.MAP);
@@ -402,7 +401,7 @@ public class AdvancedClusterReactiveIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void clusterScanStreamingWithArgs() {
+    void clusterScanStreamingWithArgs() {
 
         RedisAdvancedClusterCommands<String, String> sync = commands.getStatefulConnection().sync();
         sync.mset(KeysAndValues.MAP);
@@ -428,7 +427,7 @@ public class AdvancedClusterReactiveIntegrationTests extends TestSupport {
         syncCommands.set(KEY_ON_NODE_2, value);
     }
 
-    protected Map<String, String> prepareMset() {
+    Map<String, String> prepareMset() {
         Map<String, String> mset = new HashMap<>();
         for (char c = 'a'; c < 'z'; c++) {
             String key = new String(new char[] { c, c, c });

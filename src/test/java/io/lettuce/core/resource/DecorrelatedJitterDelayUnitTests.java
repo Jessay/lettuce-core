@@ -27,22 +27,22 @@ import org.junit.jupiter.api.Test;
  * @author Jongyeol Choi
  * @author Mark Paluch
  */
-public class DecorrelatedJitterDelayUnitTests {
+class DecorrelatedJitterDelayUnitTests {
 
     @Test
-    public void shouldNotCreateIfLowerBoundIsNegative() {
+    void shouldNotCreateIfLowerBoundIsNegative() {
         assertThatThrownBy(() -> Delay.decorrelatedJitter(-1, 100, 0, TimeUnit.MILLISECONDS)).isInstanceOf(
                 IllegalArgumentException.class);
     }
 
     @Test
-    public void shouldNotCreateIfLowerBoundIsSameAsUpperBound() {
+    void shouldNotCreateIfLowerBoundIsSameAsUpperBound() {
         assertThatThrownBy(() -> Delay.decorrelatedJitter(100, 100, 1, TimeUnit.MILLISECONDS)).isInstanceOf(
                 IllegalArgumentException.class);
     }
 
     @Test
-    public void negativeAttemptShouldReturnZero() {
+    void negativeAttemptShouldReturnZero() {
 
         Delay delay = Delay.decorrelatedJitter().get();
 
@@ -50,7 +50,7 @@ public class DecorrelatedJitterDelayUnitTests {
     }
 
     @Test
-    public void zeroShouldReturnZero() {
+    void zeroShouldReturnZero() {
 
         Delay delay = Delay.decorrelatedJitter().get();
 
@@ -58,7 +58,7 @@ public class DecorrelatedJitterDelayUnitTests {
     }
 
     @Test
-    public void testDefaultDelays() {
+    void testDefaultDelays() {
 
         Delay delay = Delay.decorrelatedJitter().get();
 

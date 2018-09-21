@@ -31,10 +31,10 @@ import io.lettuce.core.protocol.CommandType;
 /**
  * @author Mark Paluch
  */
-public class RequestsUnitTests {
+class RequestsUnitTests {
 
     @Test
-    public void shouldCreateTopologyView() throws Exception {
+    void shouldCreateTopologyView() throws Exception {
 
         RedisURI redisURI = RedisURI.create("localhost", 6379);
 
@@ -56,7 +56,7 @@ public class RequestsUnitTests {
     }
 
     @Test
-    public void shouldCreateTopologyViewWithoutClientCount() throws Exception {
+    void shouldCreateTopologyViewWithoutClientCount() throws Exception {
 
         RedisURI redisURI = RedisURI.create("localhost", 6379);
 
@@ -75,11 +75,11 @@ public class RequestsUnitTests {
     }
 
     @Test
-    public void awaitShouldReturnAwaitedTime() throws Exception {
+    void awaitShouldReturnAwaitedTime() throws Exception {
 
         RedisURI redisURI = RedisURI.create("localhost", 6379);
         Requests requests = new Requests();
-        Command<String, String, String> command = new Command<String, String, String>(CommandType.TYPE,
+        Command<String, String, String> command = new Command<>(CommandType.TYPE,
                 new StatusOutput<>(new Utf8StringCodec()));
         TimedAsyncCommand timedAsyncCommand = new TimedAsyncCommand(command);
 
@@ -89,11 +89,11 @@ public class RequestsUnitTests {
     }
 
     @Test
-    public void awaitShouldReturnAwaitedTimeIfNegative() throws Exception {
+    void awaitShouldReturnAwaitedTimeIfNegative() throws Exception {
 
         RedisURI redisURI = RedisURI.create("localhost", 6379);
         Requests requests = new Requests();
-        Command<String, String, String> command = new Command<String, String, String>(CommandType.TYPE,
+        Command<String, String, String> command = new Command<>(CommandType.TYPE,
                 new StatusOutput<>(new Utf8StringCodec()));
         TimedAsyncCommand timedAsyncCommand = new TimedAsyncCommand(command);
 
@@ -104,7 +104,7 @@ public class RequestsUnitTests {
     }
 
     private TimedAsyncCommand getCommand(String response) {
-        Command<String, String, String> command = new Command<String, String, String>(CommandType.TYPE,
+        Command<String, String, String> command = new Command<>(CommandType.TYPE,
                 new StatusOutput<>(new Utf8StringCodec()));
         TimedAsyncCommand timedAsyncCommand = new TimedAsyncCommand(command);
 

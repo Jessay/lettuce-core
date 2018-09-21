@@ -28,10 +28,10 @@ import io.lettuce.core.internal.Futures;
 /**
  * @author Mark Paluch
  */
-public class ConnectionFutureUnitTests {
+class ConnectionFutureUnitTests {
 
     @Test
-    public void shouldComposeTransformToError() {
+    void shouldComposeTransformToError() {
 
         CompletableFuture<String> foo = new CompletableFuture<>();
 
@@ -51,7 +51,7 @@ public class ConnectionFutureUnitTests {
     }
 
     @Test
-    public void composeTransformShouldFailWhileTransformation() {
+    void composeTransformShouldFailWhileTransformation() {
 
         CompletableFuture<String> foo = new CompletableFuture<>();
 
@@ -67,7 +67,7 @@ public class ConnectionFutureUnitTests {
     }
 
     @Test
-    public void composeTransformShouldFailWhileTransformationRetainOriginalException() {
+    void composeTransformShouldFailWhileTransformationRetainOriginalException() {
 
         CompletableFuture<String> foo = new CompletableFuture<>();
 
@@ -91,7 +91,7 @@ public class ConnectionFutureUnitTests {
     }
 
     @Test
-    public void shouldComposeWithErrorFlow() {
+    void shouldComposeWithErrorFlow() {
 
         CompletableFuture<String> foo = new CompletableFuture<>();
         CompletableFuture<String> exceptional = new CompletableFuture<>();

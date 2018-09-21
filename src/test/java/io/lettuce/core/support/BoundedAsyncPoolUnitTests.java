@@ -27,10 +27,10 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Mark Paluch
  */
-public class BoundedAsyncPoolUnitTests {
+class BoundedAsyncPoolUnitTests {
 
-    AtomicInteger counter = new AtomicInteger();
-    List<String> destroyed = new ArrayList<>();
+    private AtomicInteger counter = new AtomicInteger();
+    private List<String> destroyed = new ArrayList<>();
 
     private AsyncObjectFactory<String> STRING_OBJECT_FACTORY = new AsyncObjectFactory<String>() {
         @Override
@@ -51,7 +51,7 @@ public class BoundedAsyncPoolUnitTests {
     };
 
     @Test
-    public void shouldCreateObject() {
+    void shouldCreateObject() {
 
         BoundedAsyncPool<String> pool = new BoundedAsyncPool<>(STRING_OBJECT_FACTORY, BoundedPoolConfig.create());
 
@@ -62,7 +62,7 @@ public class BoundedAsyncPoolUnitTests {
     }
 
     @Test
-    public void shouldCreateMinIdleObject() {
+    void shouldCreateMinIdleObject() {
 
         BoundedAsyncPool<String> pool = new BoundedAsyncPool<>(STRING_OBJECT_FACTORY, BoundedPoolConfig.builder().minIdle(2)
                 .build());
@@ -72,7 +72,7 @@ public class BoundedAsyncPoolUnitTests {
     }
 
     @Test
-    public void shouldCreateMaintainMinIdleObject() {
+    void shouldCreateMaintainMinIdleObject() {
 
         BoundedAsyncPool<String> pool = new BoundedAsyncPool<>(STRING_OBJECT_FACTORY, BoundedPoolConfig.builder().minIdle(2)
                 .build());
@@ -84,7 +84,7 @@ public class BoundedAsyncPoolUnitTests {
     }
 
     @Test
-    public void shouldCreateMaintainMinMaxIdleObject() {
+    void shouldCreateMaintainMinMaxIdleObject() {
 
         BoundedAsyncPool<String> pool = new BoundedAsyncPool<>(STRING_OBJECT_FACTORY, BoundedPoolConfig.builder().minIdle(2)
                 .maxTotal(2).build());
@@ -96,7 +96,7 @@ public class BoundedAsyncPoolUnitTests {
     }
 
     @Test
-    public void shouldReturnObject() {
+    void shouldReturnObject() {
 
         BoundedAsyncPool<String> pool = new BoundedAsyncPool<>(STRING_OBJECT_FACTORY, BoundedPoolConfig.create());
 
@@ -108,7 +108,7 @@ public class BoundedAsyncPoolUnitTests {
     }
 
     @Test
-    public void shouldReuseObjects() {
+    void shouldReuseObjects() {
 
         BoundedAsyncPool<String> pool = new BoundedAsyncPool<>(STRING_OBJECT_FACTORY, BoundedPoolConfig.create());
 
@@ -119,7 +119,7 @@ public class BoundedAsyncPoolUnitTests {
     }
 
     @Test
-    public void shouldDestroyIdle() {
+    void shouldDestroyIdle() {
 
         BoundedAsyncPool<String> pool = new BoundedAsyncPool<>(STRING_OBJECT_FACTORY, BoundedPoolConfig.builder().maxIdle(2)
                 .maxTotal(5).build());
@@ -143,7 +143,7 @@ public class BoundedAsyncPoolUnitTests {
     }
 
     @Test
-    public void shouldExhaustPool() {
+    void shouldExhaustPool() {
 
         BoundedAsyncPool<String> pool = new BoundedAsyncPool<>(STRING_OBJECT_FACTORY, BoundedPoolConfig.builder().maxTotal(4)
                 .build());
@@ -171,7 +171,7 @@ public class BoundedAsyncPoolUnitTests {
     }
 
     @Test
-    public void shouldClearPool() {
+    void shouldClearPool() {
 
         BoundedAsyncPool<String> pool = new BoundedAsyncPool<>(STRING_OBJECT_FACTORY, BoundedPoolConfig.builder().maxTotal(4)
                 .build());
@@ -198,7 +198,7 @@ public class BoundedAsyncPoolUnitTests {
     }
 
     @Test
-    public void shouldExhaustPoolConcurrent() {
+    void shouldExhaustPoolConcurrent() {
 
         List<CompletableFuture<String>> progress = new ArrayList<>();
         AsyncObjectFactory<String> IN_PROGRESS = new AsyncObjectFactory<String>() {
@@ -245,7 +245,7 @@ public class BoundedAsyncPoolUnitTests {
     }
 
     @Test
-    public void shouldConcurrentlyFail() {
+    void shouldConcurrentlyFail() {
 
         List<CompletableFuture<String>> progress = new ArrayList<>();
         AsyncObjectFactory<String> IN_PROGRESS = new AsyncObjectFactory<String>() {

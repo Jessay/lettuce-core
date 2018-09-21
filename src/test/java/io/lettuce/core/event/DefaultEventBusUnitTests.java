@@ -21,9 +21,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import reactor.core.Disposable;
@@ -34,13 +32,13 @@ import reactor.test.StepVerifier;
  * @author Mark Paluch
  */
 @ExtendWith(MockitoExtension.class)
-public class DefaultEventBusUnitTests {
+class DefaultEventBusUnitTests {
 
     @Mock
     private Event event;
 
     @Test
-    public void publishToSubscriber() throws Exception {
+    void publishToSubscriber() throws Exception {
 
         EventBus sut = new DefaultEventBus(Schedulers.immediate());
 
@@ -48,7 +46,7 @@ public class DefaultEventBusUnitTests {
     }
 
     @Test
-    public void publishToMultipleSubscribers() throws Exception {
+    void publishToMultipleSubscribers() throws Exception {
 
         EventBus sut = new DefaultEventBus(Schedulers.immediate());
 

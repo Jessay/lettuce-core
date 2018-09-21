@@ -25,10 +25,10 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Mark Paluch
  */
-public class DefaultEventPublisherOptionsUnitTests {
+class DefaultEventPublisherOptionsUnitTests {
 
     @Test
-    public void testDefault() {
+    void testDefault() {
 
         DefaultEventPublisherOptions sut = DefaultEventPublisherOptions.create();
 
@@ -36,7 +36,7 @@ public class DefaultEventPublisherOptionsUnitTests {
     }
 
     @Test
-    public void testDisabled() {
+    void testDisabled() {
 
         DefaultEventPublisherOptions sut = DefaultEventPublisherOptions.disabled();
 
@@ -44,7 +44,7 @@ public class DefaultEventPublisherOptionsUnitTests {
     }
 
     @Test
-    public void testBuilder() {
+    void testBuilder() {
 
         DefaultEventPublisherOptions sut = DefaultEventPublisherOptions.builder().eventEmitInterval(1, TimeUnit.SECONDS)
                 .build();

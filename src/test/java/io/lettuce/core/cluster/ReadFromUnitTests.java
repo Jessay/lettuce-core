@@ -34,7 +34,7 @@ import io.lettuce.core.models.role.RedisNodeDescription;
  * @author Mark Paluch
  * @author Ryosuke Hasebe
  */
-public class ReadFromUnitTests {
+class ReadFromUnitTests {
 
     private Partitions sut = new Partitions();
     private RedisClusterNode nearest = new RedisClusterNode();
@@ -42,7 +42,7 @@ public class ReadFromUnitTests {
     private RedisClusterNode slave = new RedisClusterNode();
 
     @BeforeEach
-    public void before() {
+    void before() {
 
         master.setFlags(Collections.singleton(RedisClusterNode.NodeFlag.MASTER));
         nearest.setFlags(Collections.singleton(RedisClusterNode.NodeFlag.SLAVE));
@@ -54,67 +54,67 @@ public class ReadFromUnitTests {
     }
 
     @Test
-    public void master() {
+    void master() {
         List<RedisNodeDescription> result = ReadFrom.MASTER.select(getNodes());
         assertThat(result).hasSize(1).containsOnly(master);
     }
 
     @Test
-    public void masterPreferred() {
+    void masterPreferred() {
         List<RedisNodeDescription> result = ReadFrom.MASTER_PREFERRED.select(getNodes());
         assertThat(result).hasSize(3).containsExactly(master, nearest, slave);
     }
 
     @Test
-    public void slave() {
+    void slave() {
         List<RedisNodeDescription> result = ReadFrom.SLAVE.select(getNodes());
         assertThat(result).hasSize(2).contains(nearest, slave);
     }
 
     @Test
-    public void slavePreferred() {
+    void slavePreferred() {
         List<RedisNodeDescription> result = ReadFrom.SLAVE_PREFERRED.select(getNodes());
         assertThat(result).hasSize(3).containsExactly(nearest, slave, master);
     }
 
     @Test
-    public void nearest() {
+    void nearest() {
         List<RedisNodeDescription> result = ReadFrom.NEAREST.select(getNodes());
         assertThat(result).hasSize(3).containsExactly(nearest, master, slave);
     }
 
     @Test
-    public void valueOfNull() {
+    void valueOfNull() {
         assertThatThrownBy(() -> ReadFrom.valueOf(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void valueOfUnknown() {
+    void valueOfUnknown() {
         assertThatThrownBy(() -> ReadFrom.valueOf("unknown")).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void valueOfNearest() {
+    void valueOfNearest() {
         assertThat(ReadFrom.valueOf("nearest")).isEqualTo(ReadFrom.NEAREST);
     }
 
     @Test
-    public void valueOfMaster() {
+    void valueOfMaster() {
         assertThat(ReadFrom.valueOf("master")).isEqualTo(ReadFrom.MASTER);
     }
 
     @Test
-    public void valueOfMasterPreferred() {
+    void valueOfMasterPreferred() {
         assertThat(ReadFrom.valueOf("masterPreferred")).isEqualTo(ReadFrom.MASTER_PREFERRED);
     }
 
     @Test
-    public void valueOfSlave() {
+    void valueOfSlave() {
         assertThat(ReadFrom.valueOf("slave")).isEqualTo(ReadFrom.SLAVE);
     }
 
     @Test
-    public void valueOfSlavePreferred() {
+    void valueOfSlavePreferred() {
         assertThat(ReadFrom.valueOf("slavePreferred")).isEqualTo(ReadFrom.SLAVE_PREFERRED);
     }
 

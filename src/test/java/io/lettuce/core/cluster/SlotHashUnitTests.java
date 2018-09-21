@@ -25,34 +25,34 @@ import org.junit.jupiter.api.Test;
  * @author Mark Paluch
  * @since 3.0
  */
-public class SlotHashUnitTests {
+class SlotHashUnitTests {
 
-    static final byte[] BYTES = "123456789".getBytes();
-    static final byte[] TAGGED = "key{123456789}a".getBytes();
+    private static final byte[] BYTES = "123456789".getBytes();
+    private static final byte[] TAGGED = "key{123456789}a".getBytes();
 
     @Test
-    public void shouldGetSlotHeap() {
+    void shouldGetSlotHeap() {
 
         int result = SlotHash.getSlot(BYTES);
         assertThat(result).isEqualTo(0x31C3);
     }
 
     @Test
-    public void shouldGetTaggedSlotHeap() {
+    void shouldGetTaggedSlotHeap() {
 
         int result = SlotHash.getSlot(TAGGED);
         assertThat(result).isEqualTo(0x31C3);
     }
 
     @Test
-    public void shouldGetSlotDirect() {
+    void shouldGetSlotDirect() {
 
         int result = SlotHash.getSlot((ByteBuffer) ByteBuffer.allocateDirect(BYTES.length).put(BYTES).flip());
         assertThat(result).isEqualTo(0x31C3);
     }
 
     @Test
-    public void testHashWithHash() {
+    void testHashWithHash() {
 
         int result = SlotHash.getSlot((ByteBuffer) ByteBuffer.allocateDirect(TAGGED.length).put(TAGGED).flip());
         assertThat(result).isEqualTo(0x31C3);

@@ -30,12 +30,12 @@ import io.lettuce.core.dynamic.support.ReflectionUtils;
 /**
  * @author Mark Paluch
  */
-public class AnnotationCommandSegmentFactoryUnitTests {
+class AnnotationCommandSegmentFactoryUnitTests {
 
-    AnnotationCommandSegmentFactory factory = new AnnotationCommandSegmentFactory();
+    private AnnotationCommandSegmentFactory factory = new AnnotationCommandSegmentFactory();
 
     @Test
-    public void notAnnotatedDotAsIs() {
+    void notAnnotatedDotAsIs() {
 
         CommandMethod commandMethod = DeclaredCommandMethod.create(ReflectionUtils.findMethod(CommandMethods.class,
                 "notAnnotated"));
@@ -47,7 +47,7 @@ public class AnnotationCommandSegmentFactoryUnitTests {
     }
 
     @Test
-    public void uppercaseDot() {
+    void uppercaseDot() {
 
         CommandMethod commandMethod = DeclaredCommandMethod.create(ReflectionUtils
                 .findMethod(CommandMethods.class, "upperCase"));
@@ -59,7 +59,7 @@ public class AnnotationCommandSegmentFactoryUnitTests {
     }
 
     @Test
-    public void methodNameAsIs() {
+    void methodNameAsIs() {
 
         CommandMethod commandMethod = DeclaredCommandMethod.create(ReflectionUtils.findMethod(CommandMethods.class,
                 "methodName"));
@@ -71,7 +71,7 @@ public class AnnotationCommandSegmentFactoryUnitTests {
     }
 
     @Test
-    public void splitAsIs() {
+    void splitAsIs() {
 
         CommandMethod commandMethod = DeclaredCommandMethod.create(ReflectionUtils.findMethod(CommandMethods.class,
                 "clientSetname"));
@@ -83,7 +83,7 @@ public class AnnotationCommandSegmentFactoryUnitTests {
     }
 
     @Test
-    public void commandAnnotation() {
+    void commandAnnotation() {
 
         CommandMethod commandMethod = DeclaredCommandMethod.create(ReflectionUtils
                 .findMethod(CommandMethods.class, "atCommand"));
@@ -95,7 +95,7 @@ public class AnnotationCommandSegmentFactoryUnitTests {
     }
 
     @Test
-    public void splitDefault() {
+    void splitDefault() {
 
         CommandMethod commandMethod = DeclaredCommandMethod
                 .create(ReflectionUtils.findMethod(Defaulted.class, "clientSetname"));

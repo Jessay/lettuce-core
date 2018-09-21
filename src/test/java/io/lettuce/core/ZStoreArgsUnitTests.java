@@ -25,10 +25,10 @@ import io.lettuce.core.protocol.CommandArgs;
 /**
  * @author Mark Paluch
  */
-public class ZStoreArgsUnitTests {
+class ZStoreArgsUnitTests {
 
     @Test
-    public void shouldRenderWeights() {
+    void shouldRenderWeights() {
 
         CommandArgs<String, String> args = new CommandArgs<>(StringCodec.UTF8);
         ZStoreArgs.Builder.weights(1, 2, 3).build(args);
@@ -37,7 +37,7 @@ public class ZStoreArgsUnitTests {
     }
 
     @Test
-    public void shouldOmitWeights() {
+    void shouldOmitWeights() {
 
         CommandArgs<String, String> args = new CommandArgs<>(StringCodec.UTF8);
         ZStoreArgs.Builder.weights().build(args);

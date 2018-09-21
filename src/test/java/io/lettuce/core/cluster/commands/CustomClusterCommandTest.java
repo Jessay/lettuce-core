@@ -39,20 +39,20 @@ import io.lettuce.test.LettuceExtension;
  * @author Mark Paluch
  */
 @ExtendWith(LettuceExtension.class)
-public class CustomClusterCommandTest extends TestSupport {
+class CustomClusterCommandTest extends TestSupport {
 
     private final StatefulRedisClusterConnection<String, String> connection;
     private RedisAdvancedClusterCommands<String, String> redis;
 
     @Inject
-    public CustomClusterCommandTest(StatefulRedisClusterConnection<String, String> connection) {
+    CustomClusterCommandTest(StatefulRedisClusterConnection<String, String> connection) {
         this.connection = connection;
         this.redis = connection.sync();
         this.redis.flushall();
     }
 
     @Test
-    public void dispatchSet() {
+    void dispatchSet() {
 
         String response = redis.dispatch(CustomCommandTest.MyCommands.SET, new StatusOutput<>(StringCodec.UTF8),
                 new CommandArgs<>(StringCodec.UTF8).addKey(key).addValue(value));
@@ -61,7 +61,7 @@ public class CustomClusterCommandTest extends TestSupport {
     }
 
     @Test
-    public void dispatchWithoutArgs() {
+    void dispatchWithoutArgs() {
 
         String response = redis.dispatch(CustomCommandTest.MyCommands.INFO, new StatusOutput<>(StringCodec.UTF8));
 
@@ -69,7 +69,7 @@ public class CustomClusterCommandTest extends TestSupport {
     }
 
     @Test
-    public void dispatchShouldFailForWrongDataType() {
+    void dispatchShouldFailForWrongDataType() {
 
         redis.hset(key, key, value);
         assertThatThrownBy(
@@ -78,7 +78,7 @@ public class CustomClusterCommandTest extends TestSupport {
     }
 
     @Test
-    public void clusterAsyncPing() {
+    void clusterAsyncPing() {
 
         RedisCommand<String, String, String> command = new Command<>(CustomCommandTest.MyCommands.PING, new StatusOutput<>(
                 StringCodec.UTF8), null);
@@ -90,7 +90,7 @@ public class CustomClusterCommandTest extends TestSupport {
     }
 
     @Test
-    public void clusterAsyncBatchPing() {
+    void clusterAsyncBatchPing() {
 
         RedisCommand<String, String, String> command1 = new Command<>(CustomCommandTest.MyCommands.PING, new StatusOutput<>(
                 StringCodec.UTF8), null);
@@ -107,7 +107,7 @@ public class CustomClusterCommandTest extends TestSupport {
     }
 
     @Test
-    public void clusterAsyncBatchSet() {
+    void clusterAsyncBatchSet() {
 
         RedisCommand<String, String, String> command1 = new Command<>(CommandType.SET, new StatusOutput<>(StringCodec.UTF8),
                 new CommandArgs<>(StringCodec.UTF8).addKey("key1").addValue("value"));
@@ -129,7 +129,7 @@ public class CustomClusterCommandTest extends TestSupport {
     }
 
     @Test
-    public void clusterFireAndForget() {
+    void clusterFireAndForget() {
 
         RedisCommand<String, String, String> command = new Command<>(CustomCommandTest.MyCommands.PING, new StatusOutput<>(
                 StringCodec.UTF8), null);

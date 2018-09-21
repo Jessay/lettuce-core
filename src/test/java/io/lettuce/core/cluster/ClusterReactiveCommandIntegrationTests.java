@@ -37,14 +37,14 @@ import io.lettuce.test.LettuceExtension;
  * @author Mark Paluch
  */
 @ExtendWith(LettuceExtension.class)
-public class ClusterReactiveCommandIntegrationTests {
+class ClusterReactiveCommandIntegrationTests {
 
     private final RedisClusterClient clusterClient;
     private final RedisClusterReactiveCommands<String, String> reactive;
     private final RedisClusterCommands<String, String> sync;
 
     @Inject
-    public ClusterReactiveCommandIntegrationTests(RedisClusterClient clusterClient,
+    ClusterReactiveCommandIntegrationTests(RedisClusterClient clusterClient,
             StatefulRedisClusterConnection<String, String> connection) {
         this.clusterClient = clusterClient;
 
@@ -53,13 +53,13 @@ public class ClusterReactiveCommandIntegrationTests {
     }
 
     @Test
-    public void testClusterBumpEpoch()  {
+    void testClusterBumpEpoch() {
         StepVerifier.create(reactive.clusterBumpepoch())
                 .consumeNextWith(actual -> assertThat(actual).matches("(BUMPED|STILL).*")).verifyComplete();
     }
 
     @Test
-    public void testClusterInfo()  {
+    void testClusterInfo() {
 
         StepVerifier.create(reactive.clusterInfo()).consumeNextWith(actual -> {
             assertThat(actual).contains("cluster_known_nodes:");
@@ -69,7 +69,7 @@ public class ClusterReactiveCommandIntegrationTests {
     }
 
     @Test
-    public void testClusterNodes()  {
+    void testClusterNodes() {
 
         StepVerifier.create(reactive.clusterNodes()).consumeNextWith(actual -> {
             assertThat(actual).contains("connected");
@@ -79,12 +79,12 @@ public class ClusterReactiveCommandIntegrationTests {
     }
 
     @Test
-    public void testAsking()  {
+    void testAsking() {
         StepVerifier.create(reactive.asking()).expectNext("OK").verifyComplete();
     }
 
     @Test
-    public void testClusterSlots()  {
+    void testClusterSlots() {
 
         List<Object> reply = reactive.clusterSlots().collectList().block();
         assertThat(reply.size()).isGreaterThan(1);
@@ -100,7 +100,7 @@ public class ClusterReactiveCommandIntegrationTests {
     }
 
     @Test
-    public void clusterSlaves()  {
+    void clusterSlaves() {
 
         RedisClusterNode master = clusterClient.getPartitions().stream().filter(it -> it.is(RedisClusterNode.NodeFlag.MASTER))
                 .findFirst().get();

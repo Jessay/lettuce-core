@@ -19,19 +19,19 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Stream;
 
-import io.lettuce.test.Wait;
-import io.lettuce.test.settings.TestSettings;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.cluster.api.async.RedisAdvancedClusterAsyncCommands;
 import io.lettuce.core.cluster.api.async.RedisClusterAsyncCommands;
 import io.lettuce.core.cluster.api.sync.RedisClusterCommands;
 import io.lettuce.core.cluster.models.partitions.Partitions;
 import io.lettuce.core.cluster.models.partitions.RedisClusterNode;
+import io.lettuce.test.Wait;
+import io.lettuce.test.settings.TestSettings;
 
 /**
  * @author Mark Paluch
  */
-public class ClusterSetup {
+class ClusterSetup {
 
     /**
      * Setup a cluster consisting of two members (see {@link ClusterTestSettings#port5} to {@link ClusterTestSettings#port6}).
@@ -139,7 +139,7 @@ public class ClusterSetup {
         connection.getStatefulConnection().close();
     }
 
-    protected static Stream<RedisClusterNode> partitionStream(ClusterRule clusterRule) {
+    private static Stream<RedisClusterNode> partitionStream(ClusterRule clusterRule) {
         return clusterRule.getClusterClient().getPartitions().getPartitions().stream();
     }
 

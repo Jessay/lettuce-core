@@ -26,12 +26,9 @@ import java.util.HashSet;
 import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.RedisURI;
-import io.lettuce.core.cluster.models.partitions.ClusterPartitionParser;
-import io.lettuce.core.cluster.models.partitions.Partitions;
-import io.lettuce.core.cluster.models.partitions.RedisClusterNode;
 import io.lettuce.core.internal.LettuceLists;
 
-public class ClusterPartitionParserUnitTests {
+class ClusterPartitionParserUnitTests {
 
     private static String nodes = "c37ab8396be428403d4e55c0d317348be27ed973 127.0.0.1:7381 master - 111 1401258245007 222 connected 7000 12000 12002-16383\n"
             + "3d005a179da7d8dc1adae6409d47b39c369e992b 127.0.0.1:7380 master - 0 1401258245007 2 disconnected 8000-11999 [8000->-4213a8dabb94f92eb6a860f4d0729e6a25d43e0c] [5461-<-c37ab8396be428403d4e55c0d317348be27ed973]\n"
@@ -49,7 +46,7 @@ public class ClusterPartitionParserUnitTests {
             + "5f4a2236d00008fba7ac0dd24b95762b446767bd 127.0.0.1:7382@17382 slave 3d005a179da7d8dc1adae6409d47b39c369e992b 0 1454482721690 2 connected";
 
     @Test
-    public void shouldParseNodesCorrectly() throws Exception {
+    void shouldParseNodesCorrectly() throws Exception {
 
         Partitions result = ClusterPartitionParser.parse(nodes);
 
@@ -81,7 +78,7 @@ public class ClusterPartitionParserUnitTests {
     }
 
     @Test
-    public void shouldParseNodesWithBusPort() throws Exception {
+    void shouldParseNodesWithBusPort() throws Exception {
 
         Partitions result = ClusterPartitionParser.parse(nodesWithBusPort);
 
@@ -95,7 +92,7 @@ public class ClusterPartitionParserUnitTests {
     }
 
     @Test
-    public void shouldParseNodesIPv6Address() throws Exception {
+    void shouldParseNodesIPv6Address() throws Exception {
 
         Partitions result = ClusterPartitionParser.parse(nodesWithIPv6Addresses);
 
@@ -113,7 +110,7 @@ public class ClusterPartitionParserUnitTests {
     }
 
     @Test
-    public void getNodeByHashShouldReturnCorrectNode() throws Exception {
+    void getNodeByHashShouldReturnCorrectNode() throws Exception {
 
         Partitions partitions = ClusterPartitionParser.parse(nodes);
         assertThat(partitions.getPartitionBySlot(7000).getNodeId()).isEqualTo("c37ab8396be428403d4e55c0d317348be27ed973");
@@ -121,7 +118,7 @@ public class ClusterPartitionParserUnitTests {
     }
 
     @Test
-    public void testModel() throws Exception {
+    void testModel() throws Exception {
         RedisClusterNode node = mockRedisClusterNode();
 
         assertThat(node.toString()).contains(RedisClusterNode.class.getSimpleName());
@@ -129,7 +126,7 @@ public class ClusterPartitionParserUnitTests {
         assertThat(node.hasSlot(9)).isFalse();
     }
 
-    protected RedisClusterNode mockRedisClusterNode() {
+    RedisClusterNode mockRedisClusterNode() {
         RedisClusterNode node = new RedisClusterNode();
         node.setConfigEpoch(1);
         node.setConnected(true);
@@ -144,7 +141,7 @@ public class ClusterPartitionParserUnitTests {
     }
 
     @Test
-    public void createNode() throws Exception {
+    void createNode() throws Exception {
         RedisClusterNode original = mockRedisClusterNode();
         RedisClusterNode created = RedisClusterNode.of(original.getNodeId());
 

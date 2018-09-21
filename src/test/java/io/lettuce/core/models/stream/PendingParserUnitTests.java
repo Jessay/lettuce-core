@@ -29,10 +29,10 @@ import io.lettuce.core.Range;
 /**
  * @author Mark Paluch
  */
-public class PendingParserUnitTests {
+class PendingParserUnitTests {
 
     @Test
-    public void shouldParseXpendingWithRangeOutput() {
+    void shouldParseXpendingWithRangeOutput() {
 
         List<PendingMessage> result = PendingParser
                 .parseRange(Collections.singletonList(Arrays.asList("foo", "consumer", 1L,
@@ -50,7 +50,7 @@ public class PendingParserUnitTests {
     }
 
     @Test
-    public void shouldParseXpendingOutput() {
+    void shouldParseXpendingOutput() {
 
         PendingMessages result = PendingParser.parse(Arrays.asList(16L, "from", "to",
                 Collections.singletonList(Arrays.asList("consumer", 17L))));

@@ -22,10 +22,10 @@ import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.internal.LettuceClassUtils;
 
-public class JavaRuntimeUnitTests {
+class JavaRuntimeUnitTests {
 
     @Test
-    public void testJava8() {
+    void testJava8() {
 
         assumeTrue(System.getProperty("java.version").startsWith("1.8"));
 
@@ -33,7 +33,7 @@ public class JavaRuntimeUnitTests {
     }
 
     @Test
-    public void testJava9() {
+    void testJava9() {
 
         assumeTrue(System.getProperty("java.version").startsWith("9"));
 
@@ -41,7 +41,7 @@ public class JavaRuntimeUnitTests {
     }
 
     @Test
-    public void testNotPresentClass() {
+    void testNotPresentClass() {
         assertThat(LettuceClassUtils.isPresent("total.fancy.class.name")).isFalse();
     }
 }

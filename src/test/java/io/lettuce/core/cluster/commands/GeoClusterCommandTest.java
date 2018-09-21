@@ -19,21 +19,20 @@ import static io.lettuce.core.cluster.ClusterTestUtil.flushDatabaseOfAllNodes;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.Ignore;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 
-import io.lettuce.test.condition.RedisConditions;
-import io.lettuce.test.resource.TestClientResources;
-import io.lettuce.test.resource.FastShutdown;
 import io.lettuce.core.RedisURI;
-import io.lettuce.test.settings.TestSettings;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.cluster.ClusterTestUtil;
 import io.lettuce.core.cluster.RedisClusterClient;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.commands.GeoCommandTest;
+import io.lettuce.test.condition.RedisConditions;
+import io.lettuce.test.resource.FastShutdown;
+import io.lettuce.test.resource.TestClientResources;
+import io.lettuce.test.settings.TestSettings;
 
 /**
  * @author Mark Paluch
@@ -43,7 +42,7 @@ public class GeoClusterCommandTest extends GeoCommandTest {
     private StatefulRedisClusterConnection<String, String> clusterConnection;
 
     @BeforeAll
-    public static void setupClient() {
+    static void setupClient() {
         redisClusterClient = RedisClusterClient.create(TestClientResources.get(),
                 RedisURI.Builder.redis(TestSettings.host(), TestSettings.port(900)).build());
 
@@ -53,12 +52,12 @@ public class GeoClusterCommandTest extends GeoCommandTest {
     }
 
     @AfterAll
-    public static void closeClient() {
+    static void closeClient() {
         FastShutdown.shutdown(redisClusterClient);
     }
 
     @BeforeEach
-    public void openConnection() {
+    void openConnection() {
         redis = connect();
         flushDatabaseOfAllNodes(clusterConnection);
     }
@@ -72,41 +71,41 @@ public class GeoClusterCommandTest extends GeoCommandTest {
 
     @Disabled("MULTI not available on Redis Cluster")
     @Override
-    public void geoaddInTransaction() {
+    void geoaddInTransaction() {
     }
 
     @Disabled("MULTI not available on Redis Cluster")
     @Override
-    public void geoaddMultiInTransaction() {
+    void geoaddMultiInTransaction() {
     }
 
     @Disabled("MULTI not available on Redis Cluster")
     @Override
-    public void georadiusInTransaction() {
+    void georadiusInTransaction() {
     }
 
     @Disabled("MULTI not available on Redis Cluster")
     @Override
-    public void geodistInTransaction() {
+    void geodistInTransaction() {
     }
 
     @Disabled("MULTI not available on Redis Cluster")
     @Override
-    public void georadiusWithArgsAndTransaction() {
+    void georadiusWithArgsAndTransaction() {
     }
 
     @Disabled("MULTI not available on Redis Cluster")
     @Override
-    public void georadiusbymemberWithArgsInTransaction() {
+    void georadiusbymemberWithArgsInTransaction() {
     }
 
     @Disabled("MULTI not available on Redis Cluster")
     @Override
-    public void geoposInTransaction() {
+    void geoposInTransaction() {
     }
 
     @Disabled("MULTI not available on Redis Cluster")
     @Override
-    public void geohashInTransaction() {
+    void geohashInTransaction() {
     }
 }

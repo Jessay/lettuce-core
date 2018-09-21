@@ -32,29 +32,29 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import io.lettuce.test.LettuceExtension;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 import io.lettuce.core.sentinel.api.StatefulRedisSentinelConnection;
+import io.lettuce.test.LettuceExtension;
 
 /**
  * @author Mark Paluch
  * @author Jongyeol Choi
  */
 @ExtendWith(LettuceExtension.class)
-public class RedisClientConnectIntegrationTests extends TestSupport {
+class RedisClientConnectIntegrationTests extends TestSupport {
 
-    public static final Duration EXPECTED_TIMEOUT = Duration.ofMillis(500);
+    private static final Duration EXPECTED_TIMEOUT = Duration.ofMillis(500);
 
     private final RedisClient client;
 
     @Inject
-    public RedisClientConnectIntegrationTests(RedisClient client) {
+    RedisClientConnectIntegrationTests(RedisClient client) {
         this.client = client;
     }
 
     @BeforeEach
-    public void before() {
+    void before() {
         client.setDefaultTimeout(EXPECTED_TIMEOUT);
     }
 
@@ -62,7 +62,7 @@ public class RedisClientConnectIntegrationTests extends TestSupport {
      * Standalone/Stateful
      */
     @Test
-    public void connectClientUri() {
+    void connectClientUri() {
 
         StatefulRedisConnection<String, String> connection = client.connect();
         assertThat(connection.getTimeout()).isEqualTo(EXPECTED_TIMEOUT);
@@ -70,14 +70,14 @@ public class RedisClientConnectIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void connectCodecClientUri() {
+    void connectCodecClientUri() {
         StatefulRedisConnection<String, String> connection = client.connect(UTF8);
         assertThat(connection.getTimeout()).isEqualTo(EXPECTED_TIMEOUT);
         connection.close();
     }
 
     @Test
-    public void connectOwnUri() {
+    void connectOwnUri() {
         RedisURI redisURI = redis(host, port).build();
         StatefulRedisConnection<String, String> connection = client.connect(redisURI);
         assertThat(connection.getTimeout()).isEqualTo(redisURI.getTimeout());
@@ -85,17 +85,17 @@ public class RedisClientConnectIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void connectMissingHostAndSocketUri() {
+    void connectMissingHostAndSocketUri() {
         assertThatThrownBy(() -> client.connect(new RedisURI())).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void connectSentinelMissingHostAndSocketUri() {
+    void connectSentinelMissingHostAndSocketUri() {
         assertThatThrownBy(() -> client.connect(invalidSentinel())).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void connectCodecOwnUri() {
+    void connectCodecOwnUri() {
         RedisURI redisURI = redis(host, port).build();
         StatefulRedisConnection<String, String> connection = client.connect(UTF8, redisURI);
         assertThat(connection.getTimeout()).isEqualTo(redisURI.getTimeout());
@@ -103,7 +103,7 @@ public class RedisClientConnectIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void connectAsyncCodecOwnUri() {
+    void connectAsyncCodecOwnUri() {
         RedisURI redisURI = redis(host, port).build();
         ConnectionFuture<StatefulRedisConnection<String, String>> future = client.connectAsync(UTF8, redisURI);
         StatefulRedisConnection<String, String> connection = future.join();
@@ -112,18 +112,18 @@ public class RedisClientConnectIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void connectCodecMissingHostAndSocketUri() {
+    void connectCodecMissingHostAndSocketUri() {
         assertThatThrownBy(() -> client.connect(UTF8, new RedisURI())).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void connectcodecSentinelMissingHostAndSocketUri() {
+    void connectcodecSentinelMissingHostAndSocketUri() {
         assertThatThrownBy(() -> client.connect(UTF8, invalidSentinel())).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     @Disabled("Non-deterministic behavior. Can cause a deadlock")
-    public void shutdownSyncInRedisFutureTest() throws Exception {
+    void shutdownSyncInRedisFutureTest() throws Exception {
 
         RedisClient redisClient = RedisClient.create();
         StatefulRedisConnection<String, String> connection = redisClient.connect(redis(host, port).build());
@@ -137,7 +137,7 @@ public class RedisClientConnectIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void shutdownAsyncInRedisFutureTest() throws Exception {
+    void shutdownAsyncInRedisFutureTest() throws Exception {
 
         RedisClient redisClient = RedisClient.create();
         StatefulRedisConnection<String, String> connection = redisClient.connect(redis(host, port).build());
@@ -153,21 +153,21 @@ public class RedisClientConnectIntegrationTests extends TestSupport {
      * Standalone/PubSub Stateful
      */
     @Test
-    public void connectPubSubClientUri() {
+    void connectPubSubClientUri() {
         StatefulRedisPubSubConnection<String, String> connection = client.connectPubSub();
         assertThat(connection.getTimeout()).isEqualTo(EXPECTED_TIMEOUT);
         connection.close();
     }
 
     @Test
-    public void connectPubSubCodecClientUri() {
+    void connectPubSubCodecClientUri() {
         StatefulRedisPubSubConnection<String, String> connection = client.connectPubSub(UTF8);
         assertThat(connection.getTimeout()).isEqualTo(EXPECTED_TIMEOUT);
         connection.close();
     }
 
     @Test
-    public void connectPubSubOwnUri() {
+    void connectPubSubOwnUri() {
         RedisURI redisURI = redis(host, port).build();
         StatefulRedisPubSubConnection<String, String> connection = client.connectPubSub(redisURI);
         assertThat(connection.getTimeout()).isEqualTo(redisURI.getTimeout());
@@ -175,17 +175,17 @@ public class RedisClientConnectIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void connectPubSubMissingHostAndSocketUri() {
+    void connectPubSubMissingHostAndSocketUri() {
         assertThatThrownBy(() -> client.connectPubSub(new RedisURI())).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void connectPubSubSentinelMissingHostAndSocketUri() {
+    void connectPubSubSentinelMissingHostAndSocketUri() {
         assertThatThrownBy(() -> client.connectPubSub(invalidSentinel())).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void connectPubSubCodecOwnUri() {
+    void connectPubSubCodecOwnUri() {
         RedisURI redisURI = redis(host, port).build();
         StatefulRedisPubSubConnection<String, String> connection = client.connectPubSub(UTF8, redisURI);
         assertThat(connection.getTimeout()).isEqualTo(redisURI.getTimeout());
@@ -193,7 +193,7 @@ public class RedisClientConnectIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void connectPubSubAsync() {
+    void connectPubSubAsync() {
         RedisURI redisURI = redis(host, port).build();
         ConnectionFuture<StatefulRedisPubSubConnection<String, String>> future = client.connectPubSubAsync(
 UTF8, redisURI);
@@ -203,12 +203,12 @@ UTF8, redisURI);
     }
 
     @Test
-    public void connectPubSubCodecMissingHostAndSocketUri() {
+    void connectPubSubCodecMissingHostAndSocketUri() {
         assertThatThrownBy(() -> client.connectPubSub(UTF8, new RedisURI())).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void connectPubSubCodecSentinelMissingHostAndSocketUri() {
+    void connectPubSubCodecSentinelMissingHostAndSocketUri() {
         assertThatThrownBy(() -> client.connectPubSub(UTF8, invalidSentinel())).isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -216,31 +216,31 @@ UTF8, redisURI);
      * Sentinel Stateful
      */
     @Test
-    public void connectSentinelClientUri() {
+    void connectSentinelClientUri() {
         StatefulRedisSentinelConnection<String, String> connection = client.connectSentinel();
         assertThat(connection.getTimeout()).isEqualTo(EXPECTED_TIMEOUT);
         connection.close();
     }
 
     @Test
-    public void connectSentinelCodecClientUri() {
+    void connectSentinelCodecClientUri() {
         StatefulRedisSentinelConnection<String, String> connection = client.connectSentinel(UTF8);
         assertThat(connection.getTimeout()).isEqualTo(EXPECTED_TIMEOUT);
         connection.close();
     }
 
     @Test
-    public void connectSentinelAndMissingHostAndSocketUri() {
+    void connectSentinelAndMissingHostAndSocketUri() {
         assertThatThrownBy(() -> client.connectSentinel(new RedisURI())).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void connectSentinelSentinelMissingHostAndSocketUri() {
+    void connectSentinelSentinelMissingHostAndSocketUri() {
         assertThatThrownBy(() -> client.connectSentinel(invalidSentinel())).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void connectSentinelOwnUri() {
+    void connectSentinelOwnUri() {
         RedisURI redisURI = redis(host, port).build();
         StatefulRedisSentinelConnection<String, String> connection = client.connectSentinel(redisURI);
         assertThat(connection.getTimeout()).isEqualTo(Duration.ofMinutes(1));
@@ -248,7 +248,7 @@ UTF8, redisURI);
     }
 
     @Test
-    public void connectSentinelCodecOwnUri() {
+    void connectSentinelCodecOwnUri() {
 
         RedisURI redisURI = redis(host, port).build();
         StatefulRedisSentinelConnection<String, String> connection = client.connectSentinel(UTF8, redisURI);
@@ -257,12 +257,12 @@ UTF8, redisURI);
     }
 
     @Test
-    public void connectSentinelCodecMissingHostAndSocketUri() {
+    void connectSentinelCodecMissingHostAndSocketUri() {
         assertThatThrownBy(() -> client.connectSentinel(UTF8, new RedisURI())).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void connectSentinelCodecSentinelMissingHostAndSocketUri() {
+    void connectSentinelCodecSentinelMissingHostAndSocketUri() {
         assertThatThrownBy(() -> client.connectSentinel(UTF8, invalidSentinel())).isInstanceOf(IllegalArgumentException.class);
     }
 

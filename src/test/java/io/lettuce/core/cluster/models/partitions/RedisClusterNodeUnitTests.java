@@ -27,10 +27,10 @@ import io.lettuce.core.cluster.SlotHash;
 /**
  * @author Mark Paluch
  */
-public class RedisClusterNodeUnitTests {
+class RedisClusterNodeUnitTests {
 
     @Test
-    public void shouldCopyNode() {
+    void shouldCopyNode() {
 
         RedisClusterNode node = new RedisClusterNode();
         node.setSlots(Arrays.asList(1, 2, 3, SlotHash.SLOT_COUNT - 1));
@@ -45,7 +45,7 @@ public class RedisClusterNodeUnitTests {
     }
 
     @Test
-    public void testEquality() {
+    void testEquality() {
 
         RedisClusterNode node = new RedisClusterNode();
 
@@ -57,7 +57,7 @@ public class RedisClusterNodeUnitTests {
     }
 
     @Test
-    public void testToString() {
+    void testToString() {
 
         RedisClusterNode node = new RedisClusterNode();
 

@@ -22,18 +22,21 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import io.lettuce.test.resource.TestClientResources;
-import io.lettuce.test.Wait;
-import io.lettuce.core.*;
+import io.lettuce.core.ClientOptions;
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.RedisFuture;
+import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.codec.ByteArrayCodec;
 import io.lettuce.core.sentinel.api.StatefulRedisSentinelConnection;
 import io.lettuce.core.sentinel.api.async.RedisSentinelAsyncCommands;
 import io.lettuce.core.sentinel.api.sync.RedisSentinelCommands;
+import io.lettuce.test.Wait;
+import io.lettuce.test.resource.TestClientResources;
 import io.lettuce.test.settings.TestSettings;
 
 /**
@@ -45,20 +48,20 @@ public class SentinelConnectionTest extends AbstractSentinelTest {
     private RedisSentinelAsyncCommands<String, String> sentinelAsync;
 
     @BeforeAll
-    public static void setupClient() {
+    static void setupClient() {
         sentinelClient = RedisClient.create(TestClientResources.get(), RedisURI.Builder
                 .sentinel(TestSettings.host(), MASTER_ID).build());
     }
 
     @BeforeEach
-    public void openConnection() {
+    void openConnection() {
         connection = sentinelClient.connectSentinel();
         sentinel = connection.sync();
         sentinelAsync = connection.async();
     }
 
     @Test
-    public void testAsync() throws Exception {
+    void testAsync() throws Exception {
 
         RedisFuture<List<Map<String, String>>> future = sentinelAsync.masters();
 
@@ -68,7 +71,7 @@ public class SentinelConnectionTest extends AbstractSentinelTest {
     }
 
     @Test
-    public void testFuture() throws Exception {
+    void testFuture() throws Exception {
 
         RedisFuture<Map<String, String>> future = sentinelAsync.master("unknown master");
 
@@ -84,14 +87,14 @@ public class SentinelConnectionTest extends AbstractSentinelTest {
     }
 
     @Test
-    public void testStatefulConnection() {
+    void testStatefulConnection() {
 
         StatefulRedisSentinelConnection<String, String> statefulConnection = sentinel.getStatefulConnection();
         assertThat(statefulConnection).isSameAs(statefulConnection.async().getStatefulConnection());
     }
 
     @Test
-    public void testSyncConnection() {
+    void testSyncConnection() {
 
         StatefulRedisSentinelConnection<String, String> statefulConnection = sentinel.getStatefulConnection();
         RedisSentinelCommands<String, String> sync = statefulConnection.sync();
@@ -99,7 +102,7 @@ public class SentinelConnectionTest extends AbstractSentinelTest {
     }
 
     @Test
-    public void testSyncAsyncConversion() {
+    void testSyncAsyncConversion() {
 
         StatefulRedisSentinelConnection<String, String> statefulConnection = sentinel.getStatefulConnection();
         assertThat(statefulConnection.sync().getStatefulConnection()).isSameAs(statefulConnection);
@@ -107,7 +110,7 @@ public class SentinelConnectionTest extends AbstractSentinelTest {
     }
 
     @Test
-    public void testSyncClose() {
+    void testSyncClose() {
 
         StatefulRedisSentinelConnection<String, String> statefulConnection = sentinel.getStatefulConnection();
         statefulConnection.sync().getStatefulConnection().close();
@@ -119,7 +122,7 @@ public class SentinelConnectionTest extends AbstractSentinelTest {
     }
 
     @Test
-    public void testAsyncClose() {
+    void testAsyncClose() {
         StatefulRedisSentinelConnection<String, String> statefulConnection = sentinel.getStatefulConnection();
         statefulConnection.async().getStatefulConnection().close();
 
@@ -130,7 +133,7 @@ public class SentinelConnectionTest extends AbstractSentinelTest {
     }
 
     @Test
-    public void connectToOneNode() {
+    void connectToOneNode() {
         RedisSentinelCommands<String, String> connection = sentinelClient.connectSentinel(
                 RedisURI.Builder.sentinel(TestSettings.host(), MASTER_ID).build()).sync();
         assertThat(connection.ping()).isEqualTo("PONG");
@@ -138,14 +141,14 @@ public class SentinelConnectionTest extends AbstractSentinelTest {
     }
 
     @Test
-    public void connectWithByteCodec() {
+    void connectWithByteCodec() {
         RedisSentinelCommands<byte[], byte[]> connection = sentinelClient.connectSentinel(new ByteArrayCodec()).sync();
         assertThat(connection.master(MASTER_ID.getBytes())).isNotNull();
         connection.getStatefulConnection().close();
     }
 
     @Test
-    public void sentinelConnectionPingBeforeConnectShouldDiscardPassword() {
+    void sentinelConnectionPingBeforeConnectShouldDiscardPassword() {
 
         RedisURI redisURI = RedisURI.Builder.sentinel(TestSettings.host(), MASTER_ID).withPassword("hello-world").build();
 
@@ -160,7 +163,7 @@ public class SentinelConnectionTest extends AbstractSentinelTest {
     }
 
     @Test
-    public void sentinelConnectionShouldSetClientName() {
+    void sentinelConnectionShouldSetClientName() {
 
         RedisURI redisURI = RedisURI.Builder.sentinel(TestSettings.host(), MASTER_ID).withClientName("my-client").build();
 
@@ -172,7 +175,7 @@ public class SentinelConnectionTest extends AbstractSentinelTest {
     }
 
     @Test
-    public void sentinelManagedConnectionShouldSetClientName() {
+    void sentinelManagedConnectionShouldSetClientName() {
 
         RedisURI redisURI = RedisURI.Builder.sentinel(TestSettings.host(), MASTER_ID).withClientName("my-client").build();
 

@@ -34,19 +34,19 @@ import org.junit.jupiter.api.Test;
  * @author Mark Paluch
  */
 
-public class DirContextDnsResolverTests {
+class DirContextDnsResolverTests {
 
-    DirContextDnsResolver resolver;
+    private DirContextDnsResolver resolver;
 
     @BeforeEach
-    public void before() {
+    void before() {
 
         System.getProperties().remove(DirContextDnsResolver.PREFER_IPV4_KEY);
         System.getProperties().remove(DirContextDnsResolver.PREFER_IPV6_KEY);
     }
 
     @AfterEach
-    public void tearDown() throws Exception {
+    void tearDown() throws Exception {
 
         if (resolver != null) {
             resolver.close();
@@ -55,7 +55,7 @@ public class DirContextDnsResolverTests {
 
     @Test
     @Disabled("Requires guarding against IPv6 absence")
-    public void shouldResolveDefault() throws Exception {
+    void shouldResolveDefault() throws Exception {
 
         resolver = new DirContextDnsResolver();
         InetAddress[] resolved = resolver.resolve("google.com");
@@ -67,8 +67,7 @@ public class DirContextDnsResolverTests {
     }
 
     @Test
-
-    public void shouldResolvePreferIpv4WithProperties() throws Exception {
+    void shouldResolvePreferIpv4WithProperties() throws Exception {
 
         resolver = new DirContextDnsResolver(true, false, new Properties());
 
@@ -80,7 +79,7 @@ public class DirContextDnsResolverTests {
 
     @Test
     @Disabled("Requires guarding against IPv6 absence")
-    public void shouldResolveWithDnsServer() throws Exception {
+    void shouldResolveWithDnsServer() throws Exception {
 
         resolver = new DirContextDnsResolver(Arrays.asList("[2001:4860:4860::8888]", "8.8.8.8"));
 
@@ -90,7 +89,7 @@ public class DirContextDnsResolverTests {
     }
 
     @Test
-    public void shouldPreferIpv4() throws Exception {
+    void shouldPreferIpv4() throws Exception {
 
         System.setProperty(DirContextDnsResolver.PREFER_IPV4_KEY, "true");
 
@@ -102,7 +101,7 @@ public class DirContextDnsResolverTests {
     }
 
     @Test
-    public void shouldPreferIpv4AndNotIpv6() throws Exception {
+    void shouldPreferIpv4AndNotIpv6() throws Exception {
 
         System.setProperty(DirContextDnsResolver.PREFER_IPV4_KEY, "true");
         System.setProperty(DirContextDnsResolver.PREFER_IPV6_KEY, "false");
@@ -116,7 +115,7 @@ public class DirContextDnsResolverTests {
 
     @Test
     @Disabled("Requires guarding against IPv6 absence")
-    public void shouldPreferIpv6AndNotIpv4() throws Exception {
+    void shouldPreferIpv6AndNotIpv4() throws Exception {
 
         System.setProperty(DirContextDnsResolver.PREFER_IPV4_KEY, "false");
         System.setProperty(DirContextDnsResolver.PREFER_IPV6_KEY, "true");
@@ -129,7 +128,7 @@ public class DirContextDnsResolverTests {
     }
 
     @Test
-    public void shouldFailWithUnknownHost() {
+    void shouldFailWithUnknownHost() {
 
         resolver = new DirContextDnsResolver("8.8.8.8");
 
@@ -137,7 +136,7 @@ public class DirContextDnsResolverTests {
     }
 
     @Test
-    public void shouldResolveCname() throws Exception {
+    void shouldResolveCname() throws Exception {
 
         resolver = new DirContextDnsResolver();
         InetAddress[] resolved = resolver.resolve("www.github.io");
@@ -148,7 +147,7 @@ public class DirContextDnsResolverTests {
     }
 
     @Test
-    public void shouldResolveWithoutSubdomain() throws Exception {
+    void shouldResolveWithoutSubdomain() throws Exception {
 
         resolver = new DirContextDnsResolver();
         InetAddress[] resolved = resolver.resolve("paluch.biz");
@@ -165,7 +164,7 @@ public class DirContextDnsResolverTests {
     }
 
     @Test
-    public void shouldWorkWithIpv4Address() throws Exception {
+    void shouldWorkWithIpv4Address() throws Exception {
 
         resolver = new DirContextDnsResolver();
         InetAddress[] resolved = resolver.resolve("127.0.0.1");
@@ -176,7 +175,7 @@ public class DirContextDnsResolverTests {
     }
 
     @Test
-    public void shouldWorkWithIpv6Addresses() throws Exception {
+    void shouldWorkWithIpv6Addresses() throws Exception {
 
         resolver = new DirContextDnsResolver();
         InetAddress[] resolved = resolver.resolve("::1");

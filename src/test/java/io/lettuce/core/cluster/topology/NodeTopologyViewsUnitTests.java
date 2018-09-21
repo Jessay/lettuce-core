@@ -28,10 +28,10 @@ import io.lettuce.core.RedisURI;
 /**
  * @author Mark Paluch
  */
-public class NodeTopologyViewsUnitTests {
+class NodeTopologyViewsUnitTests {
 
     @Test
-    public void shouldReuseKnownUris() {
+    void shouldReuseKnownUris() {
 
         RedisURI localhost = RedisURI.create("127.0.0.1", 6479);
         RedisURI otherhost = RedisURI.create("127.0.0.2", 7000);
@@ -56,7 +56,7 @@ public class NodeTopologyViewsUnitTests {
     }
 
     @Test
-    public void shouldFailWithoutOwnPartition() {
+    void shouldFailWithoutOwnPartition() {
 
         RedisURI localhost = RedisURI.create("127.0.0.1", 6479);
 

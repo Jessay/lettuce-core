@@ -33,7 +33,7 @@ import io.netty.buffer.Unpooled;
  *
  * @author Mark Paluch
  */
-public class StringCodecBenchmark {
+class StringCodecBenchmark {
 
     @Benchmark
     public void encodeUtf8Unpooled(Input input) {
@@ -71,7 +71,7 @@ public class StringCodecBenchmark {
     }
 
     @State(Scope.Thread)
-    public static class Input {
+    static class Input {
 
         Blackhole blackhole;
         StringCodec asciiCodec = new StringCodec(LettuceCharsets.ASCII);

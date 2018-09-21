@@ -22,15 +22,15 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import io.lettuce.test.resource.TestClientResources;
-import io.lettuce.test.Wait;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.server.MockTcpServer;
+import io.lettuce.test.Wait;
 import io.lettuce.test.resource.FastShutdown;
+import io.lettuce.test.resource.TestClientResources;
 import io.lettuce.test.settings.TestSettings;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -39,13 +39,13 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 /**
  * @author Mark Paluch
  */
-public class ProtectedModeTests {
+class ProtectedModeTests {
 
     private static MockTcpServer server;
     private static RedisClient client;
 
     @BeforeAll
-    public static void beforeClass() throws Exception {
+    static void beforeClass() throws Exception {
 
         server = new MockTcpServer();
 
@@ -74,19 +74,19 @@ public class ProtectedModeTests {
     }
 
     @AfterAll
-    public static void afterClass() {
+    static void afterClass() {
 
         server.shutdown();
         FastShutdown.shutdown(client);
     }
 
     @BeforeEach
-    public void before() {
+    void before() {
         client.setOptions(ClientOptions.create());
     }
 
     @Test
-    public void regularClientFailsOnFirstCommand() {
+    void regularClientFailsOnFirstCommand() {
 
         try (StatefulRedisConnection<String, String> connect = client.connect()) {
 
@@ -101,7 +101,7 @@ public class ProtectedModeTests {
     }
 
     @Test
-    public void regularClientFailsOnFirstCommandWithDelay() {
+    void regularClientFailsOnFirstCommandWithDelay() {
 
         try (StatefulRedisConnection<String, String> connect = client.connect()) {
 
@@ -118,7 +118,7 @@ public class ProtectedModeTests {
     }
 
     @Test
-    public void pingBeforeConnectFailsOnPing() {
+    void pingBeforeConnectFailsOnPing() {
 
         client.setOptions(ClientOptions.builder().pingBeforeActivateConnection(true).build());
         assertThatThrownBy(() -> client.connect()).isInstanceOf(RedisConnectionException.class).hasCauseInstanceOf(

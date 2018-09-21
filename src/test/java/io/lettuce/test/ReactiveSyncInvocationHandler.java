@@ -41,7 +41,7 @@ public class ReactiveSyncInvocationHandler<K, V> extends ConnectionDecoratingInv
 
     private final StatefulConnection<?, ?> connection;
 
-    public ReactiveSyncInvocationHandler(StatefulConnection<?, ?> connection, Object rxApi) {
+    private ReactiveSyncInvocationHandler(StatefulConnection<?, ?> connection, Object rxApi) {
         super(rxApi);
         this.connection = connection;
     }

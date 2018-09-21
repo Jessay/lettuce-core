@@ -33,17 +33,17 @@ import io.netty.channel.ConnectTimeoutException;
  * @author Mark Paluch
  */
 @ExtendWith(LettuceExtension.class)
-public class SocketOptionsIntegrationTests extends TestSupport {
+class SocketOptionsIntegrationTests extends TestSupport {
 
     private final RedisClient client;
 
     @Inject
-    public SocketOptionsIntegrationTests(RedisClient client) {
+    SocketOptionsIntegrationTests(RedisClient client) {
         this.client = client;
     }
 
     @Test
-    public void testConnectTimeout() {
+    void testConnectTimeout() {
 
         SocketOptions socketOptions = SocketOptions.builder().connectTimeout(100, TimeUnit.MILLISECONDS).build();
         client.setOptions(ClientOptions.builder().socketOptions(socketOptions).build());

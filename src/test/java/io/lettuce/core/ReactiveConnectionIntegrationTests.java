@@ -35,22 +35,22 @@ import org.reactivestreams.Subscription;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-import io.lettuce.test.Delay;
-import io.lettuce.test.LettuceExtension;
-import io.lettuce.test.Wait;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.reactive.RedisReactiveCommands;
 import io.lettuce.core.api.sync.RedisCommands;
+import io.lettuce.test.Delay;
+import io.lettuce.test.LettuceExtension;
+import io.lettuce.test.Wait;
 
 @ExtendWith(LettuceExtension.class)
-public class ReactiveConnectionIntegrationTests extends TestSupport {
+class ReactiveConnectionIntegrationTests extends TestSupport {
 
     private final StatefulRedisConnection<String, String> connection;
     private final RedisCommands<String, String> redis;
     private final RedisReactiveCommands<String, String> reactive;
 
     @Inject
-    public ReactiveConnectionIntegrationTests(StatefulRedisConnection<String, String> connection) {
+    ReactiveConnectionIntegrationTests(StatefulRedisConnection<String, String> connection) {
         this.connection = connection;
         this.redis = connection.sync();
         this.reactive = connection.reactive();
@@ -58,7 +58,7 @@ public class ReactiveConnectionIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void doNotFireCommandUntilObservation() {
+    void doNotFireCommandUntilObservation() {
 
         RedisReactiveCommands<String, String> reactive = connection.reactive();
         Mono<String> set = reactive.set(key, value);
@@ -71,24 +71,24 @@ public class ReactiveConnectionIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void fireCommandAfterObserve() {
+    void fireCommandAfterObserve() {
         StepVerifier.create(reactive.set(key, value)).expectNext("OK").verifyComplete();
         assertThat(redis.get(key)).isEqualTo(value);
     }
 
     @Test
-    public void isOpen() {
+    void isOpen() {
         assertThat(reactive.isOpen()).isTrue();
     }
 
     @Test
-    public void getStatefulConnection() {
+    void getStatefulConnection() {
         assertThat(reactive.getStatefulConnection()).isSameAs(connection);
     }
 
     @Test
     @Inject
-    public void testCancelCommand(@New StatefulRedisConnection<String, String> connection) {
+    void testCancelCommand(@New StatefulRedisConnection<String, String> connection) {
 
         RedisReactiveCommands<String, String> reactive = connection.reactive();
         List<Object> result = new ArrayList<>();
@@ -103,13 +103,13 @@ public class ReactiveConnectionIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testEcho() {
+    void testEcho() {
         StepVerifier.create(reactive.echo("echo")).expectNext("echo").verifyComplete();
     }
 
     @Test
     @Inject
-    public void testMonoMultiCancel(@New StatefulRedisConnection<String, String> connection) {
+    void testMonoMultiCancel(@New StatefulRedisConnection<String, String> connection) {
 
         RedisReactiveCommands<String, String> reactive = connection.reactive();
 
@@ -129,7 +129,7 @@ public class ReactiveConnectionIntegrationTests extends TestSupport {
 
     @Test
     @Inject
-    public void testFluxCancel(@New StatefulRedisConnection<String, String> connection) {
+    void testFluxCancel(@New StatefulRedisConnection<String, String> connection) {
 
         RedisReactiveCommands<String, String> reactive = connection.reactive();
 
@@ -148,7 +148,7 @@ public class ReactiveConnectionIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void multiSubscribe() throws Exception {
+    void multiSubscribe() throws Exception {
 
         CountDownLatch latch = new CountDownLatch(4);
         reactive.set(key, "1").subscribe(s -> latch.countDown());
@@ -166,7 +166,7 @@ public class ReactiveConnectionIntegrationTests extends TestSupport {
 
     @Test
     @Inject
-    public void transactional(RedisClient client) throws Exception {
+    void transactional(RedisClient client) throws Exception {
 
         final CountDownLatch sync = new CountDownLatch(1);
 
@@ -189,12 +189,12 @@ public class ReactiveConnectionIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void auth() {
+    void auth() {
         StepVerifier.create(reactive.auth("error")).expectError().verify();
     }
 
     @Test
-    public void subscriberCompletingWithExceptionShouldBeHandledSafely() {
+    void subscriberCompletingWithExceptionShouldBeHandledSafely() {
 
         StepVerifier.create(Flux.concat(reactive.set("keyA", "valueA"), reactive.set("keyB", "valueB"))).expectNextCount(2)
                 .verifyComplete();
@@ -207,7 +207,7 @@ public class ReactiveConnectionIntegrationTests extends TestSupport {
 
     @Test
     @Inject
-    public void subscribeWithDisconnectedClient(RedisClient client) {
+    void subscribeWithDisconnectedClient(RedisClient client) {
 
         client.setOptions(ClientOptions.builder().disconnectedBehavior(REJECT_COMMANDS).autoReconnect(false).build());
 
@@ -255,7 +255,7 @@ public class ReactiveConnectionIntegrationTests extends TestSupport {
 
         private final List<Object> result;
 
-        public CompletionSubscriber(List<Object> result) {
+        CompletionSubscriber(List<Object> result) {
             this.result = result;
         }
 

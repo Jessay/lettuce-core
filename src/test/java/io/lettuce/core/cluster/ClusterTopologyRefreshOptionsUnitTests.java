@@ -27,10 +27,10 @@ import io.lettuce.core.cluster.ClusterTopologyRefreshOptions.RefreshTrigger;
 /**
  * @author Mark Paluch
  */
-public class ClusterTopologyRefreshOptionsUnitTests {
+class ClusterTopologyRefreshOptionsUnitTests {
 
     @Test
-    public void testBuilder() {
+    void testBuilder() {
 
         ClusterTopologyRefreshOptions options = ClusterTopologyRefreshOptions.builder()//
                 .enablePeriodicRefresh(true).refreshPeriod(10, TimeUnit.MINUTES)//
@@ -51,7 +51,7 @@ public class ClusterTopologyRefreshOptionsUnitTests {
     }
 
     @Test
-    public void testCopy() {
+    void testCopy() {
 
         ClusterTopologyRefreshOptions master = ClusterTopologyRefreshOptions.builder()//
                 .enablePeriodicRefresh(true).refreshPeriod(10, TimeUnit.MINUTES)//
@@ -74,7 +74,7 @@ public class ClusterTopologyRefreshOptionsUnitTests {
     }
 
     @Test
-    public void testDefault() {
+    void testDefault() {
 
         ClusterTopologyRefreshOptions options = ClusterTopologyRefreshOptions.create();
 
@@ -93,7 +93,7 @@ public class ClusterTopologyRefreshOptionsUnitTests {
     }
 
     @Test
-    public void testEnabled() {
+    void testEnabled() {
 
         ClusterTopologyRefreshOptions options = ClusterTopologyRefreshOptions.enabled();
 

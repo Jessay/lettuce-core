@@ -35,35 +35,35 @@ import javax.inject.Inject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import io.lettuce.test.WithPassword;
-import io.lettuce.test.settings.TestSettings;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-import io.lettuce.test.LettuceExtension;
-import io.lettuce.test.Wait;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.codec.StringCodec;
 import io.lettuce.core.output.StatusOutput;
 import io.lettuce.core.protocol.*;
+import io.lettuce.test.LettuceExtension;
+import io.lettuce.test.Wait;
+import io.lettuce.test.WithPassword;
+import io.lettuce.test.settings.TestSettings;
 import io.netty.channel.Channel;
 
 /**
  * @author Mark Paluch
  */
 @ExtendWith(LettuceExtension.class)
-public class ClientOptionsIntegrationTests extends TestSupport {
+class ClientOptionsIntegrationTests extends TestSupport {
 
     private final RedisClient client;
 
     @Inject
-    public ClientOptionsIntegrationTests(RedisClient client) {
+    ClientOptionsIntegrationTests(RedisClient client) {
         this.client = client;
     }
 
     @Test
-    public void variousClientOptions() {
+    void variousClientOptions() {
 
         StatefulRedisConnection<String, String> connection1 = client.connect();
 
@@ -82,7 +82,7 @@ public class ClientOptionsIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void requestQueueSize() {
+    void requestQueueSize() {
 
         client.setOptions(ClientOptions.builder().requestQueueSize(10).build());
 
@@ -108,7 +108,7 @@ public class ClientOptionsIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void requestQueueSizeAppliedForReconnect() {
+    void requestQueueSizeAppliedForReconnect() {
 
         client.setOptions(ClientOptions.builder().requestQueueSize(10).build());
 
@@ -117,7 +117,7 @@ public class ClientOptionsIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testHitRequestQueueLimitReconnectWithAuthCommand() {
+    void testHitRequestQueueLimitReconnectWithAuthCommand() {
 
         WithPassword.run(client, () -> {
 
@@ -130,7 +130,7 @@ public class ClientOptionsIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testHitRequestQueueLimitReconnectWithUriAuth() {
+    void testHitRequestQueueLimitReconnectWithUriAuth() {
 
         WithPassword.run(client, () -> {
             client.setOptions(ClientOptions.builder().requestQueueSize(10).build());
@@ -144,7 +144,7 @@ public class ClientOptionsIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void testHitRequestQueueLimitReconnectWithUriAuthPingCommand() {
+    void testHitRequestQueueLimitReconnectWithUriAuthPingCommand() {
 
         WithPassword.run(client, () -> {
 
@@ -184,7 +184,7 @@ public class ClientOptionsIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void requestQueueSizeOvercommittedReconnect() throws Exception {
+    void requestQueueSizeOvercommittedReconnect() throws Exception {
 
         client.setOptions(ClientOptions.builder().requestQueueSize(10).build());
 
@@ -221,7 +221,7 @@ public class ClientOptionsIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void disconnectedWithoutReconnect() {
+    void disconnectedWithoutReconnect() {
 
         client.setOptions(ClientOptions.builder().autoReconnect(false).build());
 
@@ -239,7 +239,7 @@ public class ClientOptionsIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void disconnectedRejectCommands() {
+    void disconnectedRejectCommands() {
 
         client.setOptions(ClientOptions.builder().disconnectedBehavior(ClientOptions.DisconnectedBehavior.REJECT_COMMANDS)
                 .build());
@@ -259,7 +259,7 @@ public class ClientOptionsIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void disconnectedAcceptCommands() {
+    void disconnectedAcceptCommands() {
 
         client.setOptions(ClientOptions.builder().autoReconnect(false)
                 .disconnectedBehavior(ClientOptions.DisconnectedBehavior.ACCEPT_COMMANDS).build());
@@ -274,7 +274,7 @@ public class ClientOptionsIntegrationTests extends TestSupport {
 
     @Test
     @Inject
-    public void pingBeforeConnect(StatefulRedisConnection<String, String> sharedConnection) {
+    void pingBeforeConnect(StatefulRedisConnection<String, String> sharedConnection) {
 
         sharedConnection.sync().set(key, value);
         client.setOptions(ClientOptions.builder().pingBeforeActivateConnection(true).build());
@@ -289,7 +289,7 @@ public class ClientOptionsIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void pingBeforeConnectTimeout() throws Exception {
+    void pingBeforeConnectTimeout() throws Exception {
 
         client.setOptions(ClientOptions.builder().pingBeforeActivateConnection(true).build());
 
@@ -309,7 +309,7 @@ public class ClientOptionsIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void pingBeforeConnectWithAuthentication() {
+    void pingBeforeConnectWithAuthentication() {
 
         WithPassword.run(client, () -> {
             client.setOptions(ClientOptions.builder().pingBeforeActivateConnection(true).build());
@@ -327,7 +327,7 @@ public class ClientOptionsIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void pingBeforeConnectWithAuthenticationTimeout() {
+    void pingBeforeConnectWithAuthenticationTimeout() {
 
         WithPassword.run(
                 client,
@@ -352,7 +352,7 @@ public class ClientOptionsIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void pingBeforeConnectWithSslAndAuthentication() {
+    void pingBeforeConnectWithSslAndAuthentication() {
 
         WithPassword.run(client, () -> {
 
@@ -373,7 +373,7 @@ public class ClientOptionsIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void pingBeforeConnectWithAuthenticationFails() {
+    void pingBeforeConnectWithAuthenticationFails() {
 
         WithPassword.run(client, () -> {
 
@@ -390,7 +390,7 @@ public class ClientOptionsIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void pingBeforeConnectWithSslAndAuthenticationFails() {
+    void pingBeforeConnectWithSslAndAuthenticationFails() {
 
         WithPassword.run(
                 client,
@@ -410,7 +410,7 @@ public class ClientOptionsIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void appliesCommandTimeoutToAsyncCommands() {
+    void appliesCommandTimeoutToAsyncCommands() {
 
         client.setOptions(ClientOptions.builder().timeoutOptions(TimeoutOptions.enabled()).build());
 
@@ -427,7 +427,7 @@ public class ClientOptionsIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void appliesCommandTimeoutToReactiveCommands() {
+    void appliesCommandTimeoutToReactiveCommands() {
 
         client.setOptions(ClientOptions.builder().timeoutOptions(TimeoutOptions.enabled()).build());
 
@@ -443,7 +443,7 @@ public class ClientOptionsIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void timeoutExpiresBatchedCommands() {
+    void timeoutExpiresBatchedCommands() {
 
         client.setOptions(ClientOptions.builder()
                 .timeoutOptions(TimeoutOptions.builder().fixedTimeout(Duration.ofMillis(1)).build()).build());
@@ -462,7 +462,7 @@ public class ClientOptionsIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void pingBeforeConnectWithQueuedCommandsAndReconnect() throws Exception {
+    void pingBeforeConnectWithQueuedCommandsAndReconnect() throws Exception {
 
         StatefulRedisConnection<String, String> controlConnection = client.connect();
 
@@ -502,7 +502,7 @@ public class ClientOptionsIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void authenticatedPingBeforeConnectWithQueuedCommandsAndReconnect() {
+    void authenticatedPingBeforeConnectWithQueuedCommandsAndReconnect() {
 
         WithPassword.run(
                 client,

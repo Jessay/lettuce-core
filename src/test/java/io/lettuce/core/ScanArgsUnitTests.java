@@ -25,10 +25,10 @@ import io.lettuce.core.protocol.CommandArgs;
 /**
  * @author Mark Paluch
  */
-public class ScanArgsUnitTests {
+class ScanArgsUnitTests {
 
     @Test
-    public void shouldEncodeMatchUsingUtf8() {
+    void shouldEncodeMatchUsingUtf8() {
 
         ScanArgs args = ScanArgs.Builder.matches("ö");
 

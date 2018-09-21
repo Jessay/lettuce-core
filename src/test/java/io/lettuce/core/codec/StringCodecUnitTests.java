@@ -29,13 +29,13 @@ import io.netty.buffer.Unpooled;
 /**
  * @author Mark Paluch
  */
-public class StringCodecUnitTests {
+class StringCodecUnitTests {
 
-    String teststring = "hello üäü~∑†®†ª€∂‚¶¢ Wørld";
-    String teststringPlain = "hello uufadsfasdfadssdfadfs";
+    private String teststring = "hello üäü~∑†®†ª€∂‚¶¢ Wørld";
+    private String teststringPlain = "hello uufadsfasdfadssdfadfs";
 
     @Test
-    public void encodeUtf8Buf() throws Exception {
+    void encodeUtf8Buf() throws Exception {
 
         StringCodec codec = new StringCodec(LettuceCharsets.UTF8);
 
@@ -46,7 +46,7 @@ public class StringCodecUnitTests {
     }
 
     @Test
-    public void encodeAsciiBuf() throws Exception {
+    void encodeAsciiBuf() throws Exception {
 
         StringCodec codec = new StringCodec(LettuceCharsets.ASCII);
 
@@ -57,7 +57,7 @@ public class StringCodecUnitTests {
     }
 
     @Test
-    public void encodeIso88591Buf() throws Exception {
+    void encodeIso88591Buf() throws Exception {
 
         StringCodec codec = new StringCodec(StandardCharsets.ISO_8859_1);
 
@@ -68,7 +68,7 @@ public class StringCodecUnitTests {
     }
 
     @Test
-    public void encodeAndDecodeUtf8Buf() throws Exception {
+    void encodeAndDecodeUtf8Buf() throws Exception {
 
         StringCodec codec = new StringCodec(LettuceCharsets.UTF8);
 
@@ -79,7 +79,7 @@ public class StringCodecUnitTests {
     }
 
     @Test
-    public void encodeAndDecodeUtf8() throws Exception {
+    void encodeAndDecodeUtf8() throws Exception {
 
         StringCodec codec = new StringCodec(LettuceCharsets.UTF8);
         ByteBuffer byteBuffer = codec.encodeKey(teststring);
@@ -88,7 +88,7 @@ public class StringCodecUnitTests {
     }
 
     @Test
-    public void encodeAndDecodeAsciiBuf() throws Exception {
+    void encodeAndDecodeAsciiBuf() throws Exception {
 
         StringCodec codec = new StringCodec(LettuceCharsets.ASCII);
 
@@ -99,7 +99,7 @@ public class StringCodecUnitTests {
     }
 
     @Test
-    public void encodeAndDecodeIso88591Buf() throws Exception {
+    void encodeAndDecodeIso88591Buf() throws Exception {
 
         StringCodec codec = new StringCodec(StandardCharsets.ISO_8859_1);
 
@@ -110,7 +110,7 @@ public class StringCodecUnitTests {
     }
 
     @Test
-    public void estimateSize() throws Exception {
+    void estimateSize() throws Exception {
 
         assertThat(new StringCodec(LettuceCharsets.UTF8).estimateSize(teststring)).isEqualTo((int) (teststring.length() * 1.1));
         assertThat(new StringCodec(LettuceCharsets.ASCII).estimateSize(teststring)).isEqualTo(teststring.length());

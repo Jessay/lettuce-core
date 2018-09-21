@@ -29,22 +29,22 @@ import io.lettuce.core.codec.Utf8StringCodec;
 /**
  * @author Mark Paluch
  */
-public class GeoCoordinatesValueListOutputUnitTests {
+class GeoCoordinatesValueListOutputUnitTests {
 
     private GeoCoordinatesValueListOutput<?, ?> sut = new GeoCoordinatesValueListOutput<>(new Utf8StringCodec());
 
     @Test
-    public void defaultSubscriberIsSet() {
+    void defaultSubscriberIsSet() {
         assertThat(sut.getSubscriber()).isNotNull().isInstanceOf(ListSubscriber.class);
     }
 
     @Test
-    public void setIntegerShouldFail() {
+    void setIntegerShouldFail() {
         assertThatThrownBy(() -> sut.set(123L)).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
-    public void commandOutputCorrectlyDecoded() {
+    void commandOutputCorrectlyDecoded() {
 
         sut.multi(2);
         sut.set(ByteBuffer.wrap("1.234".getBytes()));

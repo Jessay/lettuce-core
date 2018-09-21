@@ -26,9 +26,7 @@ import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -41,7 +39,7 @@ import io.netty.util.concurrent.EventExecutorGroup;
  */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class ClusterTopologyRefreshSchedulerUnitTests {
+class ClusterTopologyRefreshSchedulerUnitTests {
 
     private ClusterTopologyRefreshScheduler sut;
 
@@ -61,7 +59,7 @@ public class ClusterTopologyRefreshSchedulerUnitTests {
     private EventExecutorGroup eventExecutors;
 
     @BeforeEach
-    public void before() {
+    void before() {
 
         when(clientResources.eventExecutorGroup()).thenReturn(eventExecutors);
 
@@ -69,7 +67,7 @@ public class ClusterTopologyRefreshSchedulerUnitTests {
     }
 
     @Test
-    public void runShouldSubmitRefreshShouldTrigger() {
+    void runShouldSubmitRefreshShouldTrigger() {
 
         when(clusterClient.getClusterClientOptions()).thenReturn(clusterClientOptions);
 
@@ -78,7 +76,7 @@ public class ClusterTopologyRefreshSchedulerUnitTests {
     }
 
     @Test
-    public void runnableShouldCallPartitionRefresh() {
+    void runnableShouldCallPartitionRefresh() {
 
         when(clusterClient.getClusterClientOptions()).thenReturn(clusterClientOptions);
 
@@ -93,14 +91,14 @@ public class ClusterTopologyRefreshSchedulerUnitTests {
     }
 
     @Test
-    public void shouldNotSubmitIfOptionsNotSet() {
+    void shouldNotSubmitIfOptionsNotSet() {
 
         sut.run();
         verify(eventExecutors, never()).submit(any(Runnable.class));
     }
 
     @Test
-    public void shouldNotSubmitIfExecutorIsShuttingDown() {
+    void shouldNotSubmitIfExecutorIsShuttingDown() {
 
         when(eventExecutors.isShuttingDown()).thenReturn(true);
 
@@ -109,7 +107,7 @@ public class ClusterTopologyRefreshSchedulerUnitTests {
     }
 
     @Test
-    public void shouldNotSubmitIfExecutorIsShutdown() {
+    void shouldNotSubmitIfExecutorIsShutdown() {
 
         when(eventExecutors.isShutdown()).thenReturn(true);
 
@@ -118,7 +116,7 @@ public class ClusterTopologyRefreshSchedulerUnitTests {
     }
 
     @Test
-    public void shouldNotSubmitIfExecutorIsTerminated() {
+    void shouldNotSubmitIfExecutorIsTerminated() {
 
         when(eventExecutors.isTerminated()).thenReturn(true);
 
@@ -127,7 +125,7 @@ public class ClusterTopologyRefreshSchedulerUnitTests {
     }
 
     @Test
-    public void shouldTriggerRefreshOnAskRedirection() {
+    void shouldTriggerRefreshOnAskRedirection() {
 
         ClusterTopologyRefreshOptions clusterTopologyRefreshOptions = ClusterTopologyRefreshOptions.builder()
                 .enableAllAdaptiveRefreshTriggers().build();
@@ -142,7 +140,7 @@ public class ClusterTopologyRefreshSchedulerUnitTests {
     }
 
     @Test
-    public void shouldNotTriggerAdaptiveRefreshUsingDefaults() {
+    void shouldNotTriggerAdaptiveRefreshUsingDefaults() {
 
         ClusterTopologyRefreshOptions clusterTopologyRefreshOptions = ClusterTopologyRefreshOptions.create();
 
@@ -156,7 +154,7 @@ public class ClusterTopologyRefreshSchedulerUnitTests {
     }
 
     @Test
-    public void shouldTriggerRefreshOnMovedRedirection() {
+    void shouldTriggerRefreshOnMovedRedirection() {
 
         ClusterClientOptions clusterClientOptions = ClusterClientOptions.builder().topologyRefreshOptions(immediateRefresh)
                 .build();
@@ -168,7 +166,7 @@ public class ClusterTopologyRefreshSchedulerUnitTests {
     }
 
     @Test
-    public void shouldTriggerRefreshOnReconnect() {
+    void shouldTriggerRefreshOnReconnect() {
 
         ClusterClientOptions clusterClientOptions = ClusterClientOptions.builder().topologyRefreshOptions(immediateRefresh)
                 .build();
@@ -180,7 +178,7 @@ public class ClusterTopologyRefreshSchedulerUnitTests {
     }
 
     @Test
-    public void shouldTriggerRefreshOnUnknownNode() {
+    void shouldTriggerRefreshOnUnknownNode() {
 
         ClusterClientOptions clusterClientOptions = ClusterClientOptions.builder().topologyRefreshOptions(immediateRefresh)
                 .build();
@@ -192,7 +190,7 @@ public class ClusterTopologyRefreshSchedulerUnitTests {
     }
 
     @Test
-    public void shouldNotTriggerRefreshOnFirstReconnect() {
+    void shouldNotTriggerRefreshOnFirstReconnect() {
 
         ClusterClientOptions clusterClientOptions = ClusterClientOptions.builder().topologyRefreshOptions(immediateRefresh)
                 .build();
@@ -204,7 +202,7 @@ public class ClusterTopologyRefreshSchedulerUnitTests {
     }
 
     @Test
-    public void shouldRateLimitAdaptiveRequests() throws Exception {
+    void shouldRateLimitAdaptiveRequests() throws Exception {
 
         ClusterTopologyRefreshOptions adaptiveTimeout = ClusterTopologyRefreshOptions.builder().enablePeriodicRefresh(false)
                 .enableAllAdaptiveRefreshTriggers().adaptiveRefreshTriggersTimeout(50, TimeUnit.MILLISECONDS).build();

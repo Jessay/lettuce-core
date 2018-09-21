@@ -28,10 +28,10 @@ import org.junit.jupiter.api.Test;
  * @author Will Glozer
  * @author Mark Paluch
  */
-public class KeyValueUnitTests {
+class KeyValueUnitTests {
 
     @Test
-    public void shouldCreateEmptyKeyValueFromOptional() {
+    void shouldCreateEmptyKeyValueFromOptional() {
 
         KeyValue<String, String> value = KeyValue.from("key", Optional.<String> empty());
 
@@ -39,7 +39,7 @@ public class KeyValueUnitTests {
     }
 
     @Test
-    public void shouldCreateEmptyValue() {
+    void shouldCreateEmptyValue() {
 
         KeyValue<String, String> value = KeyValue.empty("key");
 
@@ -47,7 +47,7 @@ public class KeyValueUnitTests {
     }
 
     @Test
-    public void shouldCreateNonEmptyValueFromOptional() {
+    void shouldCreateNonEmptyValueFromOptional() {
 
         KeyValue<Long, String> value = KeyValue.from(1L, Optional.of("hello"));
 
@@ -56,7 +56,7 @@ public class KeyValueUnitTests {
     }
 
     @Test
-    public void shouldCreateEmptyValueFromValue() {
+    void shouldCreateEmptyValueFromValue() {
 
         KeyValue<String, String> value = KeyValue.fromNullable("key", null);
 
@@ -64,7 +64,7 @@ public class KeyValueUnitTests {
     }
 
     @Test
-    public void shouldCreateNonEmptyValueFromValue() {
+    void shouldCreateNonEmptyValueFromValue() {
 
         KeyValue<String, String> value = KeyValue.fromNullable("key", "hello");
 
@@ -73,7 +73,7 @@ public class KeyValueUnitTests {
     }
 
     @Test
-    public void justShouldCreateValueFromValue() {
+    void justShouldCreateValueFromValue() {
 
         KeyValue<String, String> value = KeyValue.just("key", "hello");
 
@@ -82,12 +82,12 @@ public class KeyValueUnitTests {
     }
 
     @Test
-    public void justShouldRejectEmptyValueFromValue() {
+    void justShouldRejectEmptyValueFromValue() {
         assertThatThrownBy(() -> just(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void shouldCreateNonEmptyValue() {
+    void shouldCreateNonEmptyValue() {
 
         KeyValue<String, String> value = KeyValue.from("key", Optional.of("hello"));
 
@@ -96,7 +96,7 @@ public class KeyValueUnitTests {
     }
 
     @Test
-    public void equals() throws Exception {
+    void equals() throws Exception {
         KeyValue<String, String> kv = kv("key", "value");
         assertThat(kv.equals(kv("key", "value"))).isTrue();
         assertThat(kv.equals(null)).isFalse();
@@ -105,12 +105,12 @@ public class KeyValueUnitTests {
     }
 
     @Test
-    public void testHashCode() throws Exception {
+    void testHashCode() throws Exception {
         assertThat(kv("key", "value").hashCode() != 0).isTrue();
     }
 
     @Test
-    public void toStringShouldRenderCorrectly() {
+    void toStringShouldRenderCorrectly() {
 
         KeyValue<String, String> value = KeyValue.from("key", Optional.of("hello"));
         KeyValue<String, String> empty = KeyValue.fromNullable("key", null);
@@ -119,7 +119,7 @@ public class KeyValueUnitTests {
         assertThat(empty.toString()).isEqualTo("KeyValue[key].empty");
     }
 
-    protected KeyValue<String, String> kv(String key, String value) {
+    KeyValue<String, String> kv(String key, String value) {
         return KeyValue.just(key, value);
     }
 }

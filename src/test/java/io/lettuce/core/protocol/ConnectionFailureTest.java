@@ -23,18 +23,18 @@ import java.util.concurrent.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import io.lettuce.test.ConnectionTestUtil;
-import io.lettuce.test.Wait;
 import io.lettuce.core.*;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.server.RandomResponseServer;
+import io.lettuce.test.ConnectionTestUtil;
+import io.lettuce.test.Wait;
 import io.lettuce.test.settings.TestSettings;
 
 /**
  * @author Mark Paluch
  */
-public class ConnectionFailureTest extends AbstractRedisClientTest {
+class ConnectionFailureTest extends AbstractRedisClientTest {
 
     private RedisURI defaultRedisUri = RedisURI.Builder.redis(TestSettings.host(), TestSettings.port()).build();
 
@@ -44,7 +44,7 @@ public class ConnectionFailureTest extends AbstractRedisClientTest {
      * @throws Exception
      */
     @Test
-    public void pingBeforeConnectFails() throws Exception {
+    void pingBeforeConnectFails() throws Exception {
 
         client.setOptions(ClientOptions.builder().pingBeforeActivateConnection(true).build());
 
@@ -72,7 +72,7 @@ public class ConnectionFailureTest extends AbstractRedisClientTest {
      * @throws Exception
      */
     @Test
-    public void pingBeforeConnectFailOnReconnect() throws Exception {
+    void pingBeforeConnectFailOnReconnect() throws Exception {
 
         ClientOptions clientOptions = ClientOptions.builder().pingBeforeActivateConnection(true)
                 .suspendReconnectOnProtocolFailure(true).build();
@@ -122,7 +122,7 @@ public class ConnectionFailureTest extends AbstractRedisClientTest {
      * @throws Exception
      */
     @Test
-    public void pingBeforeConnectFailOnReconnectShouldSendEvents() throws Exception {
+    void pingBeforeConnectFailOnReconnectShouldSendEvents() throws Exception {
 
         client.setOptions(ClientOptions.builder().pingBeforeActivateConnection(true).suspendReconnectOnProtocolFailure(false)
                 .build());
@@ -169,7 +169,7 @@ public class ConnectionFailureTest extends AbstractRedisClientTest {
      * @throws Exception
      */
     @Test
-    public void cancelCommandsOnReconnectFailure() throws Exception {
+    void cancelCommandsOnReconnectFailure() throws Exception {
 
         client.setOptions(ClientOptions.builder().pingBeforeActivateConnection(true).cancelCommandsOnReconnectFailure(true)
                 .build());
@@ -235,7 +235,7 @@ public class ConnectionFailureTest extends AbstractRedisClientTest {
      * @throws Exception
      */
     @Test
-    public void closingDisconnectedConnectionShouldDisableConnectionWatchdog() throws Exception {
+    void closingDisconnectedConnectionShouldDisableConnectionWatchdog() throws Exception {
 
         client.setOptions(ClientOptions.create());
 
@@ -263,7 +263,7 @@ public class ConnectionFailureTest extends AbstractRedisClientTest {
         assertThat(connectionWatchdog.isListenOnChannelInactive()).isFalse();
     }
 
-    protected RandomResponseServer getRandomResponseServer() throws InterruptedException {
+    RandomResponseServer getRandomResponseServer() throws InterruptedException {
         RandomResponseServer ts = new RandomResponseServer();
         ts.initialize(TestSettings.nonexistentPort());
         return ts;

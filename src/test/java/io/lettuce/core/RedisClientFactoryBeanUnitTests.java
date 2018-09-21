@@ -28,18 +28,18 @@ import io.lettuce.test.resource.FastShutdown;
 /**
  * @author Mark Paluch
  */
-public class RedisClientFactoryBeanUnitTests {
+class RedisClientFactoryBeanUnitTests {
 
     private RedisClientFactoryBean sut = new RedisClientFactoryBean();
 
     @AfterEach
-    public void tearDown() throws Exception {
+    void tearDown() throws Exception {
         FastShutdown.shutdown(sut.getObject());
         sut.destroy();
     }
 
     @Test
-    public void testSimpleUri() throws Exception {
+    void testSimpleUri() throws Exception {
         String uri = "redis://localhost/2";
 
         sut.setUri(URI.create(uri));
@@ -55,7 +55,7 @@ public class RedisClientFactoryBeanUnitTests {
     }
 
     @Test
-    public void testSimpleUriWithoutDB() throws Exception {
+    void testSimpleUriWithoutDB() throws Exception {
         String uri = "redis://localhost/";
 
         sut.setUri(URI.create(uri));
@@ -67,7 +67,7 @@ public class RedisClientFactoryBeanUnitTests {
     }
 
     @Test
-    public void testSimpleUriWithoutDB2() throws Exception {
+    void testSimpleUriWithoutDB2() throws Exception {
         String uri = "redis://localhost/";
 
         sut.setUri(URI.create(uri));
@@ -79,7 +79,7 @@ public class RedisClientFactoryBeanUnitTests {
     }
 
     @Test
-    public void testSimpleUriWithPort() throws Exception {
+    void testSimpleUriWithPort() throws Exception {
         String uri = "redis://localhost:1234/0";
 
         sut.setUri(URI.create(uri));
@@ -95,7 +95,7 @@ public class RedisClientFactoryBeanUnitTests {
     }
 
     @Test
-    public void testSentinelUri() throws Exception {
+    void testSentinelUri() throws Exception {
         String uri = "redis-sentinel://localhost/1#myMaster";
 
         sut.setUri(URI.create(uri));
@@ -114,7 +114,7 @@ public class RedisClientFactoryBeanUnitTests {
     }
 
     @Test
-    public void testSentinelUriWithPort() throws Exception {
+    void testSentinelUriWithPort() throws Exception {
         String uri = "redis-sentinel://localhost:1234/1#myMaster";
 
         sut.setUri(URI.create(uri));
@@ -133,7 +133,7 @@ public class RedisClientFactoryBeanUnitTests {
     }
 
     @Test
-    public void testMultipleSentinelUri() throws Exception {
+    void testMultipleSentinelUri() throws Exception {
         String uri = "redis-sentinel://localhost,localhost2,localhost3/1#myMaster";
 
         sut.setUri(URI.create(uri));
@@ -152,7 +152,7 @@ public class RedisClientFactoryBeanUnitTests {
     }
 
     @Test
-    public void testMultipleSentinelUriWithPorts() throws Exception {
+    void testMultipleSentinelUriWithPorts() throws Exception {
         String uri = "redis-sentinel://localhost,localhost2:1234,localhost3/1#myMaster";
 
         sut.setUri(URI.create(uri));

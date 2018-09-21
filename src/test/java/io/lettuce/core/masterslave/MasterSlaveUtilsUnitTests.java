@@ -27,10 +27,10 @@ import io.lettuce.core.models.role.RedisInstance;
 /**
  * @author Mark Paluch
  */
-public class MasterSlaveUtilsUnitTests {
+class MasterSlaveUtilsUnitTests {
 
     @Test
-    public void isChangedShouldReturnFalse() {
+    void isChangedShouldReturnFalse() {
 
         RedisMasterSlaveNode master = new RedisMasterSlaveNode("host", 1234, RedisURI.create("host", 111),
                 RedisInstance.Role.MASTER);
@@ -50,7 +50,7 @@ public class MasterSlaveUtilsUnitTests {
     }
 
     @Test
-    public void isChangedShouldReturnTrueBecauseSlaveIsGone() {
+    void isChangedShouldReturnTrueBecauseSlaveIsGone() {
 
         RedisMasterSlaveNode master = new RedisMasterSlaveNode("host", 1234, RedisURI.create("host", 111),
                 RedisInstance.Role.MASTER);
@@ -64,7 +64,7 @@ public class MasterSlaveUtilsUnitTests {
     }
 
     @Test
-    public void isChangedShouldReturnTrueBecauseHostWasMigrated() {
+    void isChangedShouldReturnTrueBecauseHostWasMigrated() {
 
         RedisMasterSlaveNode master = new RedisMasterSlaveNode("host", 1234, RedisURI.create("host", 111),
                 RedisInstance.Role.MASTER);
@@ -83,7 +83,7 @@ public class MasterSlaveUtilsUnitTests {
     }
 
     @Test
-    public void isChangedShouldReturnTrueBecauseRolesSwitched() {
+    void isChangedShouldReturnTrueBecauseRolesSwitched() {
 
         RedisMasterSlaveNode master = new RedisMasterSlaveNode("host", 1234, RedisURI.create("host", 111),
                 RedisInstance.Role.MASTER);

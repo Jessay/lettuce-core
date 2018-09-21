@@ -33,7 +33,7 @@ import io.lettuce.core.api.sync.RedisCommands;
 public class TransactionCommandTest extends AbstractRedisClientTest {
 
     @Test
-    public void discard() {
+    void discard() {
         assertThat(redis.multi()).isEqualTo("OK");
         redis.set(key, value);
         assertThat(redis.discard()).isEqualTo("OK");
@@ -41,7 +41,7 @@ public class TransactionCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void exec() {
+    void exec() {
         assertThat(redis.multi()).isEqualTo("OK");
         redis.set(key, value);
         assertThat(redis.exec()).contains("OK");
@@ -49,7 +49,7 @@ public class TransactionCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void watch() {
+    void watch() {
         assertThat(redis.watch(key)).isEqualTo("OK");
 
         RedisCommands<String, String> redis2 = client.connect().sync();
@@ -67,12 +67,12 @@ public class TransactionCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void unwatch() {
+    void unwatch() {
         assertThat(redis.unwatch()).isEqualTo("OK");
     }
 
     @Test
-    public void commandsReturnNullInMulti() {
+    void commandsReturnNullInMulti() {
 
         assertThat(redis.multi()).isEqualTo("OK");
         assertThat(redis.set(key, value)).isNull();
@@ -86,7 +86,7 @@ public class TransactionCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void execmulti() {
+    void execmulti() {
         redis.multi();
         redis.set("one", "1");
         redis.set("two", "2");
@@ -96,7 +96,7 @@ public class TransactionCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void emptyMulti() {
+    void emptyMulti() {
         redis.multi();
         TransactionResult exec = redis.exec();
         assertThat(exec.wasDiscarded()).isFalse();
@@ -104,7 +104,7 @@ public class TransactionCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void errorInMulti() {
+    void errorInMulti() {
         redis.multi();
         redis.set(key, value);
         redis.lpop(key);
@@ -117,13 +117,13 @@ public class TransactionCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void execWithoutMulti() {
+    void execWithoutMulti() {
         assertThatThrownBy(() -> redis.exec()).isInstanceOf(RedisCommandExecutionException.class).hasMessageContaining(
                 "ERR EXEC without MULTI");
     }
 
     @Test
-    public void multiCalledTwiceShouldFail() {
+    void multiCalledTwiceShouldFail() {
 
         redis.multi();
         assertThatThrownBy(() -> redis.multi()).isInstanceOf(RedisCommandExecutionException.class).hasMessageContaining(

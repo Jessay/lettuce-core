@@ -32,33 +32,33 @@ public abstract class TestSupport {
 
     public static final String host = TestSettings.hostAddr();
     public static final int port = TestSettings.port();
-    public static final String passwd = TestSettings.password();
+    protected static final String passwd = TestSettings.password();
 
     protected Logger log = LogManager.getLogger(getClass());
     public static final String key = "key";
-    public static final String value = "value";
+    protected static final String value = "value";
 
-    public static List<String> list(String... args) {
+    protected static List<String> list(String... args) {
         return Arrays.asList(args);
     }
 
-    public static List<Object> list(Object... args) {
+    protected static List<Object> list(Object... args) {
         return Arrays.asList(args);
     }
 
-    public static List<ScoredValue<String>> svlist(ScoredValue<String>... args) {
+    protected static List<ScoredValue<String>> svlist(ScoredValue<String>... args) {
         return Arrays.asList(args);
     }
 
-    public static KeyValue<String, String> kv(String key, String value) {
+    protected static KeyValue<String, String> kv(String key, String value) {
         return KeyValue.fromNullable(key, value);
     }
 
-    public static ScoredValue<String> sv(double score, String value) {
+    protected static ScoredValue<String> sv(double score, String value) {
         return ScoredValue.fromNullable(score, value);
     }
 
-    public static Set<String> set(String... args) {
+    protected static Set<String> set(String... args) {
         return LettuceSets.newHashSet(args);
     }
 }

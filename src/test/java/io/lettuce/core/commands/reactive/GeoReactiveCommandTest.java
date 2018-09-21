@@ -33,13 +33,13 @@ import io.lettuce.test.ReactiveSyncInvocationHandler;
 public class GeoReactiveCommandTest extends GeoCommandTest {
 
     @Override
-    protected RedisCommands<String, String> connect() {
+    RedisCommands<String, String> connect() {
         return ReactiveSyncInvocationHandler.sync(client.connect());
     }
 
     @Test
     @Override
-    public void geopos() {
+    void geopos() {
 
         RedisReactiveCommands<String, String> reactive = client.connect().reactive();
 
@@ -58,6 +58,6 @@ public class GeoReactiveCommandTest extends GeoCommandTest {
     @Test
     @Disabled("API differences")
     @Override
-    public void geoposInTransaction() {
+    void geoposInTransaction() {
     }
 }

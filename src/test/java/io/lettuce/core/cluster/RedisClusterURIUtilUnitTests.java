@@ -27,10 +27,10 @@ import io.lettuce.core.RedisURI;
 /**
  * @author Mark Paluch
  */
-public class RedisClusterURIUtilUnitTests {
+class RedisClusterURIUtilUnitTests {
 
     @Test
-    public void testSimpleUri() {
+    void testSimpleUri() {
 
         List<RedisURI> redisURIs = RedisClusterURIUtil.toRedisURIs(URI.create("redis://host:7479"));
 
@@ -42,7 +42,7 @@ public class RedisClusterURIUtilUnitTests {
     }
 
     @Test
-    public void testMultipleHosts() {
+    void testMultipleHosts() {
 
         List<RedisURI> redisURIs = RedisClusterURIUtil.toRedisURIs(URI.create("redis://host1,host2"));
 
@@ -58,7 +58,7 @@ public class RedisClusterURIUtilUnitTests {
     }
 
     @Test
-    public void testMultipleHostsWithPorts() {
+    void testMultipleHostsWithPorts() {
 
         List<RedisURI> redisURIs = RedisClusterURIUtil.toRedisURIs(URI.create("redis://host1:6379,host2:6380"));
 
@@ -74,7 +74,7 @@ public class RedisClusterURIUtilUnitTests {
     }
 
     @Test
-    public void testSslWithPasswordSingleHost() {
+    void testSslWithPasswordSingleHost() {
 
         List<RedisURI> redisURIs = RedisClusterURIUtil.toRedisURIs(URI.create("redis+tls://password@host1"));
 
@@ -89,7 +89,7 @@ public class RedisClusterURIUtilUnitTests {
     }
 
     @Test
-    public void testSslWithPasswordMultipleHosts() {
+    void testSslWithPasswordMultipleHosts() {
 
         List<RedisURI> redisURIs = RedisClusterURIUtil.toRedisURIs(URI.create("redis+tls://password@host1:6379,host2:6380"));
 

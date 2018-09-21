@@ -28,7 +28,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import io.lettuce.test.resource.TestClientResources;
 import io.lettuce.core.*;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
@@ -37,19 +36,20 @@ import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.cluster.StatefulRedisClusterConnectionImpl;
 import io.lettuce.core.codec.StringCodec;
 import io.lettuce.test.resource.FastShutdown;
+import io.lettuce.test.resource.TestClientResources;
 import io.netty.channel.group.ChannelGroup;
 
 /**
  * @author Mark Paluch
  */
-public class AsyncConnectionPoolSupportIntegrationTests extends TestSupport {
+class AsyncConnectionPoolSupportIntegrationTests extends TestSupport {
 
     private static RedisClient client;
     private static Set<?> channels;
     private static RedisURI uri = RedisURI.Builder.redis(host, port).build();
 
     @BeforeAll
-    public static void setupClient() {
+    static void setupClient() {
 
         client = RedisClient.create(TestClientResources.create(), uri);
         client.setOptions(ClientOptions.create());
@@ -57,13 +57,13 @@ public class AsyncConnectionPoolSupportIntegrationTests extends TestSupport {
     }
 
     @AfterAll
-    public static void afterClass() {
+    static void afterClass() {
         FastShutdown.shutdown(client);
         FastShutdown.shutdown(client.getResources());
     }
 
     @Test
-    public void asyncPoolShouldWorkWithWrappedConnections() {
+    void asyncPoolShouldWorkWithWrappedConnections() {
 
         BoundedAsyncPool<StatefulRedisConnection<String, String>> pool = AsyncConnectionPoolSupport.createBoundedObjectPool(
                 () -> client.connectAsync(StringCodec.ASCII, uri), BoundedPoolConfig.create());
@@ -83,7 +83,7 @@ public class AsyncConnectionPoolSupportIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void asyncPoolShouldCloseConnectionsAboveMaxIdleSize() {
+    void asyncPoolShouldCloseConnectionsAboveMaxIdleSize() {
 
         GenericObjectPoolConfig poolConfig = new GenericObjectPoolConfig();
         poolConfig.setMaxIdle(2);
@@ -110,7 +110,7 @@ public class AsyncConnectionPoolSupportIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void asyncPoolShouldWorkWithPlainConnections() {
+    void asyncPoolShouldWorkWithPlainConnections() {
 
         AsyncPool<StatefulRedisConnection<String, String>> pool = AsyncConnectionPoolSupport.createBoundedObjectPool(
                 () -> client.connectAsync(StringCodec.ASCII, uri), BoundedPoolConfig.create(), false);
@@ -125,7 +125,7 @@ public class AsyncConnectionPoolSupportIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void asyncPoolUsingWrappingShouldPropagateExceptionsCorrectly() {
+    void asyncPoolUsingWrappingShouldPropagateExceptionsCorrectly() {
 
         AsyncPool<StatefulRedisConnection<String, String>> pool = AsyncConnectionPoolSupport.createBoundedObjectPool(
                 () -> client.connectAsync(StringCodec.ASCII, uri), BoundedPoolConfig.create());
@@ -146,7 +146,7 @@ public class AsyncConnectionPoolSupportIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void wrappedConnectionShouldUseWrappers() {
+    void wrappedConnectionShouldUseWrappers() {
 
         AsyncPool<StatefulRedisConnection<String, String>> pool = AsyncConnectionPoolSupport.createBoundedObjectPool(
                 () -> client.connectAsync(StringCodec.ASCII, uri), BoundedPoolConfig.create());
@@ -170,7 +170,7 @@ public class AsyncConnectionPoolSupportIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void wrappedObjectClosedAfterReturn() {
+    void wrappedObjectClosedAfterReturn() {
 
         AsyncPool<StatefulRedisConnection<String, String>> pool = AsyncConnectionPoolSupport.createBoundedObjectPool(
                 () -> client.connectAsync(StringCodec.ASCII, uri), BoundedPoolConfig.create(), true);
@@ -192,7 +192,7 @@ public class AsyncConnectionPoolSupportIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void shouldPropagateAsyncFlow() {
+    void shouldPropagateAsyncFlow() {
 
         AsyncPool<StatefulRedisConnection<String, String>> pool = AsyncConnectionPoolSupport.createBoundedObjectPool(
                 () -> client.connectAsync(StringCodec.ASCII, uri), BoundedPoolConfig.create());

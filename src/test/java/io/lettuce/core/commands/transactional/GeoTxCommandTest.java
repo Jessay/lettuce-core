@@ -15,7 +15,6 @@
  */
 package io.lettuce.core.commands.transactional;
 
-import org.junit.Ignore;
 import org.junit.jupiter.api.Disabled;
 
 import io.lettuce.core.api.sync.RedisCommands;
@@ -27,47 +26,47 @@ import io.lettuce.core.commands.GeoCommandTest;
 public class GeoTxCommandTest extends GeoCommandTest {
 
     @Override
-    protected RedisCommands<String, String> connect() {
+    RedisCommands<String, String> connect() {
         return TxSyncInvocationHandler.sync(client.connect());
     }
 
     @Disabled
     @Override
-    public void georadiusbymemberWithArgsInTransaction() {
+    void georadiusbymemberWithArgsInTransaction() {
     }
 
     @Disabled
     @Override
-    public void geoaddInTransaction() {
+    void geoaddInTransaction() {
     }
 
     @Disabled
     @Override
-    public void geoaddMultiInTransaction() {
+    void geoaddMultiInTransaction() {
     }
 
     @Disabled
     @Override
-    public void geoposInTransaction() {
+    void geoposInTransaction() {
     }
 
     @Disabled
     @Override
-    public void georadiusWithArgsAndTransaction() {
+    void georadiusWithArgsAndTransaction() {
     }
 
     @Disabled
     @Override
-    public void georadiusInTransaction() {
+    void georadiusInTransaction() {
     }
 
     @Disabled
     @Override
-    public void geodistInTransaction() {
+    void geodistInTransaction() {
     }
 
     @Disabled
     @Override
-    public void geohashInTransaction() {
+    void geohashInTransaction() {
     }
 }

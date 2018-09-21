@@ -24,7 +24,7 @@ import io.lettuce.core.commands.BitCommandTest;
 public class BitTxCommandTest extends BitCommandTest {
 
     @Override
-    protected RedisCommands<String, String> connect() {
+    RedisCommands<String, String> connect() {
         bitstring = TxSyncInvocationHandler.sync(client.connect(new BitStringCodec()));
         return TxSyncInvocationHandler.sync(client.connect());
     }

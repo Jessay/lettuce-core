@@ -35,7 +35,7 @@ import io.lettuce.test.LettuceExtension;
  * @author Mark Paluch
  */
 @ExtendWith(LettuceExtension.class)
-public class ReactiveTypeAdaptionIntegrationTests extends TestSupport {
+class ReactiveTypeAdaptionIntegrationTests extends TestSupport {
 
     private final RedisCommands<String, String> redis;
 
@@ -43,7 +43,7 @@ public class ReactiveTypeAdaptionIntegrationTests extends TestSupport {
     private final RxJava2Types rxjava2;
 
     @Inject
-    public ReactiveTypeAdaptionIntegrationTests(StatefulRedisConnection<String, String> connection) {
+    ReactiveTypeAdaptionIntegrationTests(StatefulRedisConnection<String, String> connection) {
 
         this.redis = connection.sync();
 
@@ -58,42 +58,42 @@ public class ReactiveTypeAdaptionIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void rxJava1Single() {
+    void rxJava1Single() {
 
         Single<String> single = rxjava1.getRxJava1Single(key);
         assertThat(single.toBlocking().value()).isEqualTo(value);
     }
 
     @Test
-    public void rxJava1Observable() {
+    void rxJava1Observable() {
 
         Observable<String> observable = rxjava1.getRxJava1Observable(key);
         assertThat(observable.toBlocking().last()).isEqualTo(value);
     }
 
     @Test
-    public void rxJava2Single() throws InterruptedException {
+    void rxJava2Single() throws InterruptedException {
 
         io.reactivex.Single<String> single = rxjava2.getRxJava2Single(key);
         single.test().await().assertResult(value).assertComplete();
     }
 
     @Test
-    public void rxJava2Maybe() throws InterruptedException {
+    void rxJava2Maybe() throws InterruptedException {
 
         io.reactivex.Maybe<String> maybe = rxjava2.getRxJava2Maybe(key);
         maybe.test().await().assertResult(value).assertComplete();
     }
 
     @Test
-    public void rxJava2Observable() throws InterruptedException {
+    void rxJava2Observable() throws InterruptedException {
 
         io.reactivex.Observable<String> observable = rxjava2.getRxJava2Observable(key);
         observable.test().await().assertResult(value).assertComplete();
     }
 
     @Test
-    public void rxJava2Flowable() throws InterruptedException {
+    void rxJava2Flowable() throws InterruptedException {
 
         io.reactivex.Flowable<String> flowable = rxjava2.getRxJava2Flowable(key);
         flowable.test().await().assertResult(value).assertComplete();

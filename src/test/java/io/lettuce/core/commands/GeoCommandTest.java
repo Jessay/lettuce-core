@@ -26,10 +26,10 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import io.lettuce.test.resource.DefaultRedisClient;
-import io.lettuce.test.condition.RedisConditions;
 import io.lettuce.core.*;
 import io.lettuce.core.api.StatefulRedisConnection;
+import io.lettuce.test.condition.RedisConditions;
+import io.lettuce.test.resource.DefaultRedisClient;
 
 /**
  * @author Mark Paluch
@@ -37,7 +37,7 @@ import io.lettuce.core.api.StatefulRedisConnection;
 public class GeoCommandTest extends AbstractRedisClientTest {
 
     @BeforeAll
-    public static void setupClient() {
+    static void setupClient() {
         client = DefaultRedisClient.get();
         client.setOptions(ClientOptions.create());
 
@@ -47,7 +47,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void geoadd() {
+    void geoadd() {
 
         Long result = redis.geoadd(key, -73.9454966, 40.747533, "lic market");
         assertThat(result).isEqualTo(1);
@@ -57,7 +57,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void geoaddInTransaction() {
+    void geoaddInTransaction() {
 
         redis.multi();
         redis.geoadd(key, -73.9454966, 40.747533, "lic market");
@@ -67,7 +67,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void geoaddMulti() {
+    void geoaddMulti() {
 
         Long result = redis.geoadd(key, 8.6638775, 49.5282537, "Weinheim", 8.3796281, 48.9978127, "EFS9", 8.665351, 49.553302,
                 "Bahn");
@@ -75,7 +75,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void geoaddMultiInTransaction() {
+    void geoaddMultiInTransaction() {
 
         redis.multi();
         redis.geoadd(key, 8.6638775, 49.5282537, "Weinheim", 8.3796281, 48.9978127, "EFS9", 8.665351, 49.553302, "Bahn");
@@ -84,12 +84,12 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void geoaddMultiWrongArgument() {
+    void geoaddMultiWrongArgument() {
         assertThatThrownBy(() -> redis.geoadd(key, 49.528253)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void georadius() {
+    void georadius() {
 
         prepareGeo();
 
@@ -101,7 +101,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void georadiusInTransaction() {
+    void georadiusInTransaction() {
 
         prepareGeo();
 
@@ -118,7 +118,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void georadiusWithCoords() {
+    void georadiusWithCoords() {
 
         prepareGeo();
 
@@ -134,7 +134,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void geodist() {
+    void geodist() {
 
         prepareGeo();
 
@@ -144,7 +144,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void geodistMissingElements() {
+    void geodistMissingElements() {
 
         assumeTrue(RedisConditions.of(redis).hasVersionGreaterOrEqualsTo("3.4"));
         prepareGeo();
@@ -155,7 +155,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void geodistInTransaction() {
+    void geodistInTransaction() {
 
         prepareGeo();
 
@@ -168,7 +168,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void geopos() {
+    void geopos() {
 
         prepareGeo();
 
@@ -186,7 +186,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void geoposInTransaction() {
+    void geoposInTransaction() {
 
         prepareGeo();
 
@@ -202,7 +202,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void georadiusWithArgs() {
+    void georadiusWithArgs() {
 
         prepareGeo();
 
@@ -233,7 +233,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void georadiusWithArgsAndTransaction() {
+    void georadiusWithArgsAndTransaction() {
 
         prepareGeo();
 
@@ -270,7 +270,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void geohash() {
+    void geohash() {
 
         prepareGeo();
 
@@ -280,7 +280,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void geohashUnknownKey() {
+    void geohashUnknownKey() {
 
         assumeTrue(RedisConditions.of(redis).hasVersionGreaterOrEqualsTo("3.4"));
 
@@ -293,7 +293,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void geohashInTransaction() {
+    void geohashInTransaction() {
 
         prepareGeo();
 
@@ -308,7 +308,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void georadiusStore() {
+    void georadiusStore() {
 
         prepareGeo();
 
@@ -322,7 +322,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void georadiusStoreWithCountAndSort() {
+    void georadiusStoreWithCountAndSort() {
 
         prepareGeo();
 
@@ -337,7 +337,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void georadiusStoreDist() {
+    void georadiusStoreDist() {
 
         prepareGeo();
 
@@ -351,7 +351,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void georadiusStoreDistWithCountAndSort() {
+    void georadiusStoreDistWithCountAndSort() {
 
         prepareGeo();
 
@@ -367,20 +367,20 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void georadiusWithNullArgs() {
+    void georadiusWithNullArgs() {
         assertThatThrownBy(() -> redis.georadius(key, 8.665351, 49.553302, 5, GeoArgs.Unit.km, (GeoArgs) null)).isInstanceOf(
                 IllegalArgumentException.class);
     }
 
     @Test
-    public void georadiusStoreWithNullArgs() {
+    void georadiusStoreWithNullArgs() {
         assertThatThrownBy(
                 () -> redis.georadius(key, 8.665351, 49.553302, 5, GeoArgs.Unit.km, (GeoRadiusStoreArgs<String>) null))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void georadiusbymember() {
+    void georadiusbymember() {
 
         prepareGeo();
 
@@ -392,7 +392,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void georadiusbymemberStoreDistWithCountAndSort() {
+    void georadiusbymemberStoreDistWithCountAndSort() {
 
         prepareGeo();
 
@@ -408,7 +408,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void georadiusbymemberWithArgs() {
+    void georadiusbymemberWithArgs() {
 
         prepareGeo();
 
@@ -448,7 +448,7 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void georadiusbymemberWithArgsInTransaction() {
+    void georadiusbymemberWithArgsInTransaction() {
 
         prepareGeo();
 
@@ -493,13 +493,13 @@ public class GeoCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void georadiusbymemberWithNullArgs() {
+    void georadiusbymemberWithNullArgs() {
         assertThatThrownBy(() -> redis.georadiusbymember(key, "Bahn", 1, GeoArgs.Unit.km, (GeoArgs) null)).isInstanceOf(
                 IllegalArgumentException.class);
     }
 
     @Test
-    public void georadiusStorebymemberWithNullArgs() {
+    void georadiusStorebymemberWithNullArgs() {
         assertThatThrownBy(() -> redis.georadiusbymember(key, "Bahn", 1, GeoArgs.Unit.km, (GeoRadiusStoreArgs<String>) null))
                 .isInstanceOf(IllegalArgumentException.class);
     }

@@ -55,7 +55,7 @@ public class RedisClientBenchmark {
     private Mono monos[];
 
     @Setup
-    public void setup() {
+    private void setup() {
 
         redisClient = RedisClient.create(RedisURI.create(TestSettings.host(), TestSettings.port()));
         redisClient.setOptions(ClientOptions.builder()
@@ -114,7 +114,7 @@ public class RedisClientBenchmark {
     }
 
     @Benchmark
-    public void syncList() {
+    private void syncList() {
         connection.async().del(FOO);
         connection.sync().lpush(FOO, FOO, FOO, FOO, FOO, FOO, FOO, FOO, FOO, FOO, FOO, FOO, FOO, FOO, FOO, FOO, FOO, FOO, FOO,
                 FOO);

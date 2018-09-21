@@ -29,26 +29,26 @@ import io.lettuce.core.RedisURI;
 /**
  * @author Mark Paluch
  */
-public class RedisClusterClientFactoryBeanUnitTests {
+class RedisClusterClientFactoryBeanUnitTests {
 
     private RedisClusterClientFactoryBean sut = new RedisClusterClientFactoryBean();
 
     @Test
-    public void invalidUri() throws Exception {
+    void invalidUri() throws Exception {
 
         sut.setUri(URI.create("http://www.web.de"));
         assertThatThrownBy(() -> sut.afterPropertiesSet()).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void sentinelUri() throws Exception {
+    void sentinelUri() throws Exception {
 
         sut.setUri(URI.create(RedisURI.URI_SCHEME_REDIS_SENTINEL + "://www.web.de"));
         assertThatThrownBy(() -> sut.afterPropertiesSet()).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void validUri() throws Exception {
+    void validUri() throws Exception {
 
         sut.setUri(URI.create(RedisURI.URI_SCHEME_REDIS + "://password@host"));
         sut.afterPropertiesSet();
@@ -59,7 +59,7 @@ public class RedisClusterClientFactoryBeanUnitTests {
     }
 
     @Test
-    public void validUriPasswordOverride() throws Exception {
+    void validUriPasswordOverride() throws Exception {
 
         sut.setUri(URI.create(RedisURI.URI_SCHEME_REDIS + "://password@host"));
         sut.setPassword("thepassword");
@@ -72,7 +72,7 @@ public class RedisClusterClientFactoryBeanUnitTests {
     }
 
     @Test
-    public void multiNodeUri() throws Exception {
+    void multiNodeUri() throws Exception {
 
         sut.setUri(URI.create(RedisURI.URI_SCHEME_REDIS + "://password@host1,host2"));
         sut.afterPropertiesSet();
@@ -94,7 +94,7 @@ public class RedisClusterClientFactoryBeanUnitTests {
     }
 
     @Test
-    public void multiNodeUriPasswordOverride() throws Exception {
+    void multiNodeUriPasswordOverride() throws Exception {
 
         sut.setUri(URI.create(RedisURI.URI_SCHEME_REDIS + "://password@host1,host2"));
         sut.setPassword("thepassword");
@@ -118,7 +118,7 @@ public class RedisClusterClientFactoryBeanUnitTests {
     }
 
     @Test
-    public void supportsSsl() throws Exception {
+    void supportsSsl() throws Exception {
 
         sut.setUri(URI.create(RedisURI.URI_SCHEME_REDIS_SECURE + "://password@host"));
         sut.afterPropertiesSet();

@@ -43,10 +43,10 @@ import io.lettuce.core.protocol.RedisCommand;
 /**
  * @author Mark Paluch
  */
-public class CommandSegmentCommandFactoryUnitTests {
+class CommandSegmentCommandFactoryUnitTests {
 
     @Test
-    public void setKeyValue() {
+    void setKeyValue() {
 
         RedisCommand<?, ?, ?> command = createCommand(methodOf(Commands.class, "set", String.class, String.class),
                 new StringCodec(), "key", "value");
@@ -56,7 +56,7 @@ public class CommandSegmentCommandFactoryUnitTests {
     }
 
     @Test
-    public void setKeyValueWithByteArrayCodec() {
+    void setKeyValueWithByteArrayCodec() {
 
         RedisCommand<?, ?, ?> command = createCommand(methodOf(Commands.class, "set", String.class, String.class),
                 new ByteArrayCodec(), "key", "value");
@@ -65,7 +65,7 @@ public class CommandSegmentCommandFactoryUnitTests {
     }
 
     @Test
-    public void setKeyValueWithHintedValue() {
+    void setKeyValueWithHintedValue() {
 
         RedisCommand<?, ?, ?> command = createCommand(methodOf(Commands.class, "set2", String.class, String.class),
                 new StringCodec(), "key", "value");
@@ -75,7 +75,7 @@ public class CommandSegmentCommandFactoryUnitTests {
     }
 
     @Test
-    public void lowercaseCommandResolvesToStringCommand() {
+    void lowercaseCommandResolvesToStringCommand() {
 
         RedisCommand<?, ?, ?> command = createCommand(methodOf(Commands.class, "set3", String.class, String.class),
                 new StringCodec(), "key", "value");
@@ -85,7 +85,7 @@ public class CommandSegmentCommandFactoryUnitTests {
     }
 
     @Test
-    public void setWithArgs() {
+    void setWithArgs() {
 
         RedisCommand<?, ?, ?> command = createCommand(
                 methodOf(Commands.class, "set", String.class, String.class, SetArgs.class), new StringCodec(), "key", "value",
@@ -95,7 +95,7 @@ public class CommandSegmentCommandFactoryUnitTests {
     }
 
     @Test
-    public void varargsMethodWithParameterIndexAccess() {
+    void varargsMethodWithParameterIndexAccess() {
 
         RedisCommand<?, ?, ?> command = createCommand(
                 methodOf(Commands.class, "varargsWithParamIndexes", ScanArgs.class, String[].class), new StringCodec(),
@@ -105,7 +105,7 @@ public class CommandSegmentCommandFactoryUnitTests {
     }
 
     @Test
-    public void clientSetname() {
+    void clientSetname() {
 
         RedisCommand<?, ?, ?> command = createCommand(methodOf(Commands.class, "clientSetname", String.class),
                 new ByteArrayCodec(), "name");
@@ -114,7 +114,7 @@ public class CommandSegmentCommandFactoryUnitTests {
     }
 
     @Test
-    public void annotatedClientSetname() {
+    void annotatedClientSetname() {
 
         RedisCommand<?, ?, ?> command = createCommand(methodOf(Commands.class, "methodWithNamedParameters", String.class),
                 new StringCodec(), "name");
@@ -123,7 +123,7 @@ public class CommandSegmentCommandFactoryUnitTests {
     }
 
     @Test
-    public void asyncWithTimeout() {
+    void asyncWithTimeout() {
 
         try {
             createCommand(methodOf(MethodsWithTimeout.class, "async", String.class, Timeout.class), new StringCodec());
@@ -134,14 +134,14 @@ public class CommandSegmentCommandFactoryUnitTests {
     }
 
     @Test
-    public void syncWithTimeout() {
+    void syncWithTimeout() {
 
         createCommand(methodOf(MethodsWithTimeout.class, "sync", String.class, Timeout.class), new StringCodec(), "hello",
                 null);
     }
 
     @Test
-    public void resolvesUnknownCommandToStringBackedCommandType() {
+    void resolvesUnknownCommandToStringBackedCommandType() {
 
         RedisCommand<?, ?, ?> command = createCommand(methodOf(Commands.class, "unknownCommand"), new StringCodec());
 
@@ -181,7 +181,7 @@ public class CommandSegmentCommandFactoryUnitTests {
         return builder.toString();
     }
 
-    interface Commands {
+    private interface Commands {
 
         boolean set(String key, String value);
 
@@ -205,7 +205,7 @@ public class CommandSegmentCommandFactoryUnitTests {
         boolean unknownCommand();
     }
 
-    static interface MethodsWithTimeout {
+    private static interface MethodsWithTimeout {
 
         Future<String> async(String key, Timeout timeout);
 

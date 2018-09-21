@@ -33,11 +33,11 @@ import io.lettuce.test.LettuceExtension;
  * @author Mark Paluch
  */
 @ExtendWith(LettuceExtension.class)
-public class Utf8StringCodecIntegrationTests extends TestSupport {
+class Utf8StringCodecIntegrationTests extends TestSupport {
 
     @Test
     @Inject
-    public void decodeHugeBuffer(StatefulRedisConnection<String, String> connection) {
+    void decodeHugeBuffer(StatefulRedisConnection<String, String> connection) {
 
         RedisCommands<String, String> redis = connection.sync();
 

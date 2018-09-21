@@ -23,8 +23,6 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -36,12 +34,12 @@ import io.netty.channel.local.LocalAddress;
  * @author Mark Paluch
  */
 @ExtendWith(MockitoExtension.class)
-public class DefaultCommandLatencyCollectorUnitTests {
+class DefaultCommandLatencyCollectorUnitTests {
 
     private DefaultCommandLatencyCollector sut;
 
     @Test
-    public void shutdown() {
+    void shutdown() {
 
         sut = new DefaultCommandLatencyCollector(DefaultCommandLatencyCollectorOptions.create());
 
@@ -51,7 +49,7 @@ public class DefaultCommandLatencyCollectorUnitTests {
     }
 
     @Test
-    public void simpleCreateShouldNotInitializePauseDetector() {
+    void simpleCreateShouldNotInitializePauseDetector() {
 
         sut = new DefaultCommandLatencyCollector(DefaultCommandLatencyCollectorOptions.create());
         PauseDetectorWrapper wrapper = (PauseDetectorWrapper) ReflectionTestUtils.getField(sut, "pauseDetectorWrapper");
@@ -60,7 +58,7 @@ public class DefaultCommandLatencyCollectorUnitTests {
     }
 
     @Test
-    public void latencyRecordShouldInitializePauseDetectorWrapper() {
+    void latencyRecordShouldInitializePauseDetectorWrapper() {
 
         sut = new DefaultCommandLatencyCollector(DefaultCommandLatencyCollectorOptions.create());
 
@@ -76,7 +74,7 @@ public class DefaultCommandLatencyCollectorUnitTests {
     }
 
     @Test
-    public void shutdownShouldReleasePauseDetector() {
+    void shutdownShouldReleasePauseDetector() {
 
         sut = new DefaultCommandLatencyCollector(DefaultCommandLatencyCollectorOptions.create());
         PauseDetectorWrapper wrapper = (PauseDetectorWrapper) ReflectionTestUtils.getField(sut, "pauseDetectorWrapper");
@@ -93,7 +91,7 @@ public class DefaultCommandLatencyCollectorUnitTests {
     }
 
     @Test
-    public void verifyMetrics() {
+    void verifyMetrics() {
 
         sut = new DefaultCommandLatencyCollector(DefaultCommandLatencyCollectorOptions.create());
 
@@ -127,7 +125,7 @@ public class DefaultCommandLatencyCollectorUnitTests {
     }
 
     @Test
-    public void verifyCummulativeMetrics() {
+    void verifyCummulativeMetrics() {
 
         sut = new DefaultCommandLatencyCollector(DefaultCommandLatencyCollectorOptions.builder()
                 .resetLatenciesAfterEvent(false).build());

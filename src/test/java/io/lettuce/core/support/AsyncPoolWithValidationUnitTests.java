@@ -30,9 +30,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -44,13 +42,13 @@ import io.lettuce.core.RedisException;
  */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class AsyncPoolWithValidationUnitTests {
+class AsyncPoolWithValidationUnitTests {
 
     @Mock
     AsyncObjectFactory<String> factory;
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
         when(factory.destroy(any())).thenReturn(CompletableFuture.completedFuture(null));
     }
 
@@ -61,7 +59,7 @@ public class AsyncPoolWithValidationUnitTests {
     }
 
     @Test
-    public void objectCreationShouldFail() {
+    void objectCreationShouldFail() {
 
         when(factory.create()).thenReturn(failed(new RedisException("foo")));
 
@@ -77,7 +75,7 @@ public class AsyncPoolWithValidationUnitTests {
     }
 
     @Test
-    public void objectCreationFinishesAfterShutdown() {
+    void objectCreationFinishesAfterShutdown() {
 
         CompletableFuture<String> progress = new CompletableFuture<>();
 
@@ -110,7 +108,7 @@ public class AsyncPoolWithValidationUnitTests {
     }
 
     @Test
-    public void objectCreationCanceled() {
+    void objectCreationCanceled() {
 
         CompletableFuture<String> progress = new CompletableFuture<>();
 
@@ -131,7 +129,7 @@ public class AsyncPoolWithValidationUnitTests {
     }
 
     @Test
-    public void shouldCreateObjectWithTestOnBorrowFailExceptionally() {
+    void shouldCreateObjectWithTestOnBorrowFailExceptionally() {
 
         mockCreation();
         when(factory.validate(any())).thenReturn(failed(new RedisException("foo")));
@@ -148,7 +146,7 @@ public class AsyncPoolWithValidationUnitTests {
     }
 
     @Test
-    public void shouldCreateObjectWithTestOnBorrowSuccess() {
+    void shouldCreateObjectWithTestOnBorrowSuccess() {
 
         mockCreation();
         when(factory.validate(any())).thenReturn(CompletableFuture.completedFuture(true));
@@ -165,7 +163,7 @@ public class AsyncPoolWithValidationUnitTests {
     }
 
     @Test
-    public void shouldCreateObjectWithTestOnBorrowFailState() {
+    void shouldCreateObjectWithTestOnBorrowFailState() {
 
         mockCreation();
         when(factory.validate(any())).thenReturn(CompletableFuture.completedFuture(false));
@@ -182,7 +180,7 @@ public class AsyncPoolWithValidationUnitTests {
     }
 
     @Test
-    public void shouldCreateFailedObjectWithTestOnBorrowFail() {
+    void shouldCreateFailedObjectWithTestOnBorrowFail() {
 
         when(factory.create()).thenReturn(failed(new RedisException("foo")));
 
@@ -198,7 +196,7 @@ public class AsyncPoolWithValidationUnitTests {
     }
 
     @Test
-    public void shouldTestObjectOnBorrowSuccessfully() {
+    void shouldTestObjectOnBorrowSuccessfully() {
 
         mockCreation();
         when(factory.validate(any())).thenReturn(CompletableFuture.completedFuture(true));
@@ -217,7 +215,7 @@ public class AsyncPoolWithValidationUnitTests {
     }
 
     @Test
-    public void shouldTestObjectOnBorrowFailState() {
+    void shouldTestObjectOnBorrowFailState() {
 
         mockCreation();
         when(factory.validate(any())).thenReturn(failed(new RedisException("foo")));
@@ -240,7 +238,7 @@ public class AsyncPoolWithValidationUnitTests {
     }
 
     @Test
-    public void shouldTestObjectOnBorrowFailExceptionally() {
+    void shouldTestObjectOnBorrowFailExceptionally() {
 
         mockCreation();
         when(factory.validate(any())).thenReturn(failed(new RedisException("foo")));
@@ -263,7 +261,7 @@ public class AsyncPoolWithValidationUnitTests {
     }
 
     @Test
-    public void shouldTestObjectOnReturnSuccessfully() {
+    void shouldTestObjectOnReturnSuccessfully() {
 
         mockCreation();
         when(factory.validate(any())).thenReturn(CompletableFuture.completedFuture(true));
@@ -282,7 +280,7 @@ public class AsyncPoolWithValidationUnitTests {
     }
 
     @Test
-    public void shouldTestObjectOnReturnFailState() {
+    void shouldTestObjectOnReturnFailState() {
 
         mockCreation();
         when(factory.validate(any())).thenReturn(failed(new RedisException("foo")));
@@ -299,7 +297,7 @@ public class AsyncPoolWithValidationUnitTests {
     }
 
     @Test
-    public void shouldTestObjectOnReturnFailExceptionally() {
+    void shouldTestObjectOnReturnFailExceptionally() {
 
         mockCreation();
         when(factory.validate(any())).thenReturn(failed(new RedisException("foo")));
@@ -316,7 +314,7 @@ public class AsyncPoolWithValidationUnitTests {
     }
 
     @Test
-    public void shouldRefillIdleObjects() {
+    void shouldRefillIdleObjects() {
 
         mockCreation();
 
@@ -334,7 +332,7 @@ public class AsyncPoolWithValidationUnitTests {
     }
 
     @Test
-    public void shouldDisposeIdleObjects() {
+    void shouldDisposeIdleObjects() {
 
         mockCreation();
 

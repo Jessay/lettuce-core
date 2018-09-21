@@ -25,9 +25,7 @@ import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -41,18 +39,18 @@ import io.lettuce.core.api.StatefulRedisConnection;
  */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class ConnectionsUnitTests {
+class ConnectionsUnitTests {
 
     @Mock
     private StatefulRedisConnection<String, String> connection1;
 
     @BeforeEach
-    public void before() {
+    void before() {
         when(connection1.closeAsync()).thenReturn(CompletableFuture.completedFuture(null));
     }
 
     @Test
-    public void shouldCloseConnectionCompletingAfterCloseSignal() {
+    void shouldCloseConnectionCompletingAfterCloseSignal() {
 
         Connections connections = new Connections(5, Collections.emptyList());
         connections.closeAsync();

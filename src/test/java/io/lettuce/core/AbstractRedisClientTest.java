@@ -16,13 +16,13 @@
 package io.lettuce.core;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 
-import io.lettuce.test.resource.TestClientResources;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.test.resource.DefaultRedisClient;
 import io.lettuce.test.resource.FastShutdown;
+import io.lettuce.test.resource.TestClientResources;
 
 /**
  * @author Will Glozer
@@ -39,7 +39,7 @@ public abstract class AbstractRedisClientTest extends TestSupport {
         client.setOptions(ClientOptions.create());
     }
 
-    protected static RedisClient newRedisClient() {
+    private static RedisClient newRedisClient() {
         return RedisClient.create(TestClientResources.get(), RedisURI.Builder.redis(host, port).build());
     }
 
@@ -82,7 +82,7 @@ public abstract class AbstractRedisClientTest extends TestSupport {
     public abstract class WithPasswordRequired {
         protected abstract void run(RedisClient client) throws Exception;
 
-        public WithPasswordRequired() {
+        protected WithPasswordRequired() {
             try {
                 redis.configSet("requirepass", passwd);
                 redis.auth(passwd);

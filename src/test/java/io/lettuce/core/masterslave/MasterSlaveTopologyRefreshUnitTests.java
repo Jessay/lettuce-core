@@ -29,9 +29,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -49,7 +47,7 @@ import io.netty.util.concurrent.DefaultThreadFactory;
  */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class MasterSlaveTopologyRefreshUnitTests {
+class MasterSlaveTopologyRefreshUnitTests {
 
     private static final RedisMasterSlaveNode MASTER = new RedisMasterSlaveNode("localhost", 1, new RedisURI(),
             RedisInstance.Role.MASTER);
@@ -66,12 +64,12 @@ public class MasterSlaveTopologyRefreshUnitTests {
     @Mock
     RedisAsyncCommands<String, String> async;
 
-    ScheduledThreadPoolExecutor executorService;
+    private ScheduledThreadPoolExecutor executorService;
 
-    TopologyProvider provider;
+    private TopologyProvider provider;
 
     @BeforeEach
-    public void before() {
+    void before() {
 
         executorService = new ScheduledThreadPoolExecutor(1, new DefaultThreadFactory(getClass().getSimpleName(), true));
         when(connection.closeAsync()).thenReturn(CompletableFuture.completedFuture(null));
@@ -88,12 +86,12 @@ public class MasterSlaveTopologyRefreshUnitTests {
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         executorService.shutdown();
     }
 
     @Test
-    public void shouldRetrieveTopology() {
+    void shouldRetrieveTopology() {
 
         MasterSlaveTopologyRefresh refresh = new MasterSlaveTopologyRefresh(connectionFactory, executorService, provider);
 
@@ -111,7 +109,7 @@ public class MasterSlaveTopologyRefreshUnitTests {
     }
 
     @Test
-    public void shouldRetrieveTopologyWithFailedNode() {
+    void shouldRetrieveTopologyWithFailedNode() {
 
         MasterSlaveTopologyRefresh refresh = new MasterSlaveTopologyRefresh(connectionFactory, executorService, provider);
 

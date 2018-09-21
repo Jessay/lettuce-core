@@ -29,12 +29,12 @@ import io.reactivex.Observable;
 /**
  * @author Mark Paluch
  */
-public class ConversionServiceUnitTests {
+class ConversionServiceUnitTests {
 
     private ConversionService sut = new ConversionService();
 
     @Test
-    public void getConverter() {
+    void getConverter() {
 
         sut.addConverter(new FluxToObservableConverter());
         sut.addConverter(new MonoToObservableConverter());
@@ -51,7 +51,7 @@ public class ConversionServiceUnitTests {
     }
 
     @Test
-    public void canConvert() {
+    void canConvert() {
 
         sut.addConverter(new FluxToObservableConverter());
         sut.addConverter(new MonoToObservableConverter());
@@ -61,7 +61,7 @@ public class ConversionServiceUnitTests {
     }
 
     @Test
-    public void convert() {
+    void convert() {
 
         sut.addConverter(new FluxToObservableConverter());
         sut.addConverter(new MonoToObservableConverter());

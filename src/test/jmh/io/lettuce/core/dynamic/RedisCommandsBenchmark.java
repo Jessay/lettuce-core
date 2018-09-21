@@ -44,7 +44,7 @@ public class RedisCommandsBenchmark {
     private BatchCommands batchCommands;
 
     @Setup
-    public void setup() {
+    private void setup() {
 
         redisClient = RedisClient.create(RedisURI.create(TestSettings.host(), TestSettings.port()));
         connection = redisClient.connect(ByteArrayCodec.INSTANCE);
@@ -64,7 +64,7 @@ public class RedisCommandsBenchmark {
 
     @Benchmark
     @OperationsPerInvocation(BATCH_SIZE)
-    public void asyncSet() {
+    private void asyncSet() {
 
         for (int i = 0; i < BATCH_SIZE; i++) {
             commands[i] = regularCommands.set("key", "value").toCompletableFuture();

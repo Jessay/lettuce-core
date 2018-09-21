@@ -27,10 +27,10 @@ import io.lettuce.core.codec.StringCodec;
 /**
  * @author Mark Paluch
  */
-public class SocketAddressOutputUnitTests {
+class SocketAddressOutputUnitTests {
 
     @Test
-    public void shouldReportSocketAddress() {
+    void shouldReportSocketAddress() {
 
         SocketAddressOutput<String, String> output = new SocketAddressOutput<>(StringCodec.ASCII);
 

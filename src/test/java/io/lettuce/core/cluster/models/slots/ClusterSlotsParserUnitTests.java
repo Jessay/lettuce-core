@@ -28,29 +28,29 @@ import io.lettuce.core.cluster.models.partitions.RedisClusterNode;
 import io.lettuce.core.internal.LettuceLists;
 
 @SuppressWarnings("unchecked")
-public class ClusterSlotsParserUnitTests {
+class ClusterSlotsParserUnitTests {
 
     @Test
-    public void testEmpty() {
+    void testEmpty() {
         List<ClusterSlotRange> result = ClusterSlotsParser.parse(new ArrayList<>());
         assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
-    public void testOneString() {
+    void testOneString() {
         List<ClusterSlotRange> result = ClusterSlotsParser.parse(LettuceLists.newList(""));
         assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
-    public void testOneStringInList() {
+    void testOneStringInList() {
         List<?> list = Arrays.asList(LettuceLists.newList("0"));
         List<ClusterSlotRange> result = ClusterSlotsParser.parse(list);
         assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
-    public void testParse() {
+    void testParse() {
         List<?> list = Arrays.asList(LettuceLists.newList("0", "1", LettuceLists.newList("1", "2")));
         List<ClusterSlotRange> result = ClusterSlotsParser.parse(list);
         assertThat(result).hasSize(1);
@@ -59,7 +59,7 @@ public class ClusterSlotsParserUnitTests {
     }
 
     @Test
-    public void testParseWithSlave() {
+    void testParseWithSlave() {
         List<?> list = Arrays.asList(LettuceLists.newList("100", "200", LettuceLists.newList("1", "2", "nodeId1"),
                 LettuceLists.newList("1", 2, "nodeId2")));
         List<ClusterSlotRange> result = ClusterSlotsParser.parse(list);
@@ -86,7 +86,7 @@ public class ClusterSlotsParserUnitTests {
     }
 
     @Test
-    public void testSameNode() {
+    void testSameNode() {
         List<?> list = Arrays.asList(
                 LettuceLists.newList("100", "200", LettuceLists.newList("1", "2", "nodeId1"),
                         LettuceLists.newList("1", 2, "nodeId2")),
@@ -110,20 +110,20 @@ public class ClusterSlotsParserUnitTests {
     }
 
     @Test
-    public void testParseInvalidMaster() {
+    void testParseInvalidMaster() {
 
         List<?> list = Arrays.asList(LettuceLists.newList("0", "1", LettuceLists.newList("1")));
         assertThatThrownBy(() -> ClusterSlotsParser.parse(list)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void testParseInvalidMaster2() {
+    void testParseInvalidMaster2() {
         List<?> list = Arrays.asList(LettuceLists.newList("0", "1", ""));
         assertThatThrownBy(() -> ClusterSlotsParser.parse(list)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void testModel() {
+    void testModel() {
 
         ClusterSlotRange range = new ClusterSlotRange();
         range.setFrom(1);

@@ -25,12 +25,12 @@ import io.lettuce.core.codec.StringCodec;
 /**
  * @author Mark Paluch
  */
-public class NestedMultiOutputUnitTests {
+class NestedMultiOutputUnitTests {
 
     @Test
-    public void nestedMultiError() {
+    void nestedMultiError() {
 
-        NestedMultiOutput<String, String> output = new NestedMultiOutput<String, String>(StringCodec.UTF8);
+        NestedMultiOutput<String, String> output = new NestedMultiOutput<>(StringCodec.UTF8);
         output.setError(buffer("Oops!"));
         assertThat(output.getError()).isNotNull();
     }

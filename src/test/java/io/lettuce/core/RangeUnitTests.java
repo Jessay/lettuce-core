@@ -24,10 +24,10 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Mark Paluch
  */
-public class RangeUnitTests {
+class RangeUnitTests {
 
     @Test
-    public void unbounded() {
+    void unbounded() {
 
         Range<Object> unbounded = Range.unbounded();
 
@@ -38,7 +38,7 @@ public class RangeUnitTests {
     }
 
     @Test
-    public void createIncluded() {
+    void createIncluded() {
 
         Range<Object> range = Range.create("ze", "ro");
 
@@ -49,7 +49,7 @@ public class RangeUnitTests {
     }
 
     @Test
-    public void fromBoundaries() {
+    void fromBoundaries() {
 
         Range<Object> range = Range.from(including("ze"), excluding("ro"));
 
@@ -60,7 +60,7 @@ public class RangeUnitTests {
     }
 
     @Test
-    public void greater() {
+    void greater() {
 
         Range<Object> gt = Range.unbounded().gt("zero");
 
@@ -71,7 +71,7 @@ public class RangeUnitTests {
     }
 
     @Test
-    public void greaterOrEquals() {
+    void greaterOrEquals() {
 
         Range<Object> gte = Range.unbounded().gte("zero");
 
@@ -82,7 +82,7 @@ public class RangeUnitTests {
     }
 
     @Test
-    public void less() {
+    void less() {
 
         Range<Object> lt = Range.unbounded().lt("zero");
 
@@ -94,7 +94,7 @@ public class RangeUnitTests {
     }
 
     @Test
-    public void lessOrEquals() {
+    void lessOrEquals() {
 
         Range<Object> lte = Range.unbounded().lte("zero");
 

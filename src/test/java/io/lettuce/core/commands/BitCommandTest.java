@@ -22,19 +22,17 @@ import static io.lettuce.core.BitFieldArgs.unsigned;
 import static io.lettuce.core.BitFieldArgs.OverflowType.WRAP;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.nio.ByteBuffer;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import io.lettuce.test.condition.EnabledOnCommand;
-import io.lettuce.test.condition.RedisConditions;
 import io.lettuce.core.AbstractRedisClientTest;
 import io.lettuce.core.BitFieldArgs;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.codec.Utf8StringCodec;
+import io.lettuce.test.condition.EnabledOnCommand;
 
 /**
  * @author Will Glozer
@@ -45,23 +43,23 @@ public class BitCommandTest extends AbstractRedisClientTest {
     protected RedisCommands<String, String> bitstring;
 
     @Override
-    protected RedisCommands<String, String> connect() {
+    RedisCommands<String, String> connect() {
         connectBitString();
         return super.connect();
     }
 
-    protected void connectBitString() {
+    void connectBitString() {
         bitstring = client.connect(new BitStringCodec()).sync();
     }
 
     @Override
-    public void closeConnection() throws Exception {
+    void closeConnection() throws Exception {
         bitstring.getStatefulConnection().close();
         super.closeConnection();
     }
 
     @Test
-    public void bitcount() {
+    void bitcount() {
         assertThat((long) redis.bitcount(key)).isEqualTo(0);
 
         redis.setbit(key, 0, 1);
@@ -73,7 +71,7 @@ public class BitCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void bitfieldType() {
+    void bitfieldType() {
         assertThat(signed(64).getBits()).isEqualTo(64);
         assertThat(signed(64).isSigned()).isTrue();
         assertThat(unsigned(63).getBits()).isEqualTo(63);
@@ -81,22 +79,22 @@ public class BitCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void bitfieldTypeSigned65() {
+    void bitfieldTypeSigned65() {
         assertThatThrownBy(() -> signed(65)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void bitfieldTypeUnsigned64() {
+    void bitfieldTypeUnsigned64() {
         assertThatThrownBy(() -> unsigned(64)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void bitfieldBuilderEmptyPreviousType() {
+    void bitfieldBuilderEmptyPreviousType() {
         assertThatThrownBy(() -> new BitFieldArgs().overflow(WRAP).get()).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
-    public void bitfieldArgsTest() {
+    void bitfieldArgsTest() {
 
         assertThat(signed(5).toString()).isEqualTo("i5");
         assertThat(unsigned(5).toString()).isEqualTo("u5");
@@ -107,7 +105,7 @@ public class BitCommandTest extends AbstractRedisClientTest {
 
     @Test
     @EnabledOnCommand("BITFIELD")
-    public void bitfield() {
+    void bitfield() {
 
         BitFieldArgs bitFieldArgs = BitFieldArgs.Builder.set(signed(8), 0, 1).set(5, 1).incrBy(2, 3).get().get(2);
 
@@ -119,7 +117,7 @@ public class BitCommandTest extends AbstractRedisClientTest {
 
     @Test
     @EnabledOnCommand("BITFIELD")
-    public void bitfieldGetWithOffset() {
+    void bitfieldGetWithOffset() {
 
         BitFieldArgs bitFieldArgs = BitFieldArgs.Builder.set(signed(8), 0, 1).get(signed(2), typeWidthBasedOffset(1));
 
@@ -131,7 +129,7 @@ public class BitCommandTest extends AbstractRedisClientTest {
 
     @Test
     @EnabledOnCommand("BITFIELD")
-    public void bitfieldSet() {
+    void bitfieldSet() {
 
         BitFieldArgs bitFieldArgs = BitFieldArgs.Builder.set(signed(8), 0, 5).set(5);
 
@@ -143,7 +141,7 @@ public class BitCommandTest extends AbstractRedisClientTest {
 
     @Test
     @EnabledOnCommand("BITFIELD")
-    public void bitfieldWithOffsetSet() {
+    void bitfieldWithOffsetSet() {
 
         redis.bitfield(key, BitFieldArgs.Builder.set(signed(8), typeWidthBasedOffset(2), 5));
         assertThat(bitstring.get(key)).isEqualTo("000000000000000010100000");
@@ -155,7 +153,7 @@ public class BitCommandTest extends AbstractRedisClientTest {
 
     @Test
     @EnabledOnCommand("BITFIELD")
-    public void bitfieldIncrBy() {
+    void bitfieldIncrBy() {
 
         BitFieldArgs bitFieldArgs = BitFieldArgs.Builder.set(signed(8), 0, 5).incrBy(1);
 
@@ -167,7 +165,7 @@ public class BitCommandTest extends AbstractRedisClientTest {
 
     @Test
     @EnabledOnCommand("BITFIELD")
-    public void bitfieldWithOffsetIncrBy() {
+    void bitfieldWithOffsetIncrBy() {
 
         redis.bitfield(key, BitFieldArgs.Builder.incrBy(signed(8), typeWidthBasedOffset(2), 1));
         assertThat(bitstring.get(key)).isEqualTo("000000000000000010000000");
@@ -179,7 +177,7 @@ public class BitCommandTest extends AbstractRedisClientTest {
 
     @Test
     @EnabledOnCommand("BITFIELD")
-    public void bitfieldOverflow() {
+    void bitfieldOverflow() {
 
         BitFieldArgs bitFieldArgs = BitFieldArgs.Builder.overflow(WRAP).set(signed(8), 9, Integer.MAX_VALUE).get(signed(8));
 
@@ -189,7 +187,7 @@ public class BitCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void bitpos() {
+    void bitpos() {
         assertThat((long) redis.bitcount(key)).isEqualTo(0);
         redis.setbit(key, 0, 0);
         redis.setbit(key, 1, 1);
@@ -199,7 +197,7 @@ public class BitCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void bitposOffset() {
+    void bitposOffset() {
         assertThat((long) redis.bitcount(key)).isEqualTo(0);
         redis.setbit(key, 0, 1);
         redis.setbit(key, 1, 1);
@@ -218,7 +216,7 @@ public class BitCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void bitopAnd() {
+    void bitopAnd() {
         redis.setbit("foo", 0, 1);
         redis.setbit("bar", 1, 1);
         redis.setbit("baz", 2, 1);
@@ -228,7 +226,7 @@ public class BitCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void bitopNot() {
+    void bitopNot() {
         redis.setbit("foo", 0, 1);
         redis.setbit("foo", 2, 1);
 
@@ -238,7 +236,7 @@ public class BitCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void bitopOr() {
+    void bitopOr() {
         redis.setbit("foo", 0, 1);
         redis.setbit("bar", 1, 1);
         redis.setbit("baz", 2, 1);
@@ -247,7 +245,7 @@ public class BitCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void bitopXor() {
+    void bitopXor() {
         redis.setbit("foo", 0, 1);
         redis.setbit("bar", 0, 1);
         redis.setbit("baz", 2, 1);
@@ -256,20 +254,20 @@ public class BitCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void getbit() {
+    void getbit() {
         assertThat(redis.getbit(key, 0)).isEqualTo(0);
         redis.setbit(key, 0, 1);
         assertThat(redis.getbit(key, 0)).isEqualTo(1);
     }
 
     @Test
-    public void setbit() {
+    void setbit() {
 
         assertThat(redis.setbit(key, 0, 1)).isEqualTo(0);
         assertThat(redis.setbit(key, 0, 0)).isEqualTo(1);
     }
 
-    public static class BitStringCodec extends Utf8StringCodec {
+    protected static class BitStringCodec extends Utf8StringCodec {
         @Override
         public String decodeValue(ByteBuffer bytes) {
             StringBuilder bits = new StringBuilder(bytes.remaining() * 8);

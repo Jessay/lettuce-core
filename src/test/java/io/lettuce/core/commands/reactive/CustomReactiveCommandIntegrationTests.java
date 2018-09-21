@@ -37,17 +37,17 @@ import io.lettuce.test.LettuceExtension;
  * @author Mark Paluch
  */
 @ExtendWith(LettuceExtension.class)
-public class CustomReactiveCommandIntegrationTests extends TestSupport {
+class CustomReactiveCommandIntegrationTests extends TestSupport {
 
     private final RedisCommands<String, String> redis;
 
     @Inject
-    public CustomReactiveCommandIntegrationTests(StatefulRedisConnection<String, String> connection) {
+    CustomReactiveCommandIntegrationTests(StatefulRedisConnection<String, String> connection) {
         this.redis = connection.sync();
     }
 
     @Test
-    public void dispatchGetAndSet() {
+    void dispatchGetAndSet() {
 
         redis.set(key, value);
         RedisReactiveCommands<String, String> reactive = redis.getStatefulConnection().reactive();
@@ -59,7 +59,7 @@ public class CustomReactiveCommandIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void dispatchList() {
+    void dispatchList() {
 
         redis.rpush(key, "a", "b", "c");
         RedisReactiveCommands<String, String> reactive = redis.getStatefulConnection().reactive();

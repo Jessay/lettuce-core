@@ -25,28 +25,28 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
-import io.lettuce.test.LettuceExtension;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.reactive.RedisReactiveCommands;
 import io.lettuce.core.api.sync.RedisCommands;
+import io.lettuce.test.LettuceExtension;
 
 /**
  * @author Mark Paluch
  */
 @ExtendWith(LettuceExtension.class)
-public class ScanStreamTest extends TestSupport {
+class ScanStreamTest extends TestSupport {
 
     private final StatefulRedisConnection<String, String> connection;
     private final RedisCommands<String, String> redis;
 
     @Inject
-    public ScanStreamTest(StatefulRedisConnection<String, String> connection) {
+    ScanStreamTest(StatefulRedisConnection<String, String> connection) {
         this.connection = connection;
         this.redis = connection.sync();
     }
 
     @Test
-    public void shouldScanIteratively() {
+    void shouldScanIteratively() {
 
         for (int i = 0; i < 1000; i++) {
             redis.set("key-" + i, value);
@@ -62,7 +62,7 @@ public class ScanStreamTest extends TestSupport {
     }
 
     @Test
-    public void shouldHscanIteratively() {
+    void shouldHscanIteratively() {
 
         for (int i = 0; i < 1000; i++) {
             redis.hset(key, "field-" + i, "value-" + i);
@@ -76,7 +76,7 @@ public class ScanStreamTest extends TestSupport {
     }
 
     @Test
-    public void shouldSscanIteratively() {
+    void shouldSscanIteratively() {
 
         for (int i = 0; i < 1000; i++) {
             redis.sadd(key, "value-" + i);
@@ -91,7 +91,7 @@ public class ScanStreamTest extends TestSupport {
     }
 
     @Test
-    public void shouldZscanIteratively() {
+    void shouldZscanIteratively() {
 
         for (int i = 0; i < 1000; i++) {
             redis.zadd(key, (double) i, "value-" + i);

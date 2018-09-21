@@ -40,7 +40,6 @@ import org.mockito.quality.Strictness;
 import io.lettuce.core.ConnectionFuture;
 import io.lettuce.core.RedisException;
 import io.lettuce.core.RedisURI;
-import io.lettuce.test.settings.TestSettings;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.cluster.RedisClusterClient;
@@ -52,6 +51,7 @@ import io.lettuce.core.protocol.RedisCommand;
 import io.lettuce.core.resource.ClientResources;
 import io.lettuce.core.resource.DnsResolvers;
 import io.lettuce.core.resource.SocketAddressResolver;
+import io.lettuce.test.settings.TestSettings;
 
 /**
  * @author Mark Paluch
@@ -60,13 +60,13 @@ import io.lettuce.core.resource.SocketAddressResolver;
 @SuppressWarnings("unchecked")
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class ClusterTopologyRefreshUnitTests {
+class ClusterTopologyRefreshUnitTests {
 
-    public final static long COMMAND_TIMEOUT_NS = TimeUnit.MILLISECONDS.toNanos(10);
+    private final static long COMMAND_TIMEOUT_NS = TimeUnit.MILLISECONDS.toNanos(10);
 
-    public static final String NODE_1_VIEW = "1 127.0.0.1:7380 master,myself - 0 1401258245007 2 disconnected 8000-11999\n"
+    private static final String NODE_1_VIEW = "1 127.0.0.1:7380 master,myself - 0 1401258245007 2 disconnected 8000-11999\n"
             + "2 127.0.0.1:7381 master - 111 1401258245007 222 connected 7000 12000 12002-16383\n";
-    public static final String NODE_2_VIEW = "1 127.0.0.1:7380 master - 0 1401258245007 2 disconnected 8000-11999\n"
+    private static final String NODE_2_VIEW = "1 127.0.0.1:7380 master - 0 1401258245007 2 disconnected 8000-11999\n"
             + "2 127.0.0.1:7381 master,myself - 111 1401258245007 222 connected 7000 12000 12002-16383\n";
 
     private ClusterTopologyRefresh sut;
@@ -96,7 +96,7 @@ public class ClusterTopologyRefreshUnitTests {
     private RedisAsyncCommands<String, String> asyncCommands2;
 
     @BeforeEach
-    public void before() {
+    void before() {
 
         when(clientResources.socketAddressResolver()).thenReturn(SocketAddressResolver.create(DnsResolvers.JVM_DEFAULT));
         when(connection1.async()).thenReturn(asyncCommands1);
@@ -146,7 +146,7 @@ public class ClusterTopologyRefreshUnitTests {
     }
 
     @Test
-    public void getNodeSpecificViewsNode1IsFasterThanNode2() throws Exception {
+    void getNodeSpecificViewsNode1IsFasterThanNode2() throws Exception {
 
         Requests requests = createClusterNodesRequests(1, NODE_1_VIEW);
         requests = createClusterNodesRequests(2, NODE_2_VIEW).mergeWith(requests);
@@ -165,7 +165,7 @@ public class ClusterTopologyRefreshUnitTests {
     }
 
     @Test
-    public void partitionsReturnedAsReported() throws Exception {
+    void partitionsReturnedAsReported() throws Exception {
 
         System.setProperty("io.lettuce.core.topology.sort", "none");
 
@@ -193,7 +193,7 @@ public class ClusterTopologyRefreshUnitTests {
     }
 
     @Test
-    public void getNodeSpecificViewTestingNoAddrFilter() throws Exception {
+    void getNodeSpecificViewTestingNoAddrFilter() throws Exception {
 
         String nodes1 = "n1 10.37.110.63:7000 slave n3 0 1452553664848 43 connected\n"
                 + "n2 10.37.110.68:7000 slave n6 0 1452553664346 45 connected\n"
@@ -225,7 +225,7 @@ public class ClusterTopologyRefreshUnitTests {
     }
 
     @Test
-    public void getNodeSpecificViewsNode2IsFasterThanNode1() throws Exception {
+    void getNodeSpecificViewsNode2IsFasterThanNode1() throws Exception {
 
         Requests clusterNodesRequests = createClusterNodesRequests(5, NODE_1_VIEW);
         clusterNodesRequests = createClusterNodesRequests(1, NODE_2_VIEW).mergeWith(clusterNodesRequests);
@@ -244,7 +244,7 @@ public class ClusterTopologyRefreshUnitTests {
     }
 
     @Test
-    public void shouldAttemptToConnectOnlyOnce() {
+    void shouldAttemptToConnectOnlyOnce() {
 
         List<RedisURI> seed = Arrays.asList(RedisURI.create("127.0.0.1", 7380), RedisURI.create("127.0.0.1", 7381));
 
@@ -260,7 +260,7 @@ public class ClusterTopologyRefreshUnitTests {
     }
 
     @Test
-    public void shouldFailIfNoNodeConnects() {
+    void shouldFailIfNoNodeConnects() {
 
         List<RedisURI> seed = Arrays.asList(RedisURI.create("127.0.0.1", 7380), RedisURI.create("127.0.0.1", 7381));
 
@@ -282,7 +282,7 @@ public class ClusterTopologyRefreshUnitTests {
     }
 
     @Test
-    public void shouldShouldDiscoverNodes() {
+    void shouldShouldDiscoverNodes() {
 
         List<RedisURI> seed = Collections.singletonList(RedisURI.create("127.0.0.1", 7380));
 
@@ -298,7 +298,7 @@ public class ClusterTopologyRefreshUnitTests {
     }
 
     @Test
-    public void shouldShouldNotDiscoverNodes() {
+    void shouldShouldNotDiscoverNodes() {
 
         List<RedisURI> seed = Collections.singletonList(RedisURI.create("127.0.0.1", 7380));
 
@@ -312,7 +312,7 @@ public class ClusterTopologyRefreshUnitTests {
     }
 
     @Test
-    public void shouldNotFailOnDuplicateSeedNodes() {
+    void shouldNotFailOnDuplicateSeedNodes() {
 
         List<RedisURI> seed = Arrays.asList(RedisURI.create("127.0.0.1", 7380), RedisURI.create("127.0.0.1", 7381),
                 RedisURI.create("127.0.0.1", 7381));
@@ -330,7 +330,7 @@ public class ClusterTopologyRefreshUnitTests {
     }
 
     @Test
-    public void shouldCloseConnections() {
+    void shouldCloseConnections() {
 
         List<RedisURI> seed = Arrays.asList(RedisURI.create("127.0.0.1", 7380), RedisURI.create("127.0.0.1", 7381));
 
@@ -346,7 +346,7 @@ public class ClusterTopologyRefreshUnitTests {
     }
 
     @Test
-    public void undiscoveredAdditionalNodesShouldBeLastUsingClientCount() {
+    void undiscoveredAdditionalNodesShouldBeLastUsingClientCount() {
 
         List<RedisURI> seed = Collections.singletonList(RedisURI.create("127.0.0.1", 7380));
 
@@ -364,7 +364,7 @@ public class ClusterTopologyRefreshUnitTests {
     }
 
     @Test
-    public void discoveredAdditionalNodesShouldBeOrderedUsingClientCount() {
+    void discoveredAdditionalNodesShouldBeOrderedUsingClientCount() {
 
         List<RedisURI> seed = Collections.singletonList(RedisURI.create("127.0.0.1", 7380));
 
@@ -384,7 +384,7 @@ public class ClusterTopologyRefreshUnitTests {
     }
 
     @Test
-    public void undiscoveredAdditionalNodesShouldBeLastUsingLatency() {
+    void undiscoveredAdditionalNodesShouldBeLastUsingLatency() {
 
         List<RedisURI> seed = Collections.singletonList(RedisURI.create("127.0.0.1", 7380));
 
@@ -402,7 +402,7 @@ public class ClusterTopologyRefreshUnitTests {
     }
 
     @Test
-    public void discoveredAdditionalNodesShouldBeOrderedUsingLatency() {
+    void discoveredAdditionalNodesShouldBeOrderedUsingLatency() {
 
         List<RedisURI> seed = Collections.singletonList(RedisURI.create("127.0.0.1", 7380));
 
@@ -421,7 +421,7 @@ public class ClusterTopologyRefreshUnitTests {
                 .containsSequence(RedisURI.create("127.0.0.1", 7381), seed.get(0));
     }
 
-    protected Requests createClusterNodesRequests(int duration, String nodes) {
+    Requests createClusterNodesRequests(int duration, String nodes) {
 
         RedisURI redisURI = RedisURI.create("redis://localhost:" + duration);
         Connections connections = new Connections();
@@ -438,7 +438,7 @@ public class ClusterTopologyRefreshUnitTests {
         return requests;
     }
 
-    protected Requests createClientListRequests(int duration, String response) {
+    Requests createClientListRequests(int duration, String response) {
 
         RedisURI redisURI = RedisURI.create("redis://localhost:" + duration);
         Connections connections = new Connections();
@@ -461,7 +461,7 @@ public class ClusterTopologyRefreshUnitTests {
 
     private static <T> ConnectionFuture<T> completedWithException(Exception e) {
 
-        CompletableFuture<T> future = new CompletableFuture<T>();
+        CompletableFuture<T> future = new CompletableFuture<>();
         future.completeExceptionally(e);
 
         return ConnectionFuture.from(InetSocketAddress.createUnresolved(TestSettings.host(), TestSettings.port()),

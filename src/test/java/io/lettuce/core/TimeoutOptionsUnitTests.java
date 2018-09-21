@@ -26,10 +26,10 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Mark Paluch
  */
-public class TimeoutOptionsUnitTests {
+class TimeoutOptionsUnitTests {
 
     @Test
-    public void noTimeoutByDefault() {
+    void noTimeoutByDefault() {
 
         TimeoutOptions timeoutOptions = TimeoutOptions.create();
 
@@ -38,7 +38,7 @@ public class TimeoutOptionsUnitTests {
     }
 
     @Test
-    public void defaultConnectionTimeout() {
+    void defaultConnectionTimeout() {
 
         TimeoutOptions timeoutOptions = TimeoutOptions.enabled();
 
@@ -49,7 +49,7 @@ public class TimeoutOptionsUnitTests {
     }
 
     @Test
-    public void fixedConnectionTimeout() {
+    void fixedConnectionTimeout() {
 
         TimeoutOptions timeoutOptions = TimeoutOptions.enabled(Duration.ofMinutes(1));
 

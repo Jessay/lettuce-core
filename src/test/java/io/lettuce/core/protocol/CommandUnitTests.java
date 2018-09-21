@@ -34,18 +34,18 @@ import io.lettuce.core.output.StatusOutput;
  */
 public class CommandUnitTests {
 
-    protected RedisCodec<String, String> codec = new Utf8StringCodec();
-    protected Command<String, String, String> sut;
+    private RedisCodec<String, String> codec = new Utf8StringCodec();
+    private Command<String, String, String> sut;
 
     @BeforeEach
-    public void createCommand() {
+    void createCommand() {
 
-        CommandOutput<String, String, String> output = new StatusOutput<String, String>(codec);
+        CommandOutput<String, String, String> output = new StatusOutput<>(codec);
         sut = new Command<>(CommandType.INFO, output, null);
     }
 
     @Test
-    public void isCancelled() {
+    void isCancelled() {
         assertThat(sut.isCancelled()).isFalse();
         assertThat(sut.isDone()).isFalse();
 
@@ -58,7 +58,7 @@ public class CommandUnitTests {
     }
 
     @Test
-    public void isDone() {
+    void isDone() {
         assertThat(sut.isCancelled()).isFalse();
         assertThat(sut.isDone()).isFalse();
 
@@ -69,47 +69,47 @@ public class CommandUnitTests {
     }
 
     @Test
-    public void get() {
+    void get() {
         assertThat(sut.get()).isNull();
         sut.getOutput().set(buffer("one"));
         assertThat(sut.get()).isEqualTo("one");
     }
 
     @Test
-    public void getError() {
+    void getError() {
         sut.getOutput().setError("error");
         assertThat(sut.getError()).isEqualTo("error");
     }
 
     @Test
-    public void setOutputAfterCompleted() {
+    void setOutputAfterCompleted() {
         sut.complete();
         assertThatThrownBy(() -> sut.setOutput(new StatusOutput<>(codec))).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
-    public void testToString() {
+    void testToString() {
         assertThat(sut.toString()).contains("Command");
     }
 
     @Test
-    public void customKeyword() {
+    void customKeyword() {
 
-        sut = new Command<String, String, String>(MyKeywords.DUMMY, null, null);
-        sut.setOutput(new StatusOutput<String, String>(codec));
+        sut = new Command<>(MyKeywords.DUMMY, null, null);
+        sut.setOutput(new StatusOutput<>(codec));
 
         assertThat(sut.toString()).contains(MyKeywords.DUMMY.name());
     }
 
     @Test
-    public void customKeywordWithArgs() {
-        sut = new Command<String, String, String>(MyKeywords.DUMMY, null, new CommandArgs<String, String>(codec));
+    void customKeywordWithArgs() {
+        sut = new Command<>(MyKeywords.DUMMY, null, new CommandArgs<>(codec));
         sut.getArgs().add(MyKeywords.DUMMY);
         assertThat(sut.getArgs().toString()).contains(MyKeywords.DUMMY.name());
     }
 
     @Test
-    public void getWithTimeout() {
+    void getWithTimeout() {
         sut.getOutput().set(buffer("one"));
         sut.complete();
 
@@ -117,7 +117,7 @@ public class CommandUnitTests {
     }
 
     @Test
-    public void outputSubclassOverride1() {
+    void outputSubclassOverride1() {
         CommandOutput<String, String, String> output = new CommandOutput<String, String, String>(codec, null) {
             @Override
             public String get() throws RedisException {
@@ -128,7 +128,7 @@ public class CommandUnitTests {
     }
 
     @Test
-    public void outputSubclassOverride2() {
+    void outputSubclassOverride2() {
         CommandOutput<String, String, String> output = new CommandOutput<String, String, String>(codec, null) {
             @Override
             public String get() throws RedisException {
@@ -139,7 +139,7 @@ public class CommandUnitTests {
     }
 
     @Test
-    public void sillyTestsForEmmaCoverage() {
+    void sillyTestsForEmmaCoverage() {
         assertThat(CommandType.valueOf("APPEND")).isEqualTo(CommandType.APPEND);
         assertThat(CommandKeyword.valueOf("AFTER")).isEqualTo(CommandKeyword.AFTER);
     }

@@ -33,14 +33,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import io.lettuce.test.LettuceExtension;
-import io.lettuce.test.Wait;
 import io.lettuce.category.SlowTests;
-import io.lettuce.core.*;
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.RedisURI;
+import io.lettuce.core.TestSupport;
 import io.lettuce.core.api.async.BaseRedisAsyncCommands;
 import io.lettuce.core.api.sync.RedisCommands;
-import io.lettuce.core.cluster.ClusterTestSettings;
 import io.lettuce.core.cluster.ClusterClientOptions;
+import io.lettuce.core.cluster.ClusterTestSettings;
 import io.lettuce.core.cluster.ClusterTopologyRefreshOptions;
 import io.lettuce.core.cluster.RedisClusterClient;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
@@ -49,6 +49,8 @@ import io.lettuce.core.cluster.api.async.RedisClusterAsyncCommands;
 import io.lettuce.core.cluster.api.sync.RedisAdvancedClusterCommands;
 import io.lettuce.core.cluster.models.partitions.Partitions;
 import io.lettuce.core.cluster.models.partitions.RedisClusterNode;
+import io.lettuce.test.LettuceExtension;
+import io.lettuce.test.Wait;
 import io.lettuce.test.resource.FastShutdown;
 import io.lettuce.test.settings.TestSettings;
 import io.netty.util.concurrent.ScheduledFuture;
@@ -61,9 +63,9 @@ import io.netty.util.concurrent.ScheduledFuture;
 @SuppressWarnings({ "unchecked" })
 @SlowTests
 @ExtendWith(LettuceExtension.class)
-public class TopologyRefreshIntegrationTests extends TestSupport {
+class TopologyRefreshIntegrationTests extends TestSupport {
 
-    public static final String host = TestSettings.hostAddr();
+    private static final String host = TestSettings.hostAddr();
     private final RedisClient client;
 
     private RedisClusterClient clusterClient;
@@ -71,12 +73,12 @@ public class TopologyRefreshIntegrationTests extends TestSupport {
     private RedisCommands<String, String> redis2;
 
     @Inject
-    public TopologyRefreshIntegrationTests(RedisClient client) {
+    TopologyRefreshIntegrationTests(RedisClient client) {
         this.client = client;
     }
 
     @BeforeEach
-    public void openConnection() {
+    void openConnection() {
         clusterClient = RedisClusterClient.create(client.getResources(), RedisURI.Builder
                 .redis(host, ClusterTestSettings.port1).build());
         redis1 = client.connect(RedisURI.Builder.redis(ClusterTestSettings.host, ClusterTestSettings.port1).build()).sync();
@@ -84,14 +86,14 @@ public class TopologyRefreshIntegrationTests extends TestSupport {
     }
 
     @AfterEach
-    public void closeConnection() {
+    void closeConnection() {
         redis1.getStatefulConnection().close();
         redis2.getStatefulConnection().close();
         FastShutdown.shutdown(clusterClient);
     }
 
     @Test
-    public void shouldUnsubscribeTopologyRefresh() {
+    void shouldUnsubscribeTopologyRefresh() {
 
         ClusterTopologyRefreshOptions topologyRefreshOptions = ClusterTopologyRefreshOptions.builder()
                 .enablePeriodicRefresh(true) //
@@ -121,7 +123,7 @@ public class TopologyRefreshIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void changeTopologyWhileOperations() {
+    void changeTopologyWhileOperations() {
 
         ClusterTopologyRefreshOptions topologyRefreshOptions = ClusterTopologyRefreshOptions.builder()
                 .enablePeriodicRefresh(true)//
@@ -140,7 +142,7 @@ public class TopologyRefreshIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void dynamicSourcesProvidesClientCountForAllNodes() {
+    void dynamicSourcesProvidesClientCountForAllNodes() {
 
         ClusterTopologyRefreshOptions topologyRefreshOptions = ClusterTopologyRefreshOptions.create();
         clusterClient.setOptions(ClusterClientOptions.builder().topologyRefreshOptions(topologyRefreshOptions).build());
@@ -157,7 +159,7 @@ public class TopologyRefreshIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void staticSourcesProvidesClientCountForSeedNodes() {
+    void staticSourcesProvidesClientCountForSeedNodes() {
 
         ClusterTopologyRefreshOptions topologyRefreshOptions = ClusterTopologyRefreshOptions.builder()
                 .dynamicRefreshSources(false).build();
@@ -175,7 +177,7 @@ public class TopologyRefreshIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void adaptiveTopologyUpdateOnDisconnectNodeIdConnection() {
+    void adaptiveTopologyUpdateOnDisconnectNodeIdConnection() {
 
         runReconnectTest((clusterConnection, node) -> {
             RedisClusterAsyncCommands<String, String> connection = clusterConnection.getConnection(node.getUri().getHost(),
@@ -186,7 +188,7 @@ public class TopologyRefreshIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void adaptiveTopologyUpdateOnDisconnectHostAndPortConnection() {
+    void adaptiveTopologyUpdateOnDisconnectHostAndPortConnection() {
 
         runReconnectTest((clusterConnection, node) -> {
             RedisClusterAsyncCommands<String, String> connection = clusterConnection.getConnection(node.getUri().getHost(),
@@ -197,7 +199,7 @@ public class TopologyRefreshIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void adaptiveTopologyUpdateOnDisconnectDefaultConnection() {
+    void adaptiveTopologyUpdateOnDisconnectDefaultConnection() {
 
         runReconnectTest((clusterConnection, node) -> {
             return clusterConnection;
@@ -205,7 +207,7 @@ public class TopologyRefreshIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void adaptiveTopologyUpdateIsRateLimited() throws Exception {
+    void adaptiveTopologyUpdateIsRateLimited() throws Exception {
 
         ClusterTopologyRefreshOptions topologyRefreshOptions = ClusterTopologyRefreshOptions.builder()//
                 .adaptiveRefreshTriggersTimeout(1, TimeUnit.HOURS)//
@@ -233,7 +235,7 @@ public class TopologyRefreshIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void adaptiveTopologyUpdatetUsesTimeout() throws Exception {
+    void adaptiveTopologyUpdatetUsesTimeout() throws Exception {
 
         ClusterTopologyRefreshOptions topologyRefreshOptions = ClusterTopologyRefreshOptions.builder()//
                 .adaptiveRefreshTriggersTimeout(500, TimeUnit.MILLISECONDS)//
@@ -261,7 +263,7 @@ public class TopologyRefreshIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void adaptiveTriggerDoesNotFireOnSingleReconnect() throws Exception {
+    void adaptiveTriggerDoesNotFireOnSingleReconnect() throws Exception {
 
         ClusterTopologyRefreshOptions topologyRefreshOptions = ClusterTopologyRefreshOptions.builder()//
                 .enableAllAdaptiveRefreshTriggers()//
@@ -279,7 +281,7 @@ public class TopologyRefreshIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void adaptiveTriggerOnMoveRedirection() {
+    void adaptiveTriggerOnMoveRedirection() {
 
         ClusterTopologyRefreshOptions topologyRefreshOptions = ClusterTopologyRefreshOptions.builder()//
                 .enableAdaptiveRefreshTrigger(ClusterTopologyRefreshOptions.RefreshTrigger.MOVED_REDIRECT)//

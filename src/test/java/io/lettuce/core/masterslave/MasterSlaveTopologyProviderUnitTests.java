@@ -24,15 +24,15 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import io.lettuce.core.RedisURI;
-import io.lettuce.test.settings.TestSettings;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.models.role.RedisInstance;
 import io.lettuce.core.models.role.RedisNodeDescription;
+import io.lettuce.test.settings.TestSettings;
 
 /**
  * @author Mark Paluch
  */
-public class MasterSlaveTopologyProviderUnitTests {
+class MasterSlaveTopologyProviderUnitTests {
 
     private StatefulRedisConnection<String, String> connectionMock = mock(StatefulRedisConnection.class);
 
@@ -40,7 +40,7 @@ public class MasterSlaveTopologyProviderUnitTests {
             RedisURI.Builder.redis(TestSettings.host(), TestSettings.port()).build());
 
     @Test
-    public void shouldParseMaster() {
+    void shouldParseMaster() {
 
         String info = "# Replication\r\n" + "role:master\r\n" + "connected_slaves:1\r\n" + "master_repl_offset:56276\r\n"
                 + "repl_backlog_active:1\r\n";
@@ -56,7 +56,7 @@ public class MasterSlaveTopologyProviderUnitTests {
     }
 
     @Test
-    public void shouldParseMasterAndSlave() {
+    void shouldParseMasterAndSlave() {
 
         String info = "# Replication\r\n" + "role:slave\r\n" + "connected_slaves:1\r\n" + "master_host:127.0.0.1\r\n"
                 + "master_port:1234\r\n" + "master_repl_offset:56276\r\n" + "repl_backlog_active:1\r\n";
@@ -73,7 +73,7 @@ public class MasterSlaveTopologyProviderUnitTests {
     }
 
     @Test
-    public void shouldParseMasterHostname() {
+    void shouldParseMasterHostname() {
 
         String info = "# Replication\r\n" + "role:slave\r\n" + "connected_slaves:1\r\n" + "master_host:my.Host-name.COM\r\n"
                 + "master_port:1234\r\n" + "master_repl_offset:56276\r\n" + "repl_backlog_active:1\r\n";
@@ -90,7 +90,7 @@ public class MasterSlaveTopologyProviderUnitTests {
     }
 
     @Test
-    public void shouldParseIPv6MasterAddress() {
+    void shouldParseIPv6MasterAddress() {
 
         String info = "# Replication\r\n" + "role:slave\r\n" + "connected_slaves:1\r\n" + "master_host:::20f8:1400:0:0\r\n"
                 + "master_port:1234\r\n" + "master_repl_offset:56276\r\n" + "repl_backlog_active:1\r\n";
@@ -108,7 +108,7 @@ public class MasterSlaveTopologyProviderUnitTests {
     }
 
     @Test
-    public void shouldFailWithoutRole() {
+    void shouldFailWithoutRole() {
 
         String info = "# Replication\r\n" + "connected_slaves:1\r\n" + "master_repl_offset:56276\r\n"
                 + "repl_backlog_active:1\r\n";
@@ -117,7 +117,7 @@ public class MasterSlaveTopologyProviderUnitTests {
     }
 
     @Test
-    public void shouldFailWithInvalidRole() {
+    void shouldFailWithInvalidRole() {
 
         String info = "# Replication\r\n" + "role:abc\r\n" + "master_repl_offset:56276\r\n" + "repl_backlog_active:1\r\n";
 
@@ -125,7 +125,7 @@ public class MasterSlaveTopologyProviderUnitTests {
     }
 
     @Test
-    public void shouldParseSlaves() {
+    void shouldParseSlaves() {
 
         String info = "# Replication\r\n" + "role:master\r\n"
                 + "slave0:ip=127.0.0.1,port=6483,state=online,offset=56276,lag=0\r\n"
@@ -149,7 +149,7 @@ public class MasterSlaveTopologyProviderUnitTests {
     }
 
     @Test
-    public void shouldParseIPv6SlaveAddress() {
+    void shouldParseIPv6SlaveAddress() {
 
         String info = "# Replication\r\n" + "role:master\r\n"
                 + "slave0:ip=::20f8:1400:0:0,port=6483,state=online,offset=56276,lag=0\r\n"

@@ -509,7 +509,7 @@ public class RedisClusterSetupTest extends TestSupport {
         clusterConnection.getStatefulConnection().close();
     }
 
-    protected PooledClusterConnectionProvider<String, String> getPooledClusterConnectionProvider(
+    private PooledClusterConnectionProvider<String, String> getPooledClusterConnectionProvider(
             RedisAdvancedClusterAsyncCommands<String, String> clusterAsyncConnection) {
 
         RedisChannelHandler<String, String> channelHandler = getChannelHandler(clusterAsyncConnection);
@@ -537,7 +537,7 @@ public class RedisClusterSetupTest extends TestSupport {
         Wait.untilTrue(() -> !asyncCommands.isOpen()).waitOrTimeout();
     }
 
-    protected void shiftAllSlotsToNode1() throws InterruptedException, TimeoutException {
+    private void shiftAllSlotsToNode1() throws InterruptedException, TimeoutException {
 
         redis1.clusterDelSlots(createSlots(12000, 16384));
         redis2.clusterDelSlots(createSlots(12000, 16384));

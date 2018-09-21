@@ -22,13 +22,10 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
-import io.lettuce.core.tracing.Tracing;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import reactor.core.Disposable;
@@ -40,6 +37,7 @@ import io.lettuce.core.metrics.CommandLatencyCollector;
 import io.lettuce.core.output.ValueListOutput;
 import io.lettuce.core.protocol.*;
 import io.lettuce.core.resource.ClientResources;
+import io.lettuce.core.tracing.Tracing;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.embedded.EmbeddedChannel;
 import io.netty.channel.local.LocalAddress;
@@ -48,7 +46,7 @@ import io.netty.channel.local.LocalAddress;
  * @author Mark Paluch
  */
 @ExtendWith(MockitoExtension.class)
-public class ReactiveBackpressurePropagationUnitTests {
+class ReactiveBackpressurePropagationUnitTests {
 
     private CommandHandler commandHandler;
     private EmbeddedChannel embeddedChannel;
@@ -66,7 +64,7 @@ public class ReactiveBackpressurePropagationUnitTests {
     private StatefulConnection statefulConnection;
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
 
         when(clientResources.commandLatencyCollector()).thenReturn(latencyCollector);
         when(clientResources.tracing()).thenReturn(Tracing.disabled());
@@ -84,7 +82,7 @@ public class ReactiveBackpressurePropagationUnitTests {
     }
 
     @Test
-    public void writeCommand() throws Exception {
+    void writeCommand() throws Exception {
 
         Command<String, String, List<String>> lrange = new Command<>(CommandType.LRANGE,
                 new ValueListOutput<>(StringCodec.UTF8));
@@ -136,7 +134,7 @@ public class ReactiveBackpressurePropagationUnitTests {
     }
 
     @Test
-    public void writeCommandAndCancelInTheMiddle() throws Exception {
+    void writeCommandAndCancelInTheMiddle() throws Exception {
 
         Command<String, String, List<String>> lrange = new Command<>(CommandType.LRANGE,
                 new ValueListOutput<>(StringCodec.UTF8));

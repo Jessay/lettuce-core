@@ -26,17 +26,17 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Mark Paluch
  */
-public class AbstractInvocationHandlerUnitTests {
+class AbstractInvocationHandlerUnitTests {
 
     @Test
-    public void shouldHandleInterfaceMethod() {
+    void shouldHandleInterfaceMethod() {
 
         ReturnOne proxy = createProxy();
         assertThat(proxy.returnOne()).isEqualTo(1);
     }
 
     @Test
-    public void shouldBeEqualToSelf() {
+    void shouldBeEqualToSelf() {
 
         ReturnOne proxy1 = createProxy();
         ReturnOne proxy2 = createProxy();
@@ -49,7 +49,7 @@ public class AbstractInvocationHandlerUnitTests {
     }
 
     @Test
-    public void shouldBeNotEqualToProxiesWithDifferentInterfaces() {
+    void shouldBeNotEqualToProxiesWithDifferentInterfaces() {
 
         ReturnOne proxy1 = createProxy();
         Object proxy2 = Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { ReturnOne.class, Collection.class },

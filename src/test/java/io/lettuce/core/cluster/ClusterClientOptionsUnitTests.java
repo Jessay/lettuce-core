@@ -22,10 +22,10 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Mark Paluch
  */
-public class ClusterClientOptionsUnitTests {
+class ClusterClientOptionsUnitTests {
 
     @Test
-    public void testCopy() {
+    void testCopy() {
 
         ClusterClientOptions options = ClusterClientOptions.builder()
                 .autoReconnect(false).requestQueueSize(100).suspendReconnectOnProtocolFailure(true).maxRedirects(1234)

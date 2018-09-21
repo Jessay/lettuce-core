@@ -34,8 +34,8 @@ import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -47,13 +47,13 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import edu.umd.cs.mtc.MultithreadedTestCase;
 import edu.umd.cs.mtc.TestFramework;
-import io.lettuce.test.ConnectionTestUtil;
 import io.lettuce.core.ClientOptions;
 import io.lettuce.core.RedisException;
 import io.lettuce.core.codec.Utf8StringCodec;
 import io.lettuce.core.internal.LettuceFactories;
 import io.lettuce.core.output.StatusOutput;
 import io.lettuce.core.resource.ClientResources;
+import io.lettuce.test.ConnectionTestUtil;
 import io.netty.channel.*;
 import io.netty.handler.codec.EncoderException;
 import io.netty.util.concurrent.ImmediateEventExecutor;
@@ -63,7 +63,7 @@ import io.netty.util.concurrent.ImmediateEventExecutor;
  */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class DefaultEndpointUnitTests {
+class DefaultEndpointUnitTests {
 
     private Queue<RedisCommand<String, String, ?>> queue = LettuceFactories.newConcurrentQueue(1000);
 
@@ -87,7 +87,7 @@ public class DefaultEndpointUnitTests {
     private ChannelPromise promise;
 
     @BeforeAll
-    public static void beforeClass() {
+    static void beforeClass() {
         LoggerContext ctx = (LoggerContext) LogManager.getContext();
         Configuration config = ctx.getConfiguration();
         LoggerConfig loggerConfig = config.getLoggerConfig(CommandHandler.class.getName());
@@ -95,7 +95,7 @@ public class DefaultEndpointUnitTests {
     }
 
     @AfterAll
-    public static void afterClass() {
+    static void afterClass() {
         LoggerContext ctx = (LoggerContext) LogManager.getContext();
         Configuration config = ctx.getConfiguration();
         LoggerConfig loggerConfig = config.getLoggerConfig(CommandHandler.class.getName());
@@ -103,7 +103,7 @@ public class DefaultEndpointUnitTests {
     }
 
     @BeforeEach
-    public void before() {
+    void before() {
 
         promise = new DefaultChannelPromise(channel);
         when(channel.writeAndFlush(any())).thenAnswer(invocation -> {
@@ -133,7 +133,7 @@ public class DefaultEndpointUnitTests {
     }
 
     @Test
-    public void writeConnectedShouldWriteCommandToChannel() {
+    void writeConnectedShouldWriteCommandToChannel() {
 
         when(channel.isActive()).thenReturn(true);
 
@@ -145,7 +145,7 @@ public class DefaultEndpointUnitTests {
     }
 
     @Test
-    public void writeDisconnectedShouldBufferCommands() {
+    void writeDisconnectedShouldBufferCommands() {
 
         sut.write(command);
 
@@ -155,7 +155,7 @@ public class DefaultEndpointUnitTests {
     }
 
     @Test
-    public void notifyChannelActiveActivatesFacade() {
+    void notifyChannelActiveActivatesFacade() {
 
         sut.notifyChannelActive(channel);
 
@@ -163,7 +163,7 @@ public class DefaultEndpointUnitTests {
     }
 
     @Test
-    public void notifyChannelActiveArmsConnectionWatchdog() {
+    void notifyChannelActiveArmsConnectionWatchdog() {
 
         sut.registerConnectionWatchdog(connectionWatchdog);
 
@@ -173,7 +173,7 @@ public class DefaultEndpointUnitTests {
     }
 
     @Test
-    public void notifyChannelInactiveDeactivatesFacade() {
+    void notifyChannelInactiveDeactivatesFacade() {
 
         sut.notifyChannelInactive(channel);
 
@@ -181,7 +181,7 @@ public class DefaultEndpointUnitTests {
     }
 
     @Test
-    public void notifyExceptionShouldStoreException() {
+    void notifyExceptionShouldStoreException() {
 
         sut.notifyException(new IllegalStateException());
         sut.write(command);
@@ -190,7 +190,7 @@ public class DefaultEndpointUnitTests {
     }
 
     @Test
-    public void notifyChannelActiveClearsStoredException() {
+    void notifyChannelActiveClearsStoredException() {
 
         sut.notifyException(new IllegalStateException());
         sut.notifyChannelActive(channel);
@@ -200,7 +200,7 @@ public class DefaultEndpointUnitTests {
     }
 
     @Test
-    public void notifyDrainQueuedCommandsShouldBufferCommands() {
+    void notifyDrainQueuedCommandsShouldBufferCommands() {
 
         Queue<RedisCommand<?, ?, ?>> q = LettuceFactories.newConcurrentQueue(100);
         q.add(command);
@@ -212,7 +212,7 @@ public class DefaultEndpointUnitTests {
     }
 
     @Test
-    public void notifyDrainQueuedCommandsShouldWriteCommands() {
+    void notifyDrainQueuedCommandsShouldWriteCommands() {
 
         when(channel.isActive()).thenReturn(true);
 
@@ -228,7 +228,7 @@ public class DefaultEndpointUnitTests {
     }
 
     @Test
-    public void shouldCancelCommandsOnEncoderException() {
+    void shouldCancelCommandsOnEncoderException() {
 
         when(channel.isActive()).thenReturn(true);
         sut.notifyChannelActive(channel);
@@ -254,7 +254,7 @@ public class DefaultEndpointUnitTests {
     }
 
     @Test
-    public void writeShouldRejectCommandsInDisconnectedState() {
+    void writeShouldRejectCommandsInDisconnectedState() {
 
         sut = new DefaultEndpoint(ClientOptions.builder() //
                 .disconnectedBehavior(ClientOptions.DisconnectedBehavior.REJECT_COMMANDS) //
@@ -269,7 +269,7 @@ public class DefaultEndpointUnitTests {
     }
 
     @Test
-    public void writeShouldRejectCommandsInClosedState() {
+    void writeShouldRejectCommandsInClosedState() {
 
         sut.close();
 
@@ -282,7 +282,7 @@ public class DefaultEndpointUnitTests {
     }
 
     @Test
-    public void writeWithoutAutoReconnectShouldRejectCommandsInDisconnectedState() {
+    void writeWithoutAutoReconnectShouldRejectCommandsInDisconnectedState() {
 
         sut = new DefaultEndpoint(ClientOptions.builder() //
                 .autoReconnect(false) //
@@ -298,7 +298,7 @@ public class DefaultEndpointUnitTests {
     }
 
     @Test
-    public void closeCleansUpResources() {
+    void closeCleansUpResources() {
 
         ChannelFuture future = mock(ChannelFuture.class);
         when(future.isSuccess()).thenReturn(true);
@@ -314,7 +314,7 @@ public class DefaultEndpointUnitTests {
     }
 
     @Test
-    public void closeAllowsOnlyOneCall() {
+    void closeAllowsOnlyOneCall() {
 
         ChannelFuture future = mock(ChannelFuture.class);
         when(future.isSuccess()).thenReturn(true);
@@ -331,7 +331,7 @@ public class DefaultEndpointUnitTests {
     }
 
     @Test
-    public void retryListenerCompletesSuccessfullyAfterDeferredRequeue() {
+    void retryListenerCompletesSuccessfullyAfterDeferredRequeue() {
 
         DefaultEndpoint.RetryListener listener = DefaultEndpoint.RetryListener.newInstance(sut, command);
 
@@ -357,7 +357,7 @@ public class DefaultEndpointUnitTests {
     }
 
     @Test
-    public void retryListenerDoesNotRetryCompletedCommands() {
+    void retryListenerDoesNotRetryCompletedCommands() {
 
         DefaultEndpoint.RetryListener listener = DefaultEndpoint.RetryListener.newInstance(sut, command);
 
@@ -372,7 +372,7 @@ public class DefaultEndpointUnitTests {
     }
 
     @Test
-    public void testMTCConcurrentConcurrentWrite() throws Throwable {
+    void testMTCConcurrentConcurrentWrite() throws Throwable {
         TestFramework.runOnce(new MTCConcurrentConcurrentWrite(command, clientResources));
     }
 
@@ -384,7 +384,7 @@ public class DefaultEndpointUnitTests {
         private final Command<String, String, String> command;
         private TestableEndpoint handler;
 
-        public MTCConcurrentConcurrentWrite(Command<String, String, String> command, ClientResources clientResources) {
+        MTCConcurrentConcurrentWrite(Command<String, String, String> command, ClientResources clientResources) {
 
             this.command = command;
 
@@ -425,7 +425,7 @@ public class DefaultEndpointUnitTests {
          * @param clientOptions client options for this connection, must not be {@literal null}.
          * @param clientResources client resources for this connection, must not be {@literal null}.
          */
-        public TestableEndpoint(ClientOptions clientOptions, ClientResources clientResources) {
+        TestableEndpoint(ClientOptions clientOptions, ClientResources clientResources) {
             super(clientOptions, clientResources);
         }
     }

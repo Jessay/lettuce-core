@@ -28,15 +28,15 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Mark Paluch
  */
-public class LettuceFuturesUnitTests {
+class LettuceFuturesUnitTests {
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         Thread.interrupted();
     }
 
     @Test
-    public void awaitAllShouldThrowRedisCommandExecutionException() {
+    void awaitAllShouldThrowRedisCommandExecutionException() {
 
         CompletableFuture<String> f = new CompletableFuture<>();
         f.completeExceptionally(new RedisCommandExecutionException("error"));
@@ -45,7 +45,7 @@ public class LettuceFuturesUnitTests {
     }
 
     @Test
-    public void awaitAllShouldThrowRedisCommandInterruptedException() {
+    void awaitAllShouldThrowRedisCommandInterruptedException() {
 
         CompletableFuture<String> f = new CompletableFuture<>();
         Thread.currentThread().interrupt();
@@ -54,7 +54,7 @@ public class LettuceFuturesUnitTests {
     }
 
     @Test
-    public void awaitAllShouldSetInterruptedBit() {
+    void awaitAllShouldSetInterruptedBit() {
 
         CompletableFuture<String> f = new CompletableFuture<>();
         Thread.currentThread().interrupt();

@@ -34,7 +34,7 @@ import io.lettuce.core.cluster.api.async.AsyncExecutions;
  */
 public class Futures {
 
-    public static final Duration TIMEOUT = Duration.ofSeconds(5);
+    private static final Duration TIMEOUT = Duration.ofSeconds(5);
 
     /**
      * Check if all {@code futures} are {@link Future#isDone() completed}.
@@ -111,7 +111,7 @@ public class Futures {
      * @param future
      * @param <T>
      */
-    public static <T> T get(CompletableFuture<T> future) {
+    private static <T> T get(CompletableFuture<T> future) {
         return get((Future<T>) future);
     }
 

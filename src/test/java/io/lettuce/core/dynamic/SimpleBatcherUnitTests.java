@@ -23,10 +23,8 @@ import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import io.lettuce.core.api.StatefulConnection;
 import io.lettuce.core.dynamic.batch.CommandBatching;
@@ -39,13 +37,13 @@ import io.lettuce.core.protocol.RedisCommand;
  * @author Mark Paluch
  */
 @ExtendWith(MockitoExtension.class)
-public class SimpleBatcherUnitTests {
+class SimpleBatcherUnitTests {
 
     @Mock
     private StatefulConnection<Object, Object> connection;
 
     @Test
-    public void shouldBatchWithDefaultSize() {
+    void shouldBatchWithDefaultSize() {
 
         RedisCommand<Object, Object, Object> c1 = createCommand();
         RedisCommand<Object, Object, Object> c2 = createCommand();
@@ -69,7 +67,7 @@ public class SimpleBatcherUnitTests {
     }
 
     @Test
-    public void shouldBatchWithoutSize() {
+    void shouldBatchWithoutSize() {
 
         RedisCommand<Object, Object, Object> c1 = createCommand();
         RedisCommand<Object, Object, Object> c2 = createCommand();
@@ -86,7 +84,7 @@ public class SimpleBatcherUnitTests {
     }
 
     @Test
-    public void shouldBatchWithBatchControlQueue() {
+    void shouldBatchWithBatchControlQueue() {
 
         RedisCommand<Object, Object, Object> c1 = createCommand();
         RedisCommand<Object, Object, Object> c2 = createCommand();
@@ -105,7 +103,7 @@ public class SimpleBatcherUnitTests {
     }
 
     @Test
-    public void shouldBatchWithBatchControlQueueOverqueue() {
+    void shouldBatchWithBatchControlQueueOverqueue() {
 
         RedisCommand<Object, Object, Object> c1 = createCommand();
         RedisCommand<Object, Object, Object> c2 = createCommand();
@@ -128,7 +126,7 @@ public class SimpleBatcherUnitTests {
     }
 
     @Test
-    public void shouldBatchWithBatchControlFlush() {
+    void shouldBatchWithBatchControlFlush() {
 
         RedisCommand<Object, Object, Object> c1 = createCommand();
         RedisCommand<Object, Object, Object> c2 = createCommand();

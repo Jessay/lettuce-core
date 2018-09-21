@@ -30,12 +30,12 @@ import io.netty.buffer.Unpooled;
 /**
  * @author Mark Paluch
  */
-public class CommandArgsUnitTests {
+class CommandArgsUnitTests {
 
     private Utf8StringCodec codec = new Utf8StringCodec();
 
     @Test
-    public void getFirstIntegerShouldReturnNull()  {
+    void getFirstIntegerShouldReturnNull() {
 
         CommandArgs<String, String> args = new CommandArgs<>(codec).add("foo");
 
@@ -43,7 +43,7 @@ public class CommandArgsUnitTests {
     }
 
     @Test
-    public void getFirstIntegerShouldReturnFirstInteger()  {
+    void getFirstIntegerShouldReturnFirstInteger() {
 
         CommandArgs<String, String> args = new CommandArgs<>(codec).add(1L).add(127).add(128).add(129).add(0).add(-1);
 
@@ -51,7 +51,7 @@ public class CommandArgsUnitTests {
     }
 
     @Test
-    public void getFirstIntegerShouldReturnFirstNegativeInteger()  {
+    void getFirstIntegerShouldReturnFirstNegativeInteger() {
 
         CommandArgs<String, String> args = new CommandArgs<>(codec).add(-1L).add(-127).add(-128).add(-129);
 
@@ -59,7 +59,7 @@ public class CommandArgsUnitTests {
     }
 
     @Test
-    public void getFirstStringShouldReturnNull()  {
+    void getFirstStringShouldReturnNull() {
 
         CommandArgs<String, String> args = new CommandArgs<>(codec).add(1);
 
@@ -67,7 +67,7 @@ public class CommandArgsUnitTests {
     }
 
     @Test
-    public void getFirstStringShouldReturnFirstString()  {
+    void getFirstStringShouldReturnFirstString() {
 
         CommandArgs<String, String> args = new CommandArgs<>(codec).add("one").add("two");
 
@@ -75,7 +75,7 @@ public class CommandArgsUnitTests {
     }
 
     @Test
-    public void getFirstCharArrayShouldReturnCharArray()  {
+    void getFirstCharArrayShouldReturnCharArray() {
 
         CommandArgs<String, String> args = new CommandArgs<>(codec).add(1L).add("two".toCharArray());
 
@@ -83,7 +83,7 @@ public class CommandArgsUnitTests {
     }
 
     @Test
-    public void getFirstCharArrayShouldReturnNull()  {
+    void getFirstCharArrayShouldReturnNull() {
 
         CommandArgs<String, String> args = new CommandArgs<>(codec).add(1L);
 
@@ -91,7 +91,7 @@ public class CommandArgsUnitTests {
     }
 
     @Test
-    public void getFirstEncodedKeyShouldReturnNull()  {
+    void getFirstEncodedKeyShouldReturnNull() {
 
         CommandArgs<String, String> args = new CommandArgs<>(codec).add(1L);
 
@@ -99,7 +99,7 @@ public class CommandArgsUnitTests {
     }
 
     @Test
-    public void getFirstEncodedKeyShouldReturnFirstKey()  {
+    void getFirstEncodedKeyShouldReturnFirstKey() {
 
         CommandArgs<String, String> args = new CommandArgs<>(codec).addKey("one").addKey("two");
 
@@ -107,7 +107,7 @@ public class CommandArgsUnitTests {
     }
 
     @Test
-    public void addValues()  {
+    void addValues() {
 
         CommandArgs<String, String> args = new CommandArgs<>(codec).addValues(Arrays.asList("1", "2"));
 
@@ -121,7 +121,7 @@ public class CommandArgsUnitTests {
     }
 
     @Test
-    public void addByte()  {
+    void addByte() {
 
         CommandArgs<String, String> args = new CommandArgs<>(codec).add("one".getBytes());
 
@@ -135,7 +135,7 @@ public class CommandArgsUnitTests {
     }
 
     @Test
-    public void addByteUsingByteCodec()  {
+    void addByteUsingByteCodec() {
 
         CommandArgs<byte[], byte[]> args = new CommandArgs<>(ByteArrayCodec.INSTANCE).add("one".getBytes());
 
@@ -149,7 +149,7 @@ public class CommandArgsUnitTests {
     }
 
     @Test
-    public void addValueUsingByteCodec()  {
+    void addValueUsingByteCodec() {
 
         CommandArgs<byte[], byte[]> args = new CommandArgs<>(ByteArrayCodec.INSTANCE).addValue("one".getBytes());
 
@@ -163,7 +163,7 @@ public class CommandArgsUnitTests {
     }
 
     @Test
-    public void addKeyUsingByteCodec()  {
+    void addKeyUsingByteCodec() {
 
         CommandArgs<byte[], byte[]> args = new CommandArgs<>(ByteArrayCodec.INSTANCE).addValue("one".getBytes());
 

@@ -41,18 +41,18 @@ import io.lettuce.test.settings.TestSettings;
 @SlowTests
 public class RedisClusterStressScenariosTest extends TestSupport {
 
-    public static final String host = TestSettings.hostAddr();
+    private static final String host = TestSettings.hostAddr();
 
-    protected static RedisClient client;
-    protected static RedisClusterClient clusterClient;
+    private static RedisClient client;
+    private static RedisClusterClient clusterClient;
 
-    protected Logger log = LogManager.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
-    protected StatefulRedisConnection<String, String> redis5;
-    protected StatefulRedisConnection<String, String> redis6;
+    private StatefulRedisConnection<String, String> redis5;
+    private StatefulRedisConnection<String, String> redis6;
 
-    protected RedisCommands<String, String> redissync5;
-    protected RedisCommands<String, String> redissync6;
+    private RedisCommands<String, String> redissync5;
+    private RedisCommands<String, String> redissync6;
 
     protected String key = "key";
     protected String value = "value";

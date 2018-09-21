@@ -32,18 +32,18 @@ import io.lettuce.core.api.sync.RedisCommands;
  * @author Mark Paluch
  * @since 3.0
  */
-public class SyncAsyncApiConvergenceTest {
+class SyncAsyncApiConvergenceTest {
 
     @SuppressWarnings("rawtypes")
     private Class<RedisAsyncCommands> asyncClass = RedisAsyncCommands.class;
 
-    public static Stream<Method> parameters() {
+    static Stream<Method> parameters() {
         return Arrays.stream(RedisCommands.class.getMethods());
     }
 
     @ParameterizedTest
     @MethodSource("parameters")
-    public void testMethodPresentOnAsyncApi(Method syncMethod) throws Exception {
+    void testMethodPresentOnAsyncApi(Method syncMethod) throws Exception {
 
         Method method = RedisAsyncCommands.class.getMethod(syncMethod.getName(), syncMethod.getParameterTypes());
         assertThat(method).isNotNull();
@@ -51,7 +51,7 @@ public class SyncAsyncApiConvergenceTest {
 
     @ParameterizedTest
     @MethodSource("parameters")
-    public void testMethodPresentOnReactiveApi(Method syncMethod) throws Exception {
+    void testMethodPresentOnReactiveApi(Method syncMethod) throws Exception {
 
         Method method = RedisReactiveCommands.class.getMethod(syncMethod.getName(), syncMethod.getParameterTypes());
         assertThat(method).isNotNull();
@@ -59,7 +59,7 @@ public class SyncAsyncApiConvergenceTest {
 
     @ParameterizedTest
     @MethodSource("parameters")
-    public void testSameResultType(Method syncMethod) throws Exception {
+    void testSameResultType(Method syncMethod) throws Exception {
 
         Method method = asyncClass.getMethod(syncMethod.getName(), syncMethod.getParameterTypes());
         Type returnType = method.getGenericReturnType();

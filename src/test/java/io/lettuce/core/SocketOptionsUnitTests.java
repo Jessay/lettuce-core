@@ -25,15 +25,15 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Mark Paluch
  */
-public class SocketOptionsUnitTests {
+class SocketOptionsUnitTests {
 
     @Test
-    public void testNew() {
+    void testNew() {
         checkAssertions(SocketOptions.create());
     }
 
     @Test
-    public void testBuilder() {
+    void testBuilder() {
 
         SocketOptions sut = SocketOptions.builder().connectTimeout(1, TimeUnit.MINUTES).keepAlive(true).tcpNoDelay(true)
                 .build();
@@ -44,11 +44,11 @@ public class SocketOptionsUnitTests {
     }
 
     @Test
-    public void testCopy() {
+    void testCopy() {
         checkAssertions(SocketOptions.copyOf(SocketOptions.builder().build()));
     }
 
-    protected void checkAssertions(SocketOptions sut) {
+    void checkAssertions(SocketOptions sut) {
         assertThat(sut.isKeepAlive()).isEqualTo(false);
         assertThat(sut.isTcpNoDelay()).isEqualTo(false);
         assertThat(sut.getConnectTimeout()).isEqualTo(Duration.ofSeconds(10));

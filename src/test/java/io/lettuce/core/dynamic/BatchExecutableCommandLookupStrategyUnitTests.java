@@ -42,7 +42,7 @@ import io.lettuce.core.dynamic.output.CommandOutputFactoryResolver;
  */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class BatchExecutableCommandLookupStrategyUnitTests {
+class BatchExecutableCommandLookupStrategyUnitTests {
 
     @Mock
     private RedisCommandsMetadata metadata;
@@ -58,7 +58,7 @@ public class BatchExecutableCommandLookupStrategyUnitTests {
     private BatchExecutableCommandLookupStrategy sut;
 
     @BeforeEach
-    public void before() {
+    void before() {
         sut = new BatchExecutableCommandLookupStrategy(Collections.singletonList(StringCodec.UTF8), outputFactoryResolver,
                 CommandMethodVerifier.NONE, Batcher.NONE, connection);
 
@@ -66,7 +66,7 @@ public class BatchExecutableCommandLookupStrategyUnitTests {
     }
 
     @Test
-    public void shouldCreateAsyncBatchCommand() throws Exception {
+    void shouldCreateAsyncBatchCommand() throws Exception {
 
         ExecutableCommand result = sut.resolveCommandMethod(getMethod("async"), metadata);
 
@@ -74,7 +74,7 @@ public class BatchExecutableCommandLookupStrategyUnitTests {
     }
 
     @Test
-    public void shouldCreateSyncBatchCommand() throws Exception {
+    void shouldCreateSyncBatchCommand() throws Exception {
 
         ExecutableCommand result = sut.resolveCommandMethod(getMethod("justVoid"), metadata);
 
@@ -82,13 +82,13 @@ public class BatchExecutableCommandLookupStrategyUnitTests {
     }
 
     @Test
-    public void shouldNotAllowTimeoutParameter()  {
+    void shouldNotAllowTimeoutParameter() {
         assertThatThrownBy(() -> sut.resolveCommandMethod(getMethod("withTimeout", String.class, Timeout.class), metadata))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void shouldNotAllowSynchronousReturnTypes() {
+    void shouldNotAllowSynchronousReturnTypes() {
         assertThatThrownBy(() -> sut.resolveCommandMethod(getMethod("withReturnType"), metadata)).isInstanceOf(
                 IllegalArgumentException.class);
     }
@@ -97,7 +97,7 @@ public class BatchExecutableCommandLookupStrategyUnitTests {
         return DeclaredCommandMethod.create(BatchingCommands.class.getDeclaredMethod(name, parameterTypes));
     }
 
-    static interface BatchingCommands {
+    private static interface BatchingCommands {
 
         Future<String> async();
 

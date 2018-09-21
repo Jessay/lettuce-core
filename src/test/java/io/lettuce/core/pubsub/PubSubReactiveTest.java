@@ -32,11 +32,7 @@ import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-import io.lettuce.test.Delay;
-import io.lettuce.test.resource.TestClientResources;
-import io.lettuce.test.Wait;
 import io.lettuce.core.AbstractRedisClientTest;
-import io.lettuce.test.resource.FastShutdown;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.internal.LettuceFactories;
@@ -44,11 +40,15 @@ import io.lettuce.core.pubsub.api.reactive.ChannelMessage;
 import io.lettuce.core.pubsub.api.reactive.PatternMessage;
 import io.lettuce.core.pubsub.api.reactive.RedisPubSubReactiveCommands;
 import io.lettuce.core.pubsub.api.sync.RedisPubSubCommands;
+import io.lettuce.test.Delay;
+import io.lettuce.test.Wait;
+import io.lettuce.test.resource.FastShutdown;
+import io.lettuce.test.resource.TestClientResources;
 
 /**
  * @author Mark Paluch
  */
-public class PubSubReactiveTest extends AbstractRedisClientTest implements RedisPubSubListener<String, String> {
+class PubSubReactiveTest extends AbstractRedisClientTest implements RedisPubSubListener<String, String> {
 
     private RedisPubSubReactiveCommands<String, String> pubsub;
     private RedisPubSubReactiveCommands<String, String> pubsub2;
@@ -63,7 +63,7 @@ public class PubSubReactiveTest extends AbstractRedisClientTest implements Redis
     private String message = "msg!";
 
     @BeforeEach
-    public void openPubSubConnection() {
+    void openPubSubConnection() {
 
         pubsub = client.connectPubSub().reactive();
         pubsub2 = client.connectPubSub().reactive();
@@ -75,13 +75,13 @@ public class PubSubReactiveTest extends AbstractRedisClientTest implements Redis
     }
 
     @AfterEach
-    public void closePubSubConnection() {
+    void closePubSubConnection() {
         pubsub.getStatefulConnection().close();
         pubsub2.getStatefulConnection().close();
     }
 
     @Test
-    public void observeChannels() throws Exception {
+    void observeChannels() throws Exception {
 
         block(pubsub.subscribe(channel));
 
@@ -107,7 +107,7 @@ public class PubSubReactiveTest extends AbstractRedisClientTest implements Redis
     }
 
     @Test
-    public void observeChannelsUnsubscribe() {
+    void observeChannelsUnsubscribe() {
 
         block(pubsub.subscribe(channel));
 
@@ -123,7 +123,7 @@ public class PubSubReactiveTest extends AbstractRedisClientTest implements Redis
     }
 
     @Test
-    public void observePatterns() throws Exception {
+    void observePatterns() throws Exception {
 
         block(pubsub.psubscribe(pattern));
 
@@ -145,7 +145,7 @@ public class PubSubReactiveTest extends AbstractRedisClientTest implements Redis
     }
 
     @Test
-    public void observePatternsWithUnsubscribe() {
+    void observePatternsWithUnsubscribe() {
 
         block(pubsub.psubscribe(pattern));
 
@@ -171,7 +171,7 @@ public class PubSubReactiveTest extends AbstractRedisClientTest implements Redis
     }
 
     @Test
-    public void message() throws Exception {
+    void message() throws Exception {
 
         block(pubsub.subscribe(channel));
         assertThat(channels.take()).isEqualTo(channel);
@@ -182,7 +182,7 @@ public class PubSubReactiveTest extends AbstractRedisClientTest implements Redis
     }
 
     @Test
-    public void pmessage() throws Exception {
+    void pmessage() throws Exception {
 
         block(pubsub.psubscribe(pattern));
         assertThat(patterns.take()).isEqualTo(pattern);
@@ -199,7 +199,7 @@ public class PubSubReactiveTest extends AbstractRedisClientTest implements Redis
     }
 
     @Test
-    public void psubscribe() throws Exception {
+    void psubscribe() throws Exception {
 
         block(pubsub.psubscribe(pattern));
 
@@ -208,12 +208,12 @@ public class PubSubReactiveTest extends AbstractRedisClientTest implements Redis
     }
 
     @Test
-    public void pubsubEmptyChannels() {
+    void pubsubEmptyChannels() {
         assertThatThrownBy(() -> pubsub.subscribe()).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void pubsubChannels() {
+    void pubsubChannels() {
 
         block(pubsub.subscribe(channel));
         List<String> result = block(pubsub2.pubsubChannels().collectList());
@@ -221,7 +221,7 @@ public class PubSubReactiveTest extends AbstractRedisClientTest implements Redis
     }
 
     @Test
-    public void pubsubMultipleChannels() {
+    void pubsubMultipleChannels() {
 
         StepVerifier.create(pubsub.subscribe(channel, "channel1", "channel3")).verifyComplete();
 
@@ -230,7 +230,7 @@ public class PubSubReactiveTest extends AbstractRedisClientTest implements Redis
     }
 
     @Test
-    public void pubsubChannelsWithArg() {
+    void pubsubChannelsWithArg() {
 
         StepVerifier.create(pubsub.subscribe(channel)).verifyComplete();
         Wait.untilTrue(() -> mono(pubsub2.pubsubChannels(pattern).filter(s -> channel.equals(s))) != null).waitOrTimeout();
@@ -240,7 +240,7 @@ public class PubSubReactiveTest extends AbstractRedisClientTest implements Redis
     }
 
     @Test
-    public void pubsubNumsub() {
+    void pubsubNumsub() {
 
         StepVerifier.create(pubsub.subscribe(channel)).verifyComplete();
 
@@ -252,7 +252,7 @@ public class PubSubReactiveTest extends AbstractRedisClientTest implements Redis
     }
 
     @Test
-    public void pubsubNumpat() {
+    void pubsubNumpat() {
 
         Wait.untilEquals(0L, () -> block(pubsub2.pubsubNumpat())).waitOrTimeout();
 
@@ -264,7 +264,7 @@ public class PubSubReactiveTest extends AbstractRedisClientTest implements Redis
     }
 
     @Test
-    public void punsubscribe() throws Exception {
+    void punsubscribe() throws Exception {
 
         StepVerifier.create(pubsub.punsubscribe(pattern)).verifyComplete();
         assertThat(patterns.take()).isEqualTo(pattern);
@@ -273,7 +273,7 @@ public class PubSubReactiveTest extends AbstractRedisClientTest implements Redis
     }
 
     @Test
-    public void subscribe() throws Exception {
+    void subscribe() throws Exception {
 
         StepVerifier.create(pubsub.subscribe(channel)).verifyComplete();
         assertThat(channels.take()).isEqualTo(channel);
@@ -281,7 +281,7 @@ public class PubSubReactiveTest extends AbstractRedisClientTest implements Redis
     }
 
     @Test
-    public void unsubscribe() throws Exception {
+    void unsubscribe() throws Exception {
 
         StepVerifier.create(pubsub.unsubscribe(channel)).verifyComplete();
         assertThat(channels.take()).isEqualTo(channel);
@@ -295,7 +295,7 @@ public class PubSubReactiveTest extends AbstractRedisClientTest implements Redis
     }
 
     @Test
-    public void pubsubCloseOnClientShutdown() {
+    void pubsubCloseOnClientShutdown() {
 
         RedisClient redisClient = RedisClient.create(TestClientResources.get(), RedisURI.Builder.redis(host, port).build());
 
@@ -306,7 +306,7 @@ public class PubSubReactiveTest extends AbstractRedisClientTest implements Redis
     }
 
     @Test
-    public void utf8Channel() throws Exception {
+    void utf8Channel() throws Exception {
 
         String channel = "channelλ";
         String message = "αβγ";
@@ -320,7 +320,7 @@ public class PubSubReactiveTest extends AbstractRedisClientTest implements Redis
     }
 
     @Test
-    public void resubscribeChannelsOnReconnect() throws Exception {
+    void resubscribeChannelsOnReconnect() throws Exception {
 
         StepVerifier.create(pubsub.subscribe(channel)).verifyComplete();
         assertThat(channels.take()).isEqualTo(channel);
@@ -338,7 +338,7 @@ public class PubSubReactiveTest extends AbstractRedisClientTest implements Redis
     }
 
     @Test
-    public void resubscribePatternsOnReconnect() throws Exception {
+    void resubscribePatternsOnReconnect() throws Exception {
 
         StepVerifier.create(pubsub.psubscribe(pattern)).verifyComplete();
         assertThat(patterns.take()).isEqualTo(pattern);
@@ -357,7 +357,7 @@ public class PubSubReactiveTest extends AbstractRedisClientTest implements Redis
     }
 
     @Test
-    public void adapter() throws Exception {
+    void adapter() throws Exception {
 
         final BlockingQueue<Long> localCounts = LettuceFactories.newBlockingQueue();
 
@@ -389,7 +389,7 @@ public class PubSubReactiveTest extends AbstractRedisClientTest implements Redis
     }
 
     @Test
-    public void removeListener() throws Exception {
+    void removeListener() throws Exception {
 
         StepVerifier.create(pubsub.subscribe(channel)).verifyComplete();
         assertThat(channels.take()).isEqualTo(channel);
@@ -444,15 +444,15 @@ public class PubSubReactiveTest extends AbstractRedisClientTest implements Redis
         counts.add(count);
     }
 
-    protected <T> T block(Mono<T> mono) {
+    <T> T block(Mono<T> mono) {
         return mono.block();
     }
 
-    protected <T> T mono(Flux<T> flux) {
+    <T> T mono(Flux<T> flux) {
         return flux.next().block();
     }
 
-    protected <T> List<T> all(Flux<T> flux) {
+    <T> List<T> all(Flux<T> flux) {
         return flux.collectList().block();
     }
 }

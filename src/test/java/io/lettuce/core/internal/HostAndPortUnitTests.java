@@ -23,10 +23,10 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Mark Paluch
  */
-public class HostAndPortUnitTests {
+class HostAndPortUnitTests {
 
     @Test
-    public void testFromStringWellFormed() {
+    void testFromStringWellFormed() {
         // Well-formed inputs.
         checkFromStringCase("google.com", 80, "google.com", 80, false);
         checkFromStringCase("google.com", 80, "google.com", 80, false);
@@ -37,7 +37,7 @@ public class HostAndPortUnitTests {
     }
 
     @Test
-    public void testFromStringBadDefaultPort() {
+    void testFromStringBadDefaultPort() {
         // Well-formed strings with bad default ports.
         checkFromStringCase("gmail.com:81", -1, "gmail.com", 81, true);
         checkFromStringCase("192.0.2.2:83", -1, "192.0.2.2", 83, true);
@@ -51,7 +51,7 @@ public class HostAndPortUnitTests {
     }
 
     @Test
-    public void testFromStringUnusedDefaultPort() {
+    void testFromStringUnusedDefaultPort() {
         // Default port, but unused.
         checkFromStringCase("gmail.com:81", 77, "gmail.com", 81, true);
         checkFromStringCase("192.0.2.2:83", 77, "192.0.2.2", 83, true);
@@ -59,7 +59,7 @@ public class HostAndPortUnitTests {
     }
 
     @Test
-    public void testFromStringBadPort() {
+    void testFromStringBadPort() {
         // Out-of-range ports.
         checkFromStringCase("google.com:65536", 1, null, 99, false);
         checkFromStringCase("google.com:9999999999", 1, null, 99, false);
@@ -73,7 +73,7 @@ public class HostAndPortUnitTests {
     }
 
     @Test
-    public void testFromStringUnparseableNonsense() {
+    void testFromStringUnparseableNonsense() {
         // Some nonsense that causes parse failures.
         checkFromStringCase("[goo.gl]", 1, null, 99, false);
         checkFromStringCase("[goo.gl]:80", 1, null, 99, false);
@@ -84,7 +84,7 @@ public class HostAndPortUnitTests {
     }
 
     @Test
-    public void testFromStringParseableNonsense() {
+    void testFromStringParseableNonsense() {
         // Examples of nonsense that gets through.
         checkFromStringCase("[[:]]", 86, "[:]", 86, false);
         checkFromStringCase("x:y:z", 87, "x:y:z", 87, false);
@@ -95,7 +95,7 @@ public class HostAndPortUnitTests {
     }
 
     @Test
-    public void shouldCreateHostAndPortFromParts() {
+    void shouldCreateHostAndPortFromParts() {
         HostAndPort hp = HostAndPort.of("gmail.com", 81);
         assertThat(hp.getHostText()).isEqualTo("gmail.com");
         assertThat(hp.hasPort()).isTrue();
@@ -115,7 +115,7 @@ public class HostAndPortUnitTests {
     }
 
     @Test
-    public void shouldCompare() {
+    void shouldCompare() {
         HostAndPort hp1 = HostAndPort.parse("foo::123");
         HostAndPort hp2 = HostAndPort.parse("foo::123");
         HostAndPort hp3 = HostAndPort.parse("[foo::124]");
@@ -138,7 +138,7 @@ public class HostAndPortUnitTests {
     }
 
     @Test
-    public void shouldApplyCompatibilityParsing() throws Exception {
+    void shouldApplyCompatibilityParsing() throws Exception {
 
         checkFromCompatCase("affe::123:6379", "affe::123", 6379);
         checkFromCompatCase("1:2:3:4:5:6:7:8:6379", "1:2:3:4:5:6:7:8", 6379);

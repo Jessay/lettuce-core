@@ -19,9 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Fail.fail;
 
-import org.junit.Rule;
 import org.junit.jupiter.api.Test;
-import org.junit.rules.ExpectedException;
 
 import io.lettuce.core.AbstractRedisClientTest;
 import io.lettuce.core.api.sync.RedisHLLCommands;
@@ -33,7 +31,7 @@ public class HLLCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void pfadd() {
+    void pfadd() {
 
         assertThat(commands().pfadd(key, value, value)).isEqualTo(1);
         assertThat(commands().pfadd(key, value, value)).isEqualTo(0);
@@ -41,12 +39,12 @@ public class HLLCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void pfaddNoValues() {
+    void pfaddNoValues() {
         assertThatThrownBy(() -> commands().pfadd(key)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void pfaddNullValues() {
+    void pfaddNullValues() {
         try {
             commands().pfadd(key, null);
             fail("Missing IllegalArgumentException");
@@ -60,7 +58,7 @@ public class HLLCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void pfmerge() {
+    void pfmerge() {
         commands().pfadd(key, value);
         commands().pfadd("key2", "value2");
         commands().pfadd("key3", "value3");
@@ -77,12 +75,12 @@ public class HLLCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void pfmergeNoKeys() {
+    void pfmergeNoKeys() {
         assertThatThrownBy(() -> commands().pfmerge(key)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void pfcount() {
+    void pfcount() {
         commands().pfadd(key, value);
         commands().pfadd("key2", "value2");
         assertThat(commands().pfcount(key)).isEqualTo(1);
@@ -90,12 +88,12 @@ public class HLLCommandTest extends AbstractRedisClientTest {
     }
 
     @Test
-    public void pfcountNoKeys() {
+    void pfcountNoKeys() {
         assertThatThrownBy(() -> commands().pfcount()).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void pfaddPfmergePfCount() {
+    void pfaddPfmergePfCount() {
 
         commands().pfadd("key2660", "rand", "mat");
         commands().pfadd("key7112", "mat", "perrin");

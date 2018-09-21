@@ -24,25 +24,25 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
 
-import io.lettuce.test.resource.TestClientResources;
-import io.lettuce.test.Wait;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.resource.ClientResources;
 import io.lettuce.core.resource.DefaultClientResources;
 import io.lettuce.core.resource.DefaultEventLoopGroupProvider;
+import io.lettuce.test.Wait;
 import io.lettuce.test.resource.FastShutdown;
+import io.lettuce.test.resource.TestClientResources;
 import io.lettuce.test.settings.TestSettings;
 import io.netty.util.concurrent.EventExecutorGroup;
 
 /**
  * @author Mark Paluch
  */
-public class RedisClientIntegrationTests extends TestSupport {
+class RedisClientIntegrationTests extends TestSupport {
 
     private final ClientResources clientResources = TestClientResources.get();
 
     @Test
-    public void shouldNotifyListener() {
+    void shouldNotifyListener() {
 
         final TestConnectionListener listener = new TestConnectionListener();
 
@@ -74,7 +74,7 @@ public class RedisClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void shouldNotNotifyListenerAfterRemoval() {
+    void shouldNotNotifyListenerAfterRemoval() {
 
         final TestConnectionListener removedListener = new TestConnectionListener();
         final TestConnectionListener retainedListener = new TestConnectionListener();
@@ -100,7 +100,7 @@ public class RedisClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void reuseClientConnections() throws Exception {
+    void reuseClientConnections() throws Exception {
 
         // given
         DefaultClientResources clientResources = DefaultClientResources.create();
@@ -126,7 +126,7 @@ public class RedisClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void reuseClientConnectionsShutdownTwoClients() throws Exception {
+    void reuseClientConnectionsShutdownTwoClients() throws Exception {
 
         // given
         DefaultClientResources clientResources = DefaultClientResources.create();
@@ -156,7 +156,7 @@ public class RedisClientIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void managedClientResources() throws Exception {
+    void managedClientResources() throws Exception {
 
         // given
         RedisClient redisClient1 = RedisClient.create(RedisURI.create(TestSettings.host(), TestSettings.port()));

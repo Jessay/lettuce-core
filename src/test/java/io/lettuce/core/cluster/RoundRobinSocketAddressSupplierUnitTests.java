@@ -22,13 +22,11 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import io.lettuce.core.RedisURI;
@@ -42,7 +40,7 @@ import io.lettuce.core.resource.SocketAddressResolver;
  * @author Mark Paluch
  */
 @ExtendWith(MockitoExtension.class)
-public class RoundRobinSocketAddressSupplierUnitTests {
+class RoundRobinSocketAddressSupplierUnitTests {
 
     private static RedisURI hap1 = new RedisURI("127.0.0.1", 1, Duration.ofSeconds(1));
     private static RedisURI hap2 = new RedisURI("127.0.0.1", 2, Duration.ofSeconds(1));
@@ -54,7 +52,7 @@ public class RoundRobinSocketAddressSupplierUnitTests {
     private ClientResources clientResourcesMock;
 
     @BeforeAll
-    public static void beforeClass() {
+    static void beforeClass() {
 
         hap1.getResolvedAddress();
         hap2.getResolvedAddress();
@@ -62,7 +60,7 @@ public class RoundRobinSocketAddressSupplierUnitTests {
     }
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
 
         when(clientResourcesMock.socketAddressResolver()).thenReturn(SocketAddressResolver.create(DnsResolvers.JVM_DEFAULT));
 
@@ -75,7 +73,7 @@ public class RoundRobinSocketAddressSupplierUnitTests {
     }
 
     @Test
-    public void noOffset() {
+    void noOffset() {
 
         RoundRobinSocketAddressSupplier sut = new RoundRobinSocketAddressSupplier(partitions,
                 redisClusterNodes -> redisClusterNodes, clientResourcesMock);
@@ -89,7 +87,7 @@ public class RoundRobinSocketAddressSupplierUnitTests {
     }
 
     @Test
-    public void partitionTableChangesNewNode() {
+    void partitionTableChangesNewNode() {
 
         RoundRobinSocketAddressSupplier sut = new RoundRobinSocketAddressSupplier(partitions,
                 redisClusterNodes -> redisClusterNodes, clientResourcesMock);
@@ -107,7 +105,7 @@ public class RoundRobinSocketAddressSupplierUnitTests {
     }
 
     @Test
-    public void partitionTableChangesNodeRemoved() {
+    void partitionTableChangesNodeRemoved() {
 
         RoundRobinSocketAddressSupplier sut = new RoundRobinSocketAddressSupplier(partitions,
                 redisClusterNodes -> redisClusterNodes, clientResourcesMock);

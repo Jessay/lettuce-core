@@ -33,13 +33,13 @@ public class ServerReactiveCommandTest extends ServerCommandTest {
     private RedisReactiveCommands<String, String> reactive;
 
     @BeforeEach
-    public void openConnection() throws Exception {
+    void openConnection() throws Exception {
         super.openConnection();
         reactive = redis.getStatefulConnection().reactive();
     }
 
     @Override
-    protected RedisCommands<String, String> connect() {
+    RedisCommands<String, String> connect() {
         return ReactiveSyncInvocationHandler.sync(client.connect());
     }
 
@@ -47,31 +47,31 @@ public class ServerReactiveCommandTest extends ServerCommandTest {
      * Luckily these commands do not destroy anything in contrast to sync/async.
      */
     @Test
-    public void shutdown() {
+    void shutdown() {
         reactive.shutdown(true);
         assertThat(reactive.getStatefulConnection().isOpen()).isTrue();
     }
 
     @Test
-    public void debugOom() {
+    void debugOom() {
         reactive.debugOom();
         assertThat(reactive.getStatefulConnection().isOpen()).isTrue();
     }
 
     @Test
-    public void debugSegfault() {
+    void debugSegfault() {
         reactive.debugSegfault();
         assertThat(reactive.getStatefulConnection().isOpen()).isTrue();
     }
 
     @Test
-    public void debugRestart() {
+    void debugRestart() {
         reactive.debugRestart(1L);
         assertThat(reactive.getStatefulConnection().isOpen()).isTrue();
     }
 
     @Test
-    public void migrate() {
+    void migrate() {
         reactive.migrate("host", 1234, "key", 1, 10);
         assertThat(reactive.getStatefulConnection().isOpen()).isTrue();
     }

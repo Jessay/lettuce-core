@@ -33,12 +33,12 @@ import io.netty.util.concurrent.ImmediateEventExecutor;
 /**
  * @author Mark Paluch
  */
-public class SingleThreadedReactiveClusterClientTest {
+class SingleThreadedReactiveClusterClientTest {
 
-    RedisClusterClient client;
+    private RedisClusterClient client;
 
     @BeforeEach
-    public void before() {
+    void before() {
 
         DefaultClientResources clientResources = DefaultClientResources.builder()
                 .eventExecutorGroup(ImmediateEventExecutor.INSTANCE)
@@ -49,14 +49,14 @@ public class SingleThreadedReactiveClusterClientTest {
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
 
         client.shutdown();
         client.getResources().shutdown();
     }
 
     @Test
-    public void shouldPropagateAsynchronousConnections() {
+    void shouldPropagateAsynchronousConnections() {
 
         StatefulRedisClusterConnection<String, String> connect = client.connect();
         connect.sync().flushall();

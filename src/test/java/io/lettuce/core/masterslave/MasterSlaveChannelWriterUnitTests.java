@@ -28,9 +28,7 @@ import java.util.concurrent.CompletableFuture;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -48,7 +46,7 @@ import io.lettuce.core.resource.ClientResources;
  */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class MasterSlaveChannelWriterUnitTests {
+class MasterSlaveChannelWriterUnitTests {
 
     @Mock
     private MasterSlaveConnectionProvider<String, String> connectionProvider;
@@ -60,7 +58,7 @@ public class MasterSlaveChannelWriterUnitTests {
     private StatefulRedisConnection<String, String> connection;
 
     @Test
-    public void shouldReturnIntentForWriteCommand() {
+    void shouldReturnIntentForWriteCommand() {
 
         RedisCommand<String, String, String> set = new Command<>(CommandType.SET, null);
         RedisCommand<String, String, String> mset = new Command<>(CommandType.MSET, null);
@@ -73,14 +71,14 @@ public class MasterSlaveChannelWriterUnitTests {
     }
 
     @Test
-    public void shouldReturnDefaultIntentForNoCommands() {
+    void shouldReturnDefaultIntentForNoCommands() {
 
         assertThat(MasterSlaveChannelWriter.getIntent(Collections.emptyList())).isEqualTo(
                 MasterSlaveConnectionProvider.Intent.WRITE);
     }
 
     @Test
-    public void shouldReturnIntentForReadCommand() {
+    void shouldReturnIntentForReadCommand() {
 
         RedisCommand<String, String, String> get = new Command<>(CommandType.GET, null);
         RedisCommand<String, String, String> mget = new Command<>(CommandType.MGET, null);
@@ -93,7 +91,7 @@ public class MasterSlaveChannelWriterUnitTests {
     }
 
     @Test
-    public void shouldReturnIntentForMixedCommands() {
+    void shouldReturnIntentForMixedCommands() {
 
         RedisCommand<String, String, String> set = new Command<>(CommandType.SET, null);
         RedisCommand<String, String, String> mget = new Command<>(CommandType.MGET, null);
@@ -106,7 +104,7 @@ public class MasterSlaveChannelWriterUnitTests {
     }
 
     @Test
-    public void shouldBindTransactionsToMaster() {
+    void shouldBindTransactionsToMaster() {
 
         MasterSlaveChannelWriter writer = new MasterSlaveChannelWriter(connectionProvider, clientResources);
 
@@ -121,7 +119,7 @@ public class MasterSlaveChannelWriterUnitTests {
     }
 
     @Test
-    public void shouldBindTransactionsToMasterInBatch() {
+    void shouldBindTransactionsToMasterInBatch() {
 
         MasterSlaveChannelWriter writer = new MasterSlaveChannelWriter(connectionProvider, clientResources);
 
@@ -137,7 +135,7 @@ public class MasterSlaveChannelWriterUnitTests {
     }
 
     @Test
-    public void shouldDeriveIntentFromCommandTypeAfterTransaction() {
+    void shouldDeriveIntentFromCommandTypeAfterTransaction() {
 
         MasterSlaveChannelWriter writer = new MasterSlaveChannelWriter(connectionProvider, clientResources);
 
@@ -153,7 +151,7 @@ public class MasterSlaveChannelWriterUnitTests {
     }
 
     @Test
-    public void shouldDeriveIntentFromCommandTypeAfterDiscardedTransaction() {
+    void shouldDeriveIntentFromCommandTypeAfterDiscardedTransaction() {
 
         MasterSlaveChannelWriter writer = new MasterSlaveChannelWriter(connectionProvider, clientResources);
 
@@ -169,7 +167,7 @@ public class MasterSlaveChannelWriterUnitTests {
     }
 
     @Test
-    public void shouldDeriveIntentFromCommandBatchTypeAfterDiscardedTransaction() {
+    void shouldDeriveIntentFromCommandBatchTypeAfterDiscardedTransaction() {
 
         MasterSlaveChannelWriter writer = new MasterSlaveChannelWriter(connectionProvider, clientResources);
 

@@ -22,24 +22,24 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Mark Paluch
  */
-public class ClientOptionsUnitTests {
+class ClientOptionsUnitTests {
 
     @Test
-    public void testNew() {
+    void testNew() {
         checkAssertions(ClientOptions.create());
     }
 
     @Test
-    public void testBuilder() {
+    void testBuilder() {
         checkAssertions(ClientOptions.builder().build());
     }
 
     @Test
-    public void testCopy() {
+    void testCopy() {
         checkAssertions(ClientOptions.copyOf(ClientOptions.builder().build()));
     }
 
-    protected void checkAssertions(ClientOptions sut) {
+    void checkAssertions(ClientOptions sut) {
         assertThat(sut.isAutoReconnect()).isEqualTo(true);
         assertThat(sut.isCancelCommandsOnReconnectFailure()).isEqualTo(false);
         assertThat(sut.isPingBeforeActivateConnection()).isEqualTo(false);

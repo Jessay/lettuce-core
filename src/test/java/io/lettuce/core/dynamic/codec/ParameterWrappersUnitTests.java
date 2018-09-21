@@ -34,10 +34,10 @@ import io.lettuce.core.dynamic.support.TypeInformation;
 /**
  * @author Mark Paluch
  */
-public class ParameterWrappersUnitTests {
+class ParameterWrappersUnitTests {
 
     @Test
-    public void shouldReturnValueTypeForRange() {
+    void shouldReturnValueTypeForRange() {
 
         Method method = ReflectionUtils.findMethod(CommandMethods.class, "range", Range.class);
 
@@ -50,7 +50,7 @@ public class ParameterWrappersUnitTests {
     }
 
     @Test
-    public void shouldReturnValueTypeForValue() {
+    void shouldReturnValueTypeForValue() {
 
         Method method = ReflectionUtils.findMethod(CommandMethods.class, "value", Value.class);
 
@@ -62,7 +62,7 @@ public class ParameterWrappersUnitTests {
     }
 
     @Test
-    public void shouldReturnValueTypeForKeyValue() {
+    void shouldReturnValueTypeForKeyValue() {
 
         Method method = ReflectionUtils.findMethod(CommandMethods.class, "keyValue", KeyValue.class);
 
@@ -76,7 +76,7 @@ public class ParameterWrappersUnitTests {
     }
 
     @Test
-    public void shouldReturnValueTypeForArray() {
+    void shouldReturnValueTypeForArray() {
 
         Method method = ReflectionUtils.findMethod(CommandMethods.class, "array", String[].class);
 
@@ -88,7 +88,7 @@ public class ParameterWrappersUnitTests {
     }
 
     @Test
-    public void shouldNotSupportByteArray() {
+    void shouldNotSupportByteArray() {
 
         Method method = ReflectionUtils.findMethod(CommandMethods.class, "byteArray", byte[].class);
 
@@ -98,7 +98,7 @@ public class ParameterWrappersUnitTests {
     }
 
     @Test
-    public void shouldReturnValueTypeForList() {
+    void shouldReturnValueTypeForList() {
 
         Method method = ReflectionUtils.findMethod(CommandMethods.class, "withList", List.class);
 
@@ -111,7 +111,7 @@ public class ParameterWrappersUnitTests {
     }
 
     @Test
-    public void shouldReturnValueTypeForMap() {
+    void shouldReturnValueTypeForMap() {
 
         Method method = ReflectionUtils.findMethod(CommandMethods.class, "withMap", Map.class);
 

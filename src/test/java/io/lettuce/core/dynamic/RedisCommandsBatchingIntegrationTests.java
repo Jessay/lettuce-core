@@ -42,17 +42,17 @@ import io.lettuce.test.LettuceExtension;
  * @author Mark Paluch
  */
 @ExtendWith(LettuceExtension.class)
-public class RedisCommandsBatchingIntegrationTests extends TestSupport {
+class RedisCommandsBatchingIntegrationTests extends TestSupport {
 
     private final RedisCommands<String, String> redis;
 
     @Inject
-    public RedisCommandsBatchingIntegrationTests(StatefulRedisConnection<String, String> connection) {
+    RedisCommandsBatchingIntegrationTests(StatefulRedisConnection<String, String> connection) {
         this.redis = connection.sync();
     }
 
     @Test
-    public void selectiveBatching() {
+    void selectiveBatching() {
 
         RedisCommandFactory factory = new RedisCommandFactory(redis.getStatefulConnection());
 
@@ -74,7 +74,7 @@ public class RedisCommandsBatchingIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void selectiveBatchingShouldHandleErrors() {
+    void selectiveBatchingShouldHandleErrors() {
 
         RedisCommandFactory factory = new RedisCommandFactory(redis.getStatefulConnection());
 
@@ -93,7 +93,7 @@ public class RedisCommandsBatchingIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void shouldExecuteBatchingSynchronously() {
+    void shouldExecuteBatchingSynchronously() {
 
         RedisCommandFactory factory = new RedisCommandFactory(redis.getStatefulConnection());
 
@@ -111,7 +111,7 @@ public class RedisCommandsBatchingIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void shouldHandleSynchronousBatchErrors() {
+    void shouldHandleSynchronousBatchErrors() {
 
         RedisCommandFactory factory = new RedisCommandFactory(redis.getStatefulConnection());
 
@@ -139,7 +139,7 @@ public class RedisCommandsBatchingIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void shouldExecuteBatchingAynchronously() throws Exception {
+    void shouldExecuteBatchingAynchronously() throws Exception {
 
         RedisCommandFactory factory = new RedisCommandFactory(redis.getStatefulConnection());
 
@@ -157,7 +157,7 @@ public class RedisCommandsBatchingIntegrationTests extends TestSupport {
     }
 
     @Test
-    public void shouldHandleAsynchronousBatchErrors() throws Exception {
+    void shouldHandleAsynchronousBatchErrors() throws Exception {
 
         RedisCommandFactory factory = new RedisCommandFactory(redis.getStatefulConnection());
 

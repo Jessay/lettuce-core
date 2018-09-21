@@ -27,23 +27,23 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import reactor.core.Disposable;
-import io.lettuce.test.LettuceExtension;
-import io.lettuce.test.Wait;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.event.EventBus;
 import io.lettuce.core.event.metrics.CommandLatencyEvent;
 import io.lettuce.core.event.metrics.MetricEventPublisher;
+import io.lettuce.test.LettuceExtension;
+import io.lettuce.test.Wait;
 
 /**
  * @author Mark Paluch
  */
 @ExtendWith(LettuceExtension.class)
-public class ClientMetricsIntegrationTests extends TestSupport {
+class ClientMetricsIntegrationTests extends TestSupport {
 
     @Test
     @Inject
-    public void testMetricsEvent(RedisClient client, StatefulRedisConnection<String, String> connection) {
+    void testMetricsEvent(RedisClient client, StatefulRedisConnection<String, String> connection) {
 
         Collection<CommandLatencyEvent> events = new LinkedBlockingQueue<>();
         EventBus eventBus = client.getResources().eventBus();

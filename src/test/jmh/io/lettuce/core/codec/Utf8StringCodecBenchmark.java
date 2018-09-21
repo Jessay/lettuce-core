@@ -30,7 +30,7 @@ import io.lettuce.core.protocol.LettuceCharsets;
  *
  * @author Mark Paluch
  */
-public class Utf8StringCodecBenchmark {
+class Utf8StringCodecBenchmark {
 
     @Benchmark
     public void encodeUnpooled(Input input) {
@@ -44,7 +44,7 @@ public class Utf8StringCodecBenchmark {
     }
 
     @State(Scope.Thread)
-    public static class Input {
+    static class Input {
 
         Blackhole blackhole;
         Utf8StringCodec codec = new Utf8StringCodec();
