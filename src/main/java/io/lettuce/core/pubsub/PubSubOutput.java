@@ -83,7 +83,6 @@ public class PubSubOutput<K, V, T> extends CommandOutput<K, V, T> {
                     pattern = codec.decodeKey(bytes);
                     break;
                 }
-                break;
             case message:
                 if (channel == null) {
                     channel = codec.decodeKey(bytes);
