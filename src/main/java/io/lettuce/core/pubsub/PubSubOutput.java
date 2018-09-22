@@ -91,10 +91,14 @@ public class PubSubOutput<K, V, T> extends CommandOutput<K, V, T> {
                 output = (T) codec.decodeValue(bytes);
                 break;
             case psubscribe:
+                pattern = codec.decodeKey(bytes);
+                break;
             case punsubscribe:
                 pattern = codec.decodeKey(bytes);
                 break;
             case subscribe:
+                channel = codec.decodeKey(bytes);
+                break;
             case unsubscribe:
                 channel = codec.decodeKey(bytes);
                 break;

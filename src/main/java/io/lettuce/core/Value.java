@@ -39,6 +39,7 @@ import io.lettuce.core.internal.LettuceAssert;
 public class Value<V> implements Serializable {
 
     private static final Value<Object> EMPTY = new Value<>(null);
+    private static final long serialVersionUID = 5843854777806488003L;
 
     private final V value;
 
