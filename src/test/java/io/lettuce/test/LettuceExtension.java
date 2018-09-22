@@ -96,18 +96,18 @@ import io.netty.util.internal.logging.InternalLoggerFactory;
  */
 public class LettuceExtension implements ParameterResolver, BeforeEachCallback, AfterAllCallback, AfterEachCallback {
 
-    private final static InternalLogger LOGGER = InternalLoggerFactory.getInstance(LettuceExtension.class);
+    private static final InternalLogger LOGGER = InternalLoggerFactory.getInstance(LettuceExtension.class);
 
     private final ExtensionContext.Namespace LETTUCE = ExtensionContext.Namespace.create("lettuce.parameters");
 
-    private final static Set<Class<?>> SUPPORTED_INJECTABLE_TYPES = new HashSet<>(Arrays.asList(StatefulRedisConnection.class,
+    private static final Set<Class<?>> SUPPORTED_INJECTABLE_TYPES = new HashSet<>(Arrays.asList(StatefulRedisConnection.class,
             StatefulRedisPubSubConnection.class, RedisClient.class, ClientResources.class,
             StatefulRedisClusterConnection.class, RedisClusterClient.class));
 
-    private final static Set<Class<?>> CLOSE_AFTER_EACH = new HashSet<>(Arrays.asList(StatefulRedisConnection.class,
+    private static final Set<Class<?>> CLOSE_AFTER_EACH = new HashSet<>(Arrays.asList(StatefulRedisConnection.class,
             StatefulRedisPubSubConnection.class, StatefulRedisClusterConnection.class));
 
-    private final static List<Supplier<?>> SUPPLIERS = Arrays.asList(ClientResourcesSupplier.INSTANCE,
+    private static final List<Supplier<?>> SUPPLIERS = Arrays.asList(ClientResourcesSupplier.INSTANCE,
             RedisClusterClientSupplier.INSTANCE, RedisClientSupplier.INSTANCE, StatefulRedisConnectionSupplier.INSTANCE,
             StatefulRedisPubSubConnectionSupplier.INSTANCE, StatefulRedisClusterConnectionSupplier.INSTANCE);
 
